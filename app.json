@@ -17,13 +17,12 @@
             "size": "standard-1x"
         }
     },
-    "image": "heroku/ruby",
     "addons": [
         {
-            "plan": "logdna"
+            "plan": "logdna:quaco"
         },
         {
-            "plan": "heroku-postgresql"
+            "plan": "heroku-postgresql:hobby-dev"
         }
     ],
     "buildpacks": [
@@ -33,5 +32,12 @@
         {
             "url": "https://github.com/heroku/heroku-buildpack-nodejs"
         }
-    ]
+    ],{
+    "formation": {
+        "web": {
+            "quantity": 1,
+            "size": "free"
+        }
+    }
+}    
 }
