@@ -32,8 +32,8 @@
         {
             "url": "https://github.com/heroku/heroku-buildpack-nodejs"
         }
-    ],{
-    "formation": 
+    ],
+    "formation": {
         "web": {
             "quantity": 1,
             "size": "free"
