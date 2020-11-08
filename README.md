@@ -11,7 +11,7 @@
 
 A tool to improve location and equipment reservation workflow for clubs, students and faculty members.
 
-_You must have the ZenHub Extension installed for your browser to properly our issues board and sprints._
+_You must have the ZenHub Extension installed for your browser to properly our issue board and sprints._
 
 ## Installation
 
