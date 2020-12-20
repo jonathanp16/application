@@ -24,3 +24,13 @@ afterEach(() => {
     localVue = null
 })
 
+test('should mount without crashing', () => {
+
+    const wrapper = mount(Navbar, {localVue})
+
+    expect(wrapper.text()).toBeDefined()
+})
+
+
+
+
