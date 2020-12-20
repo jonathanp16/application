@@ -423,4 +423,11 @@ export default {
       showingNavigationDropdown: false,
     };
   },
+  
+  computed: {
+    path() {
+      return window.location.pathname;
+    },
+  },
+};
 </script>
