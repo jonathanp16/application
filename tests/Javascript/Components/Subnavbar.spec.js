@@ -32,42 +32,5 @@ test('should mount without crashing', () => {
 })
 
 
-test('createSubnavbar when no form errors', () => {
-
-    InertiaFormMock.post.mockReturnValueOnce({
-        then(callback) {
-            callback({})
-        }
-    })
-
-    InertiaFormMock.hasErrors.mockReturnValueOnce(false)
-
-    const wrapper = mount(Subnavbar, {localVue})
-
-    wrapper.vm.subnavbar()
-
-    expect(InertiaFormMock.post).toBeCalledTimes(1)
-
-})
-
-test('createRoom when form errors', () => {
-
-    InertiaFormMock.post.mockReturnValueOnce({
-        then(callback) {
-            callback({})
-        }
-    })
-
-    InertiaFormMock.hasErrors.mockReturnValueOnce(true)
-    InertiaFormMock.error.mockReturnValueOnce("Some name error")
-
-    const wrapper = mount(subnavbar, {localVue})
-
-    wrapper.vm.subnavbar()
-
-    expect(InertiaFormMock.post).toBeCalledTimes(1)
-
-})
-
 
 
