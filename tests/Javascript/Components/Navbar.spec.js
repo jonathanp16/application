@@ -5,7 +5,7 @@ import {createLocalVue, mount} from '@vue/test-utils'
 import {InertiaApp} from "@inertiajs/inertia-vue";
 import {InertiaForm} from "laravel-jetstream";
 import {InertiaFormMock} from "@test/__mocks__/laravel-jetstream";
-import Navbar from "@src/Components/Navbar/NavBar";
+import Navbar from "@src/Components/Navbar/Navbar";
 
 
 let localVue;
