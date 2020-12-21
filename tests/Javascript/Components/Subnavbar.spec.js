@@ -1,5 +1,4 @@
 import {afterEach, beforeEach, jest, test} from "@jest/globals";
-
 jest.mock('laravel-jetstream')
 import {createLocalVue, mount} from '@vue/test-utils'
 import {InertiaApp} from "@inertiajs/inertia-vue";
@@ -30,6 +29,8 @@ test('should mount without crashing', () => {
 
     expect(wrapper.text()).toBeDefined()
 })
+
+
 
 
 
