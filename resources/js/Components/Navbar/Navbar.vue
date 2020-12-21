@@ -23,22 +23,18 @@
                 Home
               </jet-nav-link>
               <jet-nav-link
+                v-if="$page.user.can.includes('bookings')"  
                 href="rooms"
                 :active="$page.currentRouteName == 'rooms'"
               >
                 Booking Management
               </jet-nav-link>
               <jet-nav-link
+                v-if="$page.user.can.includes('users')"
                 href="users"
                 :active="$page.currentRouteName == 'users'"
               >
                 User Management
-              </jet-nav-link>
-              <jet-nav-link
-                href="roles"
-                :active="$page.currentRouteName == 'roles'"
-              >
-                MyAccount
               </jet-nav-link>
             </div>
           </div>
@@ -423,7 +419,7 @@ export default {
       showingNavigationDropdown: false,
     };
   },
-  
+
   computed: {
     path() {
       return window.location.pathname;
