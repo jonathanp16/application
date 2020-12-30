@@ -9,7 +9,7 @@
       </div>
     </header>
 
-    <nav class="bg-white border-b border-gray-100 top-nav">
+    <nav class="bg-white border-b border-gray-100 top-nav" aria-label="Main navBar">
       <!-- Primary Navigation Menu -->
       <div>
         <div class="flex justify-between h-16">
@@ -334,7 +334,7 @@
         </div>
       </div>
     </nav>
-  <nav class="sub-nav ">
+  <nav class="sub-nav" aria-label="SubnavBar">
     <Subnavbar v-if="$page.currentRouteName == 'dashboard'">
       <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
         <jet-nav-sub

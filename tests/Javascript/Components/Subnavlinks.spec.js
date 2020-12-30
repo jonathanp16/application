@@ -36,3 +36,19 @@ test('should mount without crashing', () => {
 })
 
 
+test('should mount without crashing and active true', () => {
+
+    const wrapper = shallowMount(Subnavlink, {
+        localVue,
+        propsData: {
+                href: "link",
+                active: true
+
+        }
+    })
+
+    expect(wrapper.text()).toBeDefined()
+})
+
+
+
