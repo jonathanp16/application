@@ -1,11 +1,13 @@
 <template>
   <div>
     <header>
-       <div class="flex-shrink-0 flex items-center">
+       <div class="flex-shrink-0 flex items-center" style ="margin-left: 50px">
         <a href="/dashboard">
-          <jet-application-mark class="block h-9 w-auto" />
+          <jet-application-mark class="block h-15 w-auto"/>
         </a>
-          CSU Booking Platform
+        <pre>
+        <b>CSU booking platform</b>
+        </pre>
       </div>
     </header>
 
