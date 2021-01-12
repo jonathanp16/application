@@ -5,9 +5,7 @@
         <a href="/dashboard">
           <jet-application-mark class="block h-15 w-auto"/>
         </a>
-        <pre>
-        <b>CSU booking platform</b>
-        </pre>
+        <pre> CSU booking platform </pre>
       </div>
     </header>
 
