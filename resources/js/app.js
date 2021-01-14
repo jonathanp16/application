@@ -1,13 +1,14 @@
 require('./bootstrap');
 
-import Vue from 'vue';
+require('moment');
 
-import { InertiaApp } from '@inertiajs/inertia-vue';
-import { InertiaForm } from 'laravel-jetstream';
+// Import modules...
+import Vue from 'vue';
+import { App as InertiaApp, plugin as InertiaPlugin } from '@inertiajs/inertia-vue';
 import PortalVue from 'portal-vue';
 
-Vue.use(InertiaApp);
-Vue.use(InertiaForm);
+Vue.mixin({ methods: { route } });
+Vue.use(InertiaPlugin);
 Vue.use(PortalVue);
 
 const app = document.getElementById('app');
