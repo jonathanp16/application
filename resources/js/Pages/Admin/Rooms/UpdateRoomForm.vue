@@ -14,7 +14,7 @@
                     v-model="form.name"
                     autofocus
                 />
-                <jet-input-error :message="form.error('name')" class="mt-2" />
+                <jet-input-error :message="form.errors.name" class="mt-2" />
             </div>
 
             <div class="m-6">
@@ -26,7 +26,7 @@
                     v-model="form.number"
                     autofocus
                 />
-                <jet-input-error :message="form.error('number')" class="mt-2" />
+                <jet-input-error :message="form.errors.number" class="mt-2" />
             </div>
 
             <div class="m-6">
@@ -38,7 +38,7 @@
                     v-model="form.floor"
                     autofocus
                 />
-                <jet-input-error :message="form.error('floor')" class="mt-2" />
+                <jet-input-error :message="form.errors.floor" class="mt-2" />
             </div>
 
             <div class="m-6">
@@ -51,7 +51,7 @@
                     autofocus
                 />
                 <jet-input-error
-                    :message="form.error('building')"
+                    :message="form.errors.building"
                     class="mt-2"
                 />
             </div>
@@ -60,11 +60,11 @@
                 <jet-label for="status" value="Status" />
                 <select v-model="form.status" class="mt-1 block w-full" name="status" id="statusUpdate">
                     <option :value="form.status" selected="selected">{{form.status}}</option>
-                    <option v-if="form.status != 'available'" :value="'available'">available</option>
+                    <option v-if="form.status !== 'available'" :value="'available'">available</option>
                     <option v-else :value="'unavailable'">anavailable</option>
                 </select>
                 <jet-input-error
-                    :message="form.error('status')"
+                    :message="form.errors.status"
                     class="mt-2"
                 />
             </div>
@@ -79,7 +79,7 @@
                     v-model="form.min_days_advance"
                     autofocus
                 />
-                <jet-input-error :message="form.error('number')" class="mt-2" />
+                <jet-input-error :message="form.errors.number" class="mt-2" />
             </div>
             <div class="m-6">
                 <jet-label for="max_days_advance" value="Maximum Days Before Booking" />
@@ -90,7 +90,7 @@
                     v-model="form.max_days_advance"
                     autofocus
                 />
-                <jet-input-error :message="form.error('number')" class="mt-2" />
+                <jet-input-error :message="form.errors.number" class="mt-2" />
             </div>
 
         </template>
@@ -143,40 +143,28 @@ export default {
 
     data() {
         return {
-            form: this.$inertia.form(
-                {
-                    name: "",
-                    number: null,
-                    floor: "",
-                    building: "",
-                    status: "",
-                    min_days_advance:"",
-                    max_days_advance:""
-                },
-                {
-                    bag: "updateRoom"
-                }
-            )
+            form: this.$inertia.form({
+                name: '',
+                number: null,
+                floor: '',
+                building: '',
+                status: '',
+                min_days_advance: '',
+                max_days_advance: '',
+            })
         };
     },
 
     methods: {
         closeModal() {
-            if (this.$page && this.$page.errorBags.updateRoom) {
-                delete this.$page.errorBags.updateRoom;
-            }
             this.$emit("close");
         },
         updateRoom() {
-            this.form
-                .put("/rooms/" + this.room?.id, {
-                    preserveState: true
+            this.form.put(route('rooms.update', this.room), {
+                    errorBag: 'updateRoom',
+                    preserveState: true,
+                    onSuccess: () => this.closeModal(),
                 })
-                .then(() => {
-                    if (this.form.successful) {
-                        this.closeModal();
-                    }
-                });
         }
     },
     watch: {

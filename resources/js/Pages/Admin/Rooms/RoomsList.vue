@@ -16,16 +16,16 @@
                 <template #content>
 
                     <div class="space-y-6">
-                        <div class="grid grid-cols-7">
+                        <div class="grid grid-cols-6">
                             <div class="text-md mx-3">Room Name</div>
-                            <div class="text-md mx-3">Room Number</div>
+                            <div class="text-md mx-3">Number</div>
                             <div class="text-md mx-3">Floor Number</div>
                             <div class="text-md mx-3">Building</div>
                             <div class="text-md mx-3">Status</div>
                         </div>
 
-                        <div v-for="room in rooms" :key="room.id" class="grid flex items-center">
-                            <div class="grid grid-cols-7">
+                        <div v-for="room in rooms" :key="room.id" class="flex items-center justify-between">
+                            <div class="grid grid-cols-6">
                                 <div class="text-md mx-3">
                                     {{ room.name }}
                                 </div>
@@ -41,19 +41,14 @@
                                 <div class="text-md mx-3">
                                     {{ room.status }}
                                 </div>
-                                <div class="text-md mx-3">
-                                    <button
-                                        class="cursor-pointer ml-6 text-sm text-blue-800 focus:outline-none"
-                                        @click="roomBeingUpdated = room"
-                                    >
+
+                                <div class="flex items-center">
+                                    <button class="cursor-pointer mx-3 text-sm text-blue-800 focus:outline-none"
+                                        @click="roomBeingUpdated = room">
                                         Update
                                     </button>
-                                </div>
-                                <div class="text-md mx-3">
-                                    <button
-                                        class="cursor-pointer ml-6 text-sm text-blue-800 focus:outline-none"
-                                        @click="roomBeingDeleted = room"
-                                    >
+                                    <button class="cursor-pointer mx-3 text-sm text-red-500 focus:outline-none"
+                                        @click="roomBeingDeleted = room">
                                         Delete
                                     </button>
                                 </div>
@@ -61,11 +56,9 @@
                         </div>
                     </div>
 
-                    <update-room-form
-                        :room="roomBeingUpdated"
-                        @close="roomBeingUpdated = null">
-                    </update-room-form>
+                    <update-room-form :room="roomBeingUpdated" @close="roomBeingUpdated = null" />
 
+                    <!-- Delete Room Confirmation Modal -->
                     <jet-confirmation-modal :show="roomBeingDeleted" @close="roomBeingDeleted = null">
                         <template #title>
                             Delete Room
@@ -150,11 +143,10 @@ export default {
 
     methods: {
         deleteRoom() {
-            this.deleteRoomForm.delete('/rooms/' + this.roomBeingDeleted.id, {
+            this.deleteRoomForm.delete(route('rooms.destroy', this.roomBeingDeleted), {
                 preserveScroll: true,
                 preserveState: true,
-            }).then(() => {
-                this.roomBeingDeleted = null
+                onFinish: () => this.roomBeingDeleted = null,
             })
         }
     }

@@ -14,25 +14,25 @@
                     <div class="col-span-6 sm:col-span-3">
                         <jet-label for="name" value="Room name"/>
                         <jet-input id="name" type="text" class="mt-1 block w-full" v-model="createRoomForm.name" autofocus/>
-                        <jet-input-error :message="createRoomForm.error('name')" class="mt-2"/>
+                        <jet-input-error :message="createRoomForm.errors.name" class="mt-2"/>
                     </div>
                      
                     <div class="col-span-6 sm:col-span-3">
                         <jet-label for="roomnumber" value="Room Number"/>
                         <jet-input id="number" type="roomnumber" class="mt-1 block w-full" v-model="createRoomForm.number"/>
-                        <jet-input-error :message="createRoomForm.error('roomnumber')" class="mt-2"/>
+                        <jet-input-error :message="createRoomForm.errors.roomnumber" class="mt-2"/>
                     </div>
 
                     <div class="col-span-6 sm:col-span-3">
                         <jet-label for="floor" value="Floor"/>
                         <jet-input id="floor" type="number" class="mt-1 block w-full" v-model="createRoomForm.floor"/>
-                        <jet-input-error :message="createRoomForm.error('floor')" class="mt-2"/>
+                        <jet-input-error :message="createRoomForm.errors.floor" class="mt-2"/>
                     </div>
 
                     <div class="col-span-6 sm:col-span-3">  
                         <jet-label for="building" value="Building"/>
                         <jet-input id="building" type="building" class="mt-1 block w-full" v-model="createRoomForm.building"/>
-                        <jet-input-error :message="createRoomForm.error('building')" class="mt-2"/>
+                        <jet-input-error :message="createRoomForm.errors.building" class="mt-2"/>
                     </div>
 
                     <div class="col-span-6 sm:col-span-3">  
@@ -42,7 +42,7 @@
                             <option value="available">Available</option>
                             <option value="unavailable">Unavailable</option>
                         </select>
-                        <jet-input-error :message="createRoomForm.error('status')" class="mt-2"/>
+                        <jet-input-error :message="createRoomForm.errors.status" class="mt-2"/>
                     </div>
 
                     <div class="col-span-6 sm:col-span-6">
@@ -62,8 +62,8 @@
                             class="mt-1 block w-full"
                             v-model="value.opening_hours"
                         />
-                        <jet-input-error
-                            :message="createRoomForm.error('availabilities.' + key + '.opening_hours')"
+                        <jet-input-error  v-if="createRoomForm.errors.availabilities"
+                            :message="createRoomForm.errors.availabilities[key].opening_hours"
                             class="mt-2"
                         />
 
@@ -73,8 +73,8 @@
                             class="mt-1 block w-full"
                             v-model="value.closing_hours"
                         />
-                        <jet-input-error
-                            :message="createRoomForm.error('availabilities.' + key + '.closing_hours')"
+                        <jet-input-error v-if="createRoomForm.errors.availabilities"
+                            :message="createRoomForm.errors.availabilities[key].closing_hours"
                             class="mt-2"
                         />
                     </div>
@@ -82,13 +82,13 @@
                     <div class="col-span-6 sm:col-span-3">  
                         <jet-label for="min_days_advance" value="Minimum Days Before Booking"/>
                         <jet-input id="min_days_advance" type="min_days_advance" class="mt-1 block w-full" v-model="createRoomForm.min_days_advance"/>
-                        <jet-input-error :message="createRoomForm.error('min_days_advance')" class="mt-2"/>
+                        <jet-input-error :message="createRoomForm.errors.min_days_advance" class="mt-2"/>
                     </div>
 
                     <div class="col-span-6 sm:col-span-3">  
                         <jet-label for="max_days_advance" value="Maximum Days Before Booking"/>
                         <jet-input id="max_days_advance" type="max_days_advance" class="mt-1 block w-full" v-model="createRoomForm.max_days_advance"/>
-                        <jet-input-error :message="createRoomForm.error('max_days_advance')" class="mt-2"/>
+                        <jet-input-error :message="createRoomForm.errors.max_days_advance" class="mt-2"/>
                     </div>
 
             </template>
@@ -165,16 +165,15 @@ export default {
                 },
                 min_days_advance:'',
                 max_days_advance:''
-            }, {
-                bag: 'createRoom',
-                resetOnSuccess: true,
             }),
         }
     },
     methods: {
         createRoom() {
-            this.createRoomForm.post('/rooms', {
+            this.createRoomForm.post(route('rooms.store'), {
+                errorBag: 'createRoom',
                 preserveScroll: true,
+                onSuccess: this.createRoomForm.reset(),
             })
         },
     },
