@@ -4,7 +4,6 @@
 
         <div class="min-h-screen bg-gray-100">
             <!-- Navigation Bar -->
-            <app-navigation />
             <Navbar />
 
             <!-- Page Heading -->
