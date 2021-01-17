@@ -25,12 +25,10 @@ afterEach(() => {
     InertiaFormMock.post.mockClear()
 })
 
-//This is an example, please do more than just test if it crashes :p
 test('should mount without crashing', () => {
     expect(wrapper.text()).toBeDefined()
 })
 
-//This is an example, please do more than just test if it crashes :p
 test('createRole when no form errors', () => {
 
     InertiaFormMock.post.mockReturnValueOnce({
@@ -47,7 +45,6 @@ test('createRole when no form errors', () => {
 
 })
 
-//This is an example, please do more than just test if it crashes :p
 test('createRole when form errors', () => {
 
     InertiaFormMock.post.mockReturnValueOnce({

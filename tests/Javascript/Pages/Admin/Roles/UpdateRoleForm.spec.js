@@ -23,16 +23,16 @@ afterEach(() => {
     localVue = null
     wrapper = null
 
+    InertiaFormMock.hasErrors.mockClear()
+    InertiaFormMock.error.mockClear()
     InertiaFormMock.put.mockClear()
 })
 
-//This is an example, please do more than just test if it crashes :p
 test('should mount without crashing', () => {
 
     expect(wrapper.text()).toBeDefined()
 })
 
-//This is an example, please do more than just test if it crashes :p
 test('Update Role when no form errors', () => {
 
     InertiaFormMock.put.mockReturnValueOnce({
@@ -49,7 +49,6 @@ test('Update Role when no form errors', () => {
 
 })
 
-//This is an example, please do more than just test if it crashes :p
 test('Update Role when form errors', () => {
 
     InertiaFormMock.put.mockReturnValueOnce({
@@ -66,7 +65,6 @@ test('Update Role when form errors', () => {
     expect(InertiaFormMock.put).toBeCalledTimes(1)
 
 })
-
 
 test('Role prop watcher updates form', () => {
 
