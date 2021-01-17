@@ -31,9 +31,9 @@
                                     Created {{ fromNow(user.created_at) }}
                                 </div>
 
-                                <button class="cursor-pointer ml-6 text-sm focus:outline-none"
+                                <button class="cursor-pointer ml-6 text-sm text-blue-800 focus:outline-none"
                                         @click="openUpdateModal(user)">
-                                    Edit
+                                    Update
                                 </button>
 
                                 <button class="cursor-pointer ml-6 text-sm text-red-500 focus:outline-none"
@@ -48,21 +48,21 @@
             </jet-action-section>
         </div>
 
-        <jet-confirmation-modal :show="userBeingUpdated != null" @close="userBeingUpdated = null">
+        <jet-confirmation-modal :show="userBeingUpdated" @close="userBeingUpdated = null">
             <template #title>
-                Update User: {{ userBeingUpdated != null && userBeingUpdated.name }}
+                Update User: {{ updateUserForm.name }}
             </template>
 
             <template #content>
                 <div>
                     <jet-label for="name" value="Name"/>
                     <jet-input id="name" type="text" class="mt-1 block w-full" v-model="updateUserForm.name" autofocus/>
-                    <jet-input-error :message="updateUserForm.error('name')" class="mt-2"/>
+                    <jet-input-error :message="updateUserForm.errors.name" class="mt-2"/>
                 </div>
                 <div>
                     <jet-label for="email" value="Email"/>
                     <jet-input id="email" type="text" class="mt-1 block w-full" v-model="updateUserForm.email"/>
-                    <jet-input-error :message="updateUserForm.error('email')" class="mt-2"/>
+                    <jet-input-error :message="updateUserForm.errors.email" class="mt-2"/>
                 </div>
                 <!-- Permissions -->
                 <div class="mt-2 col-span-12" v-if="roles.length > 0">
@@ -175,9 +175,6 @@ export default {
                 name: '',
                 email: '',
                 roles: [],
-            }, {
-                bag: 'updateUser',
-                resetOnSuccess: true,
             }),
             userBeingDeleted: null,
             userBeingUpdated: null,
@@ -185,46 +182,39 @@ export default {
     },
 
     methods: {
-        deleteUser() {
-            this.deleteUserForm.delete('/users/' + this.userBeingDeleted.id, {
-                preserveScroll: true,
-                preserveState: true,
-            }).then(() => {
-                this.userBeingDeleted = null
-            })
-        },
-
         openUpdateModal(user) {
-            this.setSelectedRoles(user)
             this.userBeingUpdated = user;
+            this.updateUserForm.roles = this.mapUserRoles(user.roles)
             this.updateUserForm.name = user.name;
             this.updateUserForm.email = user.email;
         },
 
-        updateUser() {
-            this.updateUserForm.put('/users/' + this.userBeingUpdated.id, {
+        deleteUser() {
+            this.deleteUserForm.delete('/users/' + this.userBeingDeleted.id, {
                 preserveScroll: true,
                 preserveState: true,
-            }).then(() => {
-                if (this.updateUserForm.successful) {
-                    this.userBeingUpdated = null;
-                }
-            });
+                onFinish: () => this.userBeingDeleted = null,
+            })
         },
 
-        fromNow(timestamp) {
-            return moment(timestamp).local().fromNow()
-        },
-
-        setSelectedRoles(user) {
-            this.updateUserForm.roles = this.mapUserRoles(user.roles)
+        updateUser() {
+            this.updateUserForm.put('/users/' + this.userBeingUpdated.id, {
+                errorBag: 'updateUser',
+                preserveScroll: true,
+                preserveState: true,
+                onSuccess: () => this.userBeingUpdated = null,
+            })
         },
 
         mapUserRoles(roles) {
             return roles.map((o) => {
                 return o.name;
             });
-        }
+        },
+
+        fromNow(timestamp) {
+            return moment(timestamp).local().fromNow()
+        },
     }
 }
 </script>
