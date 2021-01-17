@@ -8,9 +8,9 @@
             <div class="m-6">
                 <jet-label for="name" value="Room" />
                 <select v-model="form.room_id" class="mt-1 block w-full" name="rooms" id="room_id">
-                    <option v-for="room in availableRooms" :key="room.id" :value="room.id" :selected="{ selected: room.id == form.room_id}">{{room.name}}</option>
+                    <option v-for="room in availableRooms" :key="room.id" :value="room.id" :selected="{ selected: room.id === form.room_id}">{{room.name}}</option>
                 </select>
-                <jet-input-error :message="form.error('room_id')" class="mt-2" />
+                <jet-input-error :message="form.errors.room_id" class="mt-2" />
             </div>
 
             <div class="m-6">
@@ -22,7 +22,7 @@
                     v-model="form.start_time"
                     autofocus
                 />
-                <jet-input-error :message="form.error('start_time')" class="mt-2" />
+                <jet-input-error :message="form.errors.start_time" class="mt-2" />
             </div>
 
             <div class="m-6">
@@ -35,7 +35,7 @@
                     autofocus
                 />
                 <jet-input-error
-                    :message="form.error('end_time')"
+                    :message="form.errors.end_time"
                     class="mt-2"
                 />
             </div>
@@ -50,17 +50,17 @@
             </div>  
             <div class="m-6">
                 <jet-input-error
-                    :message="form.error('availabilities')"
+                    :message="form.errors.availabilities"
                     class="mt-2"
                 />
             </div>
             
             <div class="m-6">
-                <jet-input-error :message="form.error('booked_too_close')" class="mt-2" />
+                <jet-input-error :message="form.errors.booked_too_close" class="mt-2" />
             </div>
 
            <div class="m-6">
-               <jet-input-error :message="form.error('booked_too_far')" class="mt-2" />
+               <jet-input-error :message="form.errors.booked_too_far" class="mt-2" />
            </div>
         </template>
 
@@ -112,47 +112,34 @@ export default {
             type: Array,
             default: function() {
                 return [];
-        }
+            }
         }
     },
 
     data() {
         return {
             availableExcludingCurrent: [], 
-            form: this.$inertia.form(
-                { 
-                    user_id: null,
-                    room_id: null,
-                    start_time: null,
-                    end_time: null,
-                    reference: [],
-                    _method: 'PUT'
-                },
-                {
-                    bag: "updateBookingRequest"
-                }
-            ),
-            
+            form: this.$inertia.form({
+                user_id: null,
+                room_id: null,
+                start_time: null,
+                end_time: null,
+                reference: [],
+            }),
         };
     },
 
     methods: {
         closeModal() {
-            if (this.$page && this.$page.errorBags.updateBookingRequest) {
-                delete this.$page.errorBags.updateBookingRequest;
-            }
+            this.form.reset();
             this.$emit("close");
         },
         updateBookingRequest() {
-            this.form.post("/bookings/" + this.booking_request?.id, {
-                    preserveState: true
-                })
-                .then(() => {
-                    if (this.form.successful) {
-                        this.closeModal();
-                    }
-                }
-            );
+            this.form.put(route('bookings.update', this.booking_request), {
+                errorBag: 'updateBookingRequest',
+                preserveState: true,
+                onSuccess: () => this.closeModal(),
+            });
         },
         fieldChange(e){
             let selectedFiles = e.target.files;

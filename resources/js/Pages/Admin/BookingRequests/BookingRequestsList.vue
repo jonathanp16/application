@@ -1,79 +1,79 @@
 <template>
-  <div>
-    <!-- View Rooms -->
-    <div class="mt-10 sm:mt-0">
-      <jet-action-section>
-        <template #title>View Booking Requests</template>
+    <div>
+        <!-- View Rooms -->
+        <div class="mt-10 sm:mt-0">
+            <jet-action-section>
+                <template #title>View Booking Requests</template>
 
-        <template #description>Description of booking Requests.</template>
+                <template #description>Description of booking Requests.</template>
 
-        <!-- Rooms List -->
-        <template #content>
-          <div class="space-y-6">
-            <div class="grid grid-cols-7">
-              <div class="text-md mx-3">User</div>
-              <div class="text-md mx-3">Room</div>
-              <div class="text-md mx-3">Start Time</div>
-              <div class="text-md mx-3">End time</div>
-              <div class="text-md mx-3">Status</div>
-            </div>
+                <!-- Rooms List -->
+                <template #content>
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-7">
+                            <div class="text-md mx-3">User</div>
+                            <div class="text-md mx-3">Room</div>
+                            <div class="text-md mx-3">Start Time</div>
+                            <div class="text-md mx-3">End time</div>
+                            <div class="text-md mx-3">Status</div>
+                        </div>
 
-            <div
-              v-for="booking_request in booking_requests"
-              :key="booking_request.id"
-              class="grid flex items-center"
-            >
-              <div class="grid grid-cols-7">
-                <div class="text-md mx-3">{{ booking_request.user.name }}</div>
-                <div class="text-md mx-3">{{ booking_request.room.name }}</div>
-                <div class="text-md mx-3">{{ calendar(booking_request.start_time) }}</div>
-                <div class="text-md mx-3">{{ calendar(booking_request.end_time) }}</div>
-                <div class="text-md mx-3">{{ booking_request.status }}</div>
-                <div class="text-md mx-3">
-                  <button
-                    class="cursor-pointer ml-6 text-sm text-blue-800 focus:outline-none"
-                    @click="bookingRequestBeingUpdated = booking_request"
-                  >Update</button>
-                </div>
-                <div class="text-md mx-3">
-                  <button
-                    class="cursor-pointer ml-6 text-sm text-blue-800 focus:outline-none"
-                    @click="bookingRequestBeingDeleted = booking_request"
-                  >Delete</button>
-                </div>
-              </div>
-            </div>
-          </div>
+                        <div
+                            v-for="booking_request in booking_requests"
+                            :key="booking_request.id"
+                            class="grid flex items-center"
+                        >
+                            <div class="grid grid-cols-7">
+                                <div class="text-md mx-3">{{ booking_request.user.name }}</div>
+                                <div class="text-md mx-3">{{ booking_request.room.name }}</div>
+                                <div class="text-md mx-3">{{ calendar(booking_request.start_time) }}</div>
+                                <div class="text-md mx-3">{{ calendar(booking_request.end_time) }}</div>
+                                <div class="text-md mx-3">{{ booking_request.status }}</div>
+                                <div class="text-md mx-3">
+                                    <button
+                                        class="cursor-pointer ml-6 text-sm text-blue-800 focus:outline-none"
+                                        @click="bookingRequestBeingUpdated = booking_request"
+                                    >Update</button>
+                                </div>
+                                <div class="text-md mx-3">
+                                    <button
+                                        class="cursor-pointer ml-6 text-sm text-red-500 focus:outline-none"
+                                        @click="bookingRequestBeingDeleted = booking_request"
+                                    >Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-          <UpdateBookingRequestForm
-            :booking_request="bookingRequestBeingUpdated"
-            :availableRooms="availableRooms"
-            @close="bookingRequestBeingUpdated = null"
-          ></UpdateBookingRequestForm>
+                    <UpdateBookingRequestForm
+                        :booking_request="bookingRequestBeingUpdated"
+                        :availableRooms="availableRooms"
+                        @close="bookingRequestBeingUpdated = null"
+                    />
 
-          <jet-confirmation-modal
-            :show="bookingRequestBeingDeleted"
-            @close="bookingRequestBeingDeleted = null"
-          >
-            <template #title>Delete Booking Request</template>
+                    <jet-confirmation-modal :show="bookingRequestBeingDeleted" @close="bookingRequestBeingDeleted = null">
+                        <template #title>Delete Booking Request</template>
 
-            <template #content>Are you sure you would like to delete this booking request?</template>
+                        <template #content>Are you sure you would like to delete this booking request?</template>
 
-            <template #footer>
-              <jet-secondary-button @click.native="bookingRequestBeingDeleted = null">Nevermind</jet-secondary-button>
+                        <template #footer>
+                            <jet-secondary-button @click.native="bookingRequestBeingDeleted = null">
+                                Nevermind
+                            </jet-secondary-button>
 
-              <jet-danger-button
-                class="ml-2"
-                @click.native="deleteBookingRequest"
-                :class="{ 'opacity-25': deleteBookingRequestForm.processing }"
-                :disabled="deleteBookingRequestForm.processing"
-              >Delete</jet-danger-button>
-            </template>
-          </jet-confirmation-modal>
-        </template>
-      </jet-action-section>
+                            <jet-danger-button
+                                class="ml-2"
+                                @click.native="deleteBookingRequest"
+                                :class="{ 'opacity-25': deleteBookingRequestForm.processing }"
+                                :disabled="deleteBookingRequestForm.processing">
+                                Delete
+                            </jet-danger-button>
+                        </template>
+                    </jet-confirmation-modal>
+                </template>
+            </jet-action-section>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -93,64 +93,62 @@ import UpdateBookingRequestForm from "./UpdateBookingRequestForm";
 import Label from "@src/Jetstream/Label";
 
 export default {
-  props: {
-    booking_requests: {
-      type: Array,
-      default: function() {
-        return [];
-      }
+    props: {
+        booking_requests: {
+            type: Array,
+            default: function() {
+                return [];
+            }
+        },
+        rooms: {
+            type: Array,
+            default: function() {
+                return [];
+            }
+        }
     },
-    rooms: {
-      type: Array,
-      default: function() {
-        return [];
-      }
-    }
-  },
 
-  components: {
-    Label,
-    Dropdown,
-    Input,
-    JetSectionBorder,
-    JetActionSection,
-    JetButton,
-    JetDangerButton,
-    JetSecondaryButton,
-    JetConfirmationModal,
-    JetModal,
-    JetInput,
-    JetLabel,
-    JetInputError,
-    UpdateBookingRequestForm
-  },
-
-  data() {
-    return {
-      deleteBookingRequestForm: this.$inertia.form(),
-      bookingRequestBeingUpdated: null,
-      bookingRequestBeingDeleted: null
-    };
-  },
-
-  methods: {
-    deleteBookingRequest() {
-      this.deleteBookingRequestForm
-        .delete("/bookings/" + this.bookingRequestBeingDeleted.id, {
-          preserveScroll: true,
-          preserveState: true
-        })
-        .then(() => {
-          this.bookingRequestBeingDeleted = null;
-        });
+    components: {
+        Label,
+        Dropdown,
+        Input,
+        JetSectionBorder,
+        JetActionSection,
+        JetButton,
+        JetDangerButton,
+        JetSecondaryButton,
+        JetConfirmationModal,
+        JetModal,
+        JetInput,
+        JetLabel,
+        JetInputError,
+        UpdateBookingRequestForm
     },
-    calendar(timestamp) {
-        return moment(timestamp).local().format('LLL');
+
+    data() {
+        return {
+            deleteBookingRequestForm: this.$inertia.form(),
+            bookingRequestBeingUpdated: null,
+            bookingRequestBeingDeleted: null
+        };
     },
-  },
-  computed: {
+
+    methods: {
+        deleteBookingRequest() {
+            this.deleteBookingRequestForm
+                .delete("/bookings/" + this.bookingRequestBeingDeleted.id, {
+                    preserveScroll: true,
+                    preserveState: true,
+                    onFinish: () => this.bookingRequestBeingDeleted = null,
+                });
+        },
+        calendar(timestamp) {
+            return moment(timestamp).local().format('LLL');
+        },
+    },
+    computed: {
         availableRooms: function () {
-            return this.rooms.filter(room => room.status == "available");
+            return this.rooms.filter(room => room.status === 'available');
         }
     }
 };

@@ -14,7 +14,7 @@
                     :value="room_name"
                     disabled
                 />
-                <jet-input-error :message="createBookingRequestForm.error('room_id')" class="mt-2" />
+                <jet-input-error :message="form.errors.room_id" class="mt-2" />
             </div>
 
             <div class="m-6">
@@ -23,10 +23,10 @@
                     id="start_time"
                     type="datetime-local"
                     class="mt-1 block w-full"
-                    v-model="createBookingRequestForm.start_time"
+                    v-model="form.start_time"
                     autofocus
                 />
-                <jet-input-error :message="createBookingRequestForm.error('start_time')" class="mt-2" />
+                <jet-input-error :message="form.errors.start_time" class="mt-2" />
             </div>
 
             <div class="m-6">
@@ -35,13 +35,10 @@
                     id="end_time"
                     type="datetime-local"
                     class="mt-1 block w-full"
-                    v-model="createBookingRequestForm.end_time"
+                    v-model="form.end_time"
                     autofocus
                 />
-                <jet-input-error
-                    :message="createBookingRequestForm.error('end_time')"
-                    class="mt-2"
-                />
+                <jet-input-error :message="form.errors.end_time" class="mt-2"/>
             </div>
 
             <div class="m-6">
@@ -53,10 +50,7 @@
                 />
             </div>  
             <div class="m-6">
-                <jet-input-error
-                    :message="createBookingRequestForm.error('availabilities')"
-                    class="mt-2"
-                />
+                <jet-input-error :message="form.errors.availabilities" class="mt-2"/>
             </div>
         </template>
 
@@ -68,8 +62,8 @@
             <jet-button
                 class="ml-2"
                 @click.native="createBookingRequest"
-                :class="{ 'opacity-25': createBookingRequestForm.processing }"
-                :disabled="createBookingRequestForm.processing"
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
             >
                 Create
             </jet-button>
@@ -91,72 +85,63 @@ import JetNavLink from "@src/Jetstream/NavLink";
 import JetSecondaryButton from "@src/Jetstream/SecondaryButton";
 
 export default {
-  components: {
-    JetButton,
-    JetInput,
-    JetFormSection,
-    JetActionMessage,
-    JetInputError,
-    JetLabel,
-    JetDropdown,
-    JetDropdownLink,
-    JetNavLink,
-    JetDialogModal,
-    JetSecondaryButton
-  },
+    components: {
+        JetButton,
+        JetInput,
+        JetFormSection,
+        JetActionMessage,
+        JetInputError,
+        JetLabel,
+        JetDropdown,
+        JetDropdownLink,
+        JetNavLink,
+        JetDialogModal,
+        JetSecondaryButton
+    },
 
-  props: {
-    room: {
-      type: Object,
-      required: false
-    }
-  },
-
-  data() {
-    return {
-      createBookingRequestForm: this.$inertia.form(
-        {
-          room_id: null,
-          start_time: "",
-          end_time: "",
-          reference: []
-        },
-        {
-          bag: "createBookingRequest",
-          resetOnSuccess: true
+    props: {
+        room: {
+            type: Object,
+            required: false
         }
-      ),
-      room_name: ""
-    };
-  },
-  methods: {
-    closeModal() {
-        this.createBookingRequestForm.room_id = null;
-        this.createBookingRequestForm.start_time = "";
-        this.createBookingRequestForm.end_time = "";
-        this.createBookingRequestForm.reference = [];
-        this.$emit("close");
     },
-    createBookingRequest() {
-      this.createBookingRequestForm.post("/bookings", {
-        preserveScroll: true
-      }).then( () => {
-        this.closeModal();
-      });
+
+    data() {
+        return {
+            form: this.$inertia.form({
+                room_id: null,
+                start_time: "",
+                end_time: "",
+                reference: []
+            }),
+            room_name: ""
+        };
     },
-    fieldChange(e) {
-      let selectedFiles = e.target.files;
+    methods: {
+        closeModal() {
+            this.form.reset();
+            this.$emit("close");
+        },
+        createBookingRequest() {
+            this.form.post(route('bookings.store'), {
+                errorBag: 'createBookingRequest',
+                preserveScroll: true,
+                onSuccess: () => this.closeModal(),
+            });
+        },
+        fieldChange(e) {
+            let selectedFiles = e.target.files;
 
-      if (!selectedFiles.length) return false;
+            if (!selectedFiles.length) return false;
 
-      for (let file of selectedFiles) {
-        this.createBookingRequestForm.reference.push(file);
-      }
-    }
-  },
-  watch: {
+            for (let file of selectedFiles) {
+                this.form.reference.push(file);
+            }
+        }
+    },
+    watch: {
         room(room) {
-            this.createBookingRequestForm.room_id = room?.id;
+            this.form.room_id = room?.id;
             this.room_name = room?.name;
         }
     }
