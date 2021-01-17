@@ -11,7 +11,7 @@ executors:
   ci:
     working_directory: /workspace
     docker:
-      - image: ghcr.io/csu-booking-platform/devcontainer:0.0.4
+      - image: ghcr.io/csu-booking-platform/devcontainer:0.0.5
         command: []
 jobs:
   tag-and-release:
