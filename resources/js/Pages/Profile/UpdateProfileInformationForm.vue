@@ -88,7 +88,7 @@
             JetSecondaryButton,
         },
 
-        props: ['name', 'email'],
+        props: ['user'],
 
         data() {
             return {
