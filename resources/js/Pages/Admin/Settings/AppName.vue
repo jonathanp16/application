@@ -8,19 +8,19 @@
                     <jet-input id="label" type="hidden" class="mt-1 block w-full" value="app_name"/>
                 <div class="col-span-12 sm:col-span-6">
                     <jet-label for="app_name" value="Application Name"/>
-                    <jet-input id="app_name" type="text" class="mt-1 block w-full" v-model="updateNameSettingform.app_name"
+                    <jet-input id="app_name" type="text" class="mt-1 block w-full" v-model="form.app_name"
                                autofocus/>
-                    <jet-input-error :message="updateNameSettingform.error('app_name')" class="mt-2"/>
+                    <jet-input-error :message="form.errors.app_name" class="mt-2"/>
                 </div>
             </template>
 
             <template #actions>
-                <jet-action-message :on="updateNameSettingform.recentlySuccessful" class="mr-3">
+                <jet-action-message :on="form.recentlySuccessful" class="mr-3">
                     Updated.
                 </jet-action-message>
 
-                <jet-button :class="{ 'opacity-25': updateNameSettingform.processing }"
-                            :disabled="updateNameSettingform.processing">
+                <jet-button :class="{ 'opacity-25': form.processing }"
+                            :disabled="form.processing">
                     Update
                 </jet-button>
             </template>
@@ -34,11 +34,9 @@ import JetActionMessage from '@src/Jetstream/ActionMessage'
 import JetFormSection from '@src/Jetstream/FormSection'
 import JetInputError from '@src/Jetstream/InputError'
 import JetLabel from '@src/Jetstream/Label'
-import AppName from "@src/Pages/Admin/Settings/AppName";
 
 export default {
     components: {
-        AppName,
         JetButton,
         JetInput,
         JetFormSection,
@@ -48,9 +46,9 @@ export default {
     },
     data() {
         return {
-            updateNameSettingform: this.$inertia.form({
+            form: this.$inertia.form({
                 label: 'app_name',
-                app_name: this.settings.name,
+                app_name: this.settings?.name,
             }, {
                 bag: 'updateNameSetting',
                 resetOnSuccess: false,
@@ -64,7 +62,7 @@ export default {
     },
     methods: {
         updateNameSetting() {
-            this.updateNameSettingform.post('/settings/app_name', {
+            this.form.post('/settings/app_name', {
                 preserveScroll: true,
             })
         },

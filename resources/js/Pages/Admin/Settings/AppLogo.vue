@@ -1,85 +1,107 @@
 <template>
-        <jet-form-section-image @submitted="updateLogoSetting">
+        <jet-form-section @submitted="updateLogoSetting">
             <template #title>
                 Application Logo
             </template>
 
             <template #form >
-                    <jet-input id="label" type="hidden" class="mt-1 block w-full" value="app_logo"/>
-                <div class="col-span-12 sm:col-span-6">
-                    <img :src="updateLogoSettingform.app_path" class="img-responsive" height="70" width="90" alt="Logo Image Preview">
-                    <jet-label for="app_logo" value="Application Logo"/>
-                    <input type="file"  @change="selectFile">
-                    <jet-input-error :message="updateLogoSettingform.error('app_logo')" class="mt-2"/>
+                <div class="col-span-6 sm:col-span-4">
+                    <!-- Hidden File Input -->
+                    <input type="file" class="hidden" ref="logo" @change="updateLogoPreview">
+
+                    <jet-label for="logo" value="Application Logo"/>
+
+
+                    <!-- Current Logo -->
+                    <div class="my-3" v-show="!preview">
+                        <application-mark class="rounded-full h-40 w-40 object-cover" />
+                    </div>
+
+                    <!-- New Logo Preview -->
+                    <div class="my-3" v-show="preview">
+                    <span class="block rounded-full w-40 h-40"
+                          :style="'background-size: cover; background-repeat: no-repeat; background-position: center center; background-image: url(\'' + preview + '\');'">
+                    </span>
+                    </div>
+
+                    <jet-secondary-button class="mt-2 mr-2" type="button" @click.native.prevent="selectNewLogo">
+                        Select A New Logo
+                    </jet-secondary-button>
+
+<!--                    <jet-secondary-button type="button" class="mt-2" @click.native.prevent="deleteLogo" v-if="form.app_path">
+                        Remove Logo
+                    </jet-secondary-button>-->
+
+                    <jet-input-error :message="form.errors.app_logo" class="mt-2" />
+
                 </div>
             </template>
 
             <template #actions>
-                <jet-action-message :on="updateLogoSettingform.recentlySuccessful" class="mr-3">
+                <jet-action-message :on="form.recentlySuccessful" class="mr-3">
                     Updated.
                 </jet-action-message>
 
-                <jet-button :class="{ 'opacity-25': updateLogoSettingform.processing }"
-                            :disabled="updateLogoSettingform.processing">
+                <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Update
                 </jet-button>
             </template>
-        </jet-form-section-image>
+        </jet-form-section>
 </template>
-<script>
 
-import JetButton from '@src/Jetstream/Button'
-import JetInput from '@src/Jetstream/Input'
-import JetActionMessage from '@src/Jetstream/ActionMessage'
-import JetFormSectionImage from '@src/Jetstream/FormSectionImage'
-import JetInputError from '@src/Jetstream/InputError'
+<script>
+import JetFormSection from '@src/Jetstream/FormSection'
 import JetLabel from '@src/Jetstream/Label'
-import AppName from "@src/Pages/Admin/Settings/AppName";
+import JetInput from '@src/Jetstream/Input'
+import JetInputError from '@src/Jetstream/InputError'
+import JetButton from '@src/Jetstream/Button'
+import JetSecondaryButton from '@src/Jetstream/SecondaryButton'
+import JetActionMessage from '@src/Jetstream/ActionMessage'
+import ApplicationMark from "@src/Jetstream/ApplicationMark"
 
 export default {
     components: {
-        AppName,
-        JetButton,
-        JetInput,
-        JetFormSectionImage,
-        JetActionMessage,
-        JetInputError,
+        ApplicationMark,
+        JetFormSection,
         JetLabel,
+        JetInput,
+        JetInputError,
+        JetButton,
+        JetSecondaryButton,
+        JetActionMessage,
     },
     data() {
         return {
-            updateLogoSettingform: this.$inertia.form({
+            form: this.$inertia.form({
                 label: 'app_logo',
-                app_logo: '',
-                app_path: this.settings.path,
-            }, {
-                bag: 'updateNameSetting',
-                resetOnSuccess: false,
+                app_logo: null,
             }),
-            formData: new FormData()
-        }
-    },
-    props: {
-        settings: {
-            type: Object,
-        },
-    },
-    watch: {
-        settings: {
-            // the callback will be called immediately after the start of the observation
-            immediate: true,
-            handler (val, oldVal) {
-                this.updateLogoSettingform.app_path = this.settings.path
-            }
+
+            preview: null,
         }
     },
     methods: {
         updateLogoSetting() {
-            this.updateLogoSettingform.post('/settings/app_logo')
+            if (this.$refs.logo) {
+                this.form.app_logo = this.$refs.logo.files[0]
+            }
+
+            this.form.post('/settings/app_logo')
         },
-        selectFile(event) {
-            this.updateLogoSettingform.app_logo = event.target.files[0];
-        }
+
+        selectNewLogo() {
+            this.$refs.logo.click();
+        },
+
+        updateLogoPreview() {
+            const reader = new FileReader();
+
+            reader.readAsDataURL(this.$refs.logo.files[0]);
+
+            reader.onload = (e) => {
+                this.preview = e.target.result;
+            };
+        },
     },
 }
 </script>
