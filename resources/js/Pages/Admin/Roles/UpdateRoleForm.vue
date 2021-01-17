@@ -11,7 +11,7 @@
             <div class="col-span-6 sm:col-span-4">
                 <jet-label for="name" value="Name"/>
                 <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form.name" autofocus/>
-                <jet-input-error :message="form.error('name')" class="mt-2"/>
+                <jet-input-error :message="form.errors.name" class="mt-2"/>
             </div>
 
             <!-- Permissions -->
@@ -19,7 +19,7 @@
                 <jet-label for="permissions" value="Permissions" />
 
                 <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div v-for="permission in permissions">
+                    <div v-for="permission in permissions" :key="permission.id">
                         <label class="flex items-center">
                             <input type="checkbox" class="form-checkbox" :value="permission.name" v-model="form.permissions">
                             <span class="ml-2 text-md text-black">{{ permission.name }}</span>
@@ -85,8 +85,6 @@
                 form: this.$inertia.form({
                     name: '',
                     permissions: [],
-                }, {
-                    bag: 'updateRole',
                 })
             }
 
@@ -97,10 +95,10 @@
                 this.$emit('close');
             },
             updateRole() {
-                this.form.put('/roles/' + this.role?.id, {
+                this.form.put(route('roles.update', this.role), {
+                    errorBag: 'updateRole',
                     preserveState: true,
-                }).then(() => {
-                    this.closeModel();
+                    onSuccess: () => this.closeModel(),
                 })
             },
         },

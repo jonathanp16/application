@@ -139,11 +139,10 @@
 
         methods: {
             deleteRole() {
-                this.deleteRoleForm.delete('/roles/' + this.roleBeingDeleted.id, {
+                this.deleteRoleForm.delete(route('roles.destroy', this.roleBeingDeleted), {
                     preserveScroll: true,
                     preserveState: true,
-                }).then(() => {
-                    this.roleBeingDeleted = null
+                    onFinish: () => this.roleBeingDeleted = null,
                 })
             },
 
