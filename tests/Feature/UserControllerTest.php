@@ -56,12 +56,12 @@ class UserControllerTest extends TestCase
         $user = User::factory()->create();
         $this->assertDatabaseCount('users', 1);
 
-        $roles = Role::factory()->count(20)->create();
+        $roles = Role::factory()->count(20)->create()->random(5)->pluck('name')->toArray();
 
         $response = $this->actingAs(User::factory()->make())->put("users/{$user->id}", [
             'name' => 'TESTING NAME',
             'email' => 'test@test.com',
-            'roles' => $roles->random(5)->pluck('name')->toArray(),
+            'roles' => $roles,
         ]);
 
         $response->assertStatus(302);
