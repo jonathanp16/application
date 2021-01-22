@@ -14,7 +14,7 @@ class AddRoomTypeToRoomsTable extends Migration
     public function up()
     {
         Schema::table('rooms', function (Blueprint $table) {
-            $table->string('room_type');
+            $table->string('room_type')->default('');
         });
     }
 
