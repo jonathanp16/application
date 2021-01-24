@@ -73,10 +73,10 @@
 
              <div class="m-6">
                 <jet-label for="room_type" value="room_type" />
-                <select v-model="form.status" class="mt-1 block w-full" name="room_type" id="room_typeUpdate">
-                    <option :value="form.status" selected="selected">{{form.status}}</option>
-                    <option v-if="form.status != 'available'" :value="'available'">available</option> 
-                    <option v-else :value="'unavailable'">anavailable</option>
+                <select v-model="form.room_type" class="mt-1 block w-full" name="room_type" id="room_typeUpdate">
+                    <option value="lounge" :selected="form.room_type=='lounge'">Lounge</option> 
+                    <option value="mezzanine" :selected="form.room_type=='mezzanine'">Mezzanine</option>
+                    <option value="conference" :selected="form.room_type=='conference'">Conference</option>
                 </select>
                 <jet-input-error
                     :message="form.error('room_type')"
@@ -280,6 +280,7 @@ export default {
                     sale_for_profit: false,
                     fundraiser: false,
                     status: "",
+                    room_type: "",
                     min_days_advance:"",
                     max_days_advance:""
                 },
