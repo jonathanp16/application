@@ -72,11 +72,9 @@
                 </div>
 
              <div class="m-6">
-                <jet-label for="room_type" value="room_type" />
+                <jet-label for="room_type" value="Room Type" />
                 <select v-model="form.room_type" class="mt-1 block w-full" name="room_type" id="room_typeUpdate">
-                    <option value="lounge" :selected="form.room_type=='lounge'">Lounge</option> 
-                    <option value="mezzanine" :selected="form.room_type=='mezzanine'">Mezzanine</option>
-                    <option value="conference" :selected="form.room_type=='conference'">Conference</option>
+                    <option v-for="roomType in availableRoomTypes" :key="roomType" :value="roomType" :selected="form.room_type===roomType">{{roomType}}</option> 
                 </select>
                 <jet-input-error
                     :message="form.error('room_type')"
@@ -252,7 +250,12 @@ export default {
         room: {
             type: Object,
             required: false
-        }
+        },
+
+        availableRoomTypes: {
+            type: Array,
+            required: true
+        },
     },
 
     data() {
