@@ -78,25 +78,22 @@
 
                 
                     <div class="col-span-6 sm:col-span-3">
-                              <jet-label for="room_type" value="Room type" />
-                              <select
-                                v-model="createRoomForm.room_type"
-                                class="mt-1 block w-full"
-                                name="room_type"
-                                id="room_type"
-                              >
-                                <option value="" selected disabled hidden>
-                                  Select Room Type
-                                </option>
-                                <option value="lounge">Lounge</option>
-                                <option value="mezzanine">Mezzanine</option>
-                                <option value="conference">Conference</option>
-                              </select>
-                              <jet-input-error
-                                :message="createRoomForm.error('room_type')"
-                                class="mt-2"
-                              />
-                      </div>
+                    <jet-label for="room_type" value="Room type" />
+                    <select
+                      v-model="createRoomForm.room_type"
+                      class="mt-1 block w-full"
+                      name="room_type"
+                      id="room_type"
+                    >
+                      <option value="" selected disabled hidden>Select Room Type</option>
+                      <option v-for="roomType in availableRoomTypes" :key="roomType" :value="roomType">{{roomType}}</option>
+                    </select>
+                    <jet-input-error
+                      :message="createRoomForm.error('room_type')"
+                      class="mt-2"
+                    />
+                    </div>
+
 
                     <div class="col-span-6 sm:col-span-3">  
                         <jet-label for="equippment" value="Equippment"/>
@@ -239,6 +236,13 @@ export default {
     JetInputError,
     JetLabel,
   },
+
+    props: {
+        availableRoomTypes: {
+            type: Array,
+            required: true
+        },
+    },
 
   data() {
     return {
