@@ -63,6 +63,7 @@ class RoomController extends Controller
             'ambiant_music' => ['required', 'boolean'],
             'sale_for_profit' => ['required', 'boolean'],
             'fundraiser' => ['required', 'boolean'],
+            'room_type' => ['required', 'string', 'max:255'],
             'availabilities.Monday.opening_hours' => 'nullable|required_with:availabilities.Monday.closing_hours|before:availabilities.Monday.closing_hours',
             'availabilities.Monday.closing_hours' => 'nullable|required_with:availabilities.Monday.opening_hours|after:availabilities.Monday.opening_hours',
             'availabilities.Tuesday.opening_hours' => 'nullable|required_with:availabilities.Tuesday.closing_hours|before:availabilities.Tuesday.closing_hours',
@@ -104,6 +105,7 @@ class RoomController extends Controller
                 'fundraiser' => $request->fundraiser,           
             ],
 
+            'room_type' => $request->room_type
         ]);
 
         $availabilities = $request->get('availabilities');
@@ -161,6 +163,7 @@ class RoomController extends Controller
             'floor' => ['required', 'integer'],
             'building' => ['required', 'string', 'max:255'],
             'status' => ['required', 'string', 'max:255'],
+            'room_type' => ['required', 'string', 'max:255']
         ]);
 
         $room->fill($request->except('attributes'))->save();
