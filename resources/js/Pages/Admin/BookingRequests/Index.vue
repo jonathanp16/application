@@ -28,6 +28,7 @@ import CreateBookingRequestForm from './CreateBookingRequestForm';
 import BookingRequestsList from './BookingRequestsList';
 import AppLayout from '@src/Layouts/AppLayout';
 import RoomTable from '@src/Components/Tables/RoomTable';
+import axios from 'axios';
 
 export default {
     components: {
@@ -52,9 +53,12 @@ export default {
         },
 
     },
+    mounted(){
+        this.dataRooms = this.rooms ?? [];
+    },
     data() {
         return {
-            dataRooms: this.rooms
+            dataRooms: []
         }
     },
     computed: {
@@ -66,7 +70,6 @@ export default {
         filterRoomsJson(e) {
             axios.post('/api/filterRooms', e)
                 .then((response)=>{
-
                     this.dataRooms = response.data;
                 })
         }
