@@ -15,10 +15,9 @@
             <jet-section-border/>
             <BookingRequestsList
             :booking_requests="booking_requests"
-            :rooms="rooms" />
+            :rooms="rooms" 
+            />
         </div>
-
-
     </app-layout>
 </template>
 
