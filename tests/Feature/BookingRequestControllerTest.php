@@ -215,6 +215,7 @@ class BookingRequestControllerTest extends TestCase
     $response->assertSessionHasErrors();
 
     $this->assertDatabaseCount('booking_requests',0);
+    $this->assertDatabaseCount('reservations',0);
     $this->assertDatabaseMissing('reservations', [
       'room_id' => $room->id,
       'start_time' => Carbon::parse($date)->toDateTimeString(),
@@ -254,9 +255,9 @@ class BookingRequestControllerTest extends TestCase
         'attendees' => $this->faker->numberBetween(100),
       ]
     ]);
-
     $response->assertSessionHasErrors(['availabilities']);
     $this->assertDatabaseCount('booking_requests', 0);
+    $this->assertDatabaseCount('reservations', 0);
     $this->assertDatabaseMissing('reservations', [
       'room_id' => $room->id,
       'start_time' => Carbon::parse($date)->toDateTimeString(),
@@ -449,7 +450,7 @@ class BookingRequestControllerTest extends TestCase
       ]
     ]);
 
-    dump(session()->all());
+//    dump(session()->all());
     $response->assertSessionHasNoErrors();
 
     Event::assertDispatched(BookingRequestUpdated::class);

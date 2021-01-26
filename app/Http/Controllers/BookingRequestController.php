@@ -66,7 +66,7 @@ class BookingRequestController extends Controller
         // validate room still available at given times
         foreach ($data['reservations'] as $value) {
             //$room->verifyDatesAreWithinRoomRestrictions($value['start'], $value['end']);
-            //$room->verifyDatetimesAreWithinAvailabilities($value['start'], $value['end']);
+            $room->verifyDatetimesAreWithinAvailabilities($value['start'], $value['end']);
             //$room->verifyRoomIsFreeValidation($value['start'], $value['end']);
         }
 
@@ -131,7 +131,7 @@ class BookingRequestController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(BookingRequest $bookingRequest)
-    { 
+    {
         //$booking = $bookingRequest->load('user', 'reservations', 'reservations.room');
         //dd($booking);
         return inertia('Requestee/EditBookingForm', [
@@ -240,6 +240,6 @@ class BookingRequestController extends Controller
         ]);
     }
 
- 
+
 
 }
