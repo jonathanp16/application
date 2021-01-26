@@ -130,12 +130,10 @@ class BookingRequestController extends Controller
      * @param  \App\Models\BookingRequest  $bookingRequest
      * @return \Illuminate\Http\Response
      */
-    public function edit(BookingRequest $bookingRequest)
-    {
-        //$booking = $bookingRequest->load('user', 'reservations', 'reservations.room');
-        //dd($booking);
+    public function edit(BookingRequest $booking)
+    { 
         return inertia('Requestee/EditBookingForm', [
-            'booking' => $bookingRequest->load('user', 'reservations', 'reservations.room'),
+            'booking' => $booking->load('user', 'reservations', 'reservations.room'),
         ]);
     }
 

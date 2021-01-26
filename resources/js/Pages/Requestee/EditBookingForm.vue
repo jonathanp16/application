@@ -590,12 +590,6 @@ export default {
 
     },
 
-    mounted() {
-        this.form.booking.room_id = this.booking.room.id;
-        this.form.reservations = this.reservations;
-        this.form.event.start = this.minStart;
-        this.form.event.end = this.maxEnd;
-    },
 
     filters: {
         only_date: function (date) {
@@ -620,20 +614,44 @@ export default {
         uploadedFiles(files) {
             this.form.files = files;
         },
+
+        updateForm(booking) {
+            this.form.onsite_contact.name = this.booking?.onsite_contact.name;
+            this.form.onsite_contact.email = this.booking?.onsite_contact.event;
+            this.form.onsite_contact.phone = this.booking?.onsite_contact.phone;
+            this.form.event.start  = this.booking?.event.start;
+            this.form.event.end = this.booking?.event.end;
+            this.form.event.title = this.booking?.event.title;
+            this.form.event.type = booking?.event.type;
+            this.form.event.description = booking?.event.description;
+            this.form.event.guest_speakers  = booking?.event.guest_speakers;
+            this.form.event.attendees = booking?.event.attendees;
+            this.form.event.fee = booking?.event.fee;
+            this.form.event.music = booking?.event.music;
+            this.form.event.food.high_risk = booking?.event.food.high_risk;
+            this.form.event.food.low_risk = booking.event?.food?.low_risk;          
+          
+        },
     },
+
+    mounted() {
+        this.updateForm(this.booking);
+
+    },
+
 
     computed: {
         reservation() {
-            return this.reservations[0];
+            return this.booking.reservations[0];
         },
         isRecurring() {
-            return Object.keys(this.reservations).length > 1;
+            return Object.keys(this.booking.reservations).length > 1;
         },
         minStart() {
-            return moment(this.reservation?.start).format("HH:mm");
+            return moment(this.booking.reservation?.start).format("HH:mm");
         },
         maxEnd() {
-            return moment(this.reservation?.end).format("HH:mm");
+            return moment(this.booking.reservation?.end).format("HH:mm");
         },
     },
 
@@ -654,23 +672,10 @@ export default {
             }
         },
 
-        booking(booking) {
-            this.form.onsite_contact.name = booking?.onsite_contact.name;
-            this.form.onsite_contact.email = booking?.onsite_contact.event;
-            this.form.onsite_contact.phone = booking?.onsite_contact.phone;
-            this.form.event.start  = booking?.event.start;
-            this.form.event.end = booking?.event.end;
-            this.form.event.title = booking?.event.title;
-            this.form.event.type = booking?.event.type;
-            this.form.event.description = booking?.event.description;
-            this.form.event.guest_speakers  = booking?.event.guest_speakers;
-            this.form.event.attendees = booking?.event.attendees;
-            this.form.event.fee = booking?.event.fee;
-            this.form.event.music = booking?.event.music;
-            this.form.event.food.high_risk = booking?.event.food.high_risk;
-            this.form.event.food.low_risk = booking.event?.food?.low_risk;          
-          
+        booking(booking){
+            updateForm(booking);
         }
+
 
     
     }

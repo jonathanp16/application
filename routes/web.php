@@ -49,7 +49,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::resource('reservation',\App\Http\Controllers\ReservationsController::class);
 
     Route::get('bookingsList',[\App\Http\Controllers\BookingRequestController::class, 'list']);
-    Route::get('bookings/edit',[\App\Http\Controllers\BookingRequestController::class, 'edit']);
+    Route::get('bookings/{booking}/edit',[\App\Http\Controllers\BookingRequestController::class, 'edit']);
 
 
     if (env('APP_ENV') == 'local' || env('APP_ENV') == 'testing') {
