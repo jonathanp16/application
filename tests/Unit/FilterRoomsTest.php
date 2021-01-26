@@ -66,7 +66,7 @@ class FilterRoomsTest extends TestCase
     $availability = Availability::create([
       'weekday' => Carbon::now()->format('l'),
       'opening_hours' => Carbon::now(),
-      'closing_hours' => Carbon::now()->addHours(8),
+      'closing_hours' => Carbon::now()->addMinutes(5),
       'room_id' => $room->id
     ]);
 
