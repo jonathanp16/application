@@ -285,7 +285,6 @@ class RoomController extends Controller
       // If param value boolean, filter for boolean and if
       // numeric filter greater than integer in that column
       $query = Room::query();
-
       if($request->recurrences){
         foreach ($request->recurrences as $pair){
           $query->whereHas('availabilities', function (Builder $builder) use ($pair)
@@ -296,8 +295,8 @@ class RoomController extends Controller
             $builder
               ->where('weekday', $start_day->format('l'))
               ->where('weekday', $end_day->format('l'))
-              ->where('opening_hours', '>', $start_day)
-              ->where('closing_hours', '<', $end_day);
+              ->where('opening_hours', '<', $start_day)
+              ->where('closing_hours', '>', $end_day);
           }
           );
         }
