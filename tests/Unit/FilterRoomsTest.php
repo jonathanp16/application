@@ -51,7 +51,7 @@ class FilterRoomsTest extends TestCase
     }
 
   /**
-   * Test filtering rooms with json attribute fields
+   * Test filtering rooms with availability fields
    *
    * @return void
    */
@@ -64,9 +64,9 @@ class FilterRoomsTest extends TestCase
         'chairs' => 8
       ]]);
     $availability = Availability::create([
-      'weekday' => 'Monday',
+      'weekday' => Carbon::now()->format('l'),
       'opening_hours' => Carbon::now(),
-      'closing_hours' => Carbon::now()->addHours(3),
+      'closing_hours' => Carbon::now()->addHours(8),
       'room_id' => $room->id
     ]);
 
@@ -79,32 +79,32 @@ class FilterRoomsTest extends TestCase
 
 
     // Send valid date range of availability, assert that the room is found
-    $valid_pair = json_encode([
-      'start_time' => Carbon::now()->addHours(1)->format('Y-m-d\TH:i'),
-      'end_time' => Carbon::now()->addHours(2)->format('Y-m-d\TH:i')
-    ]);
+    $valid_pair = [
+      'start_time' => Carbon::now()->addMinutes(1)->format('Y-m-d\TH:i'),
+      'end_time' => Carbon::now()->addMinutes(2)->format('Y-m-d\TH:i')
+    ];
 
-    $valid_recurrences = json_encode(['recurrences' => [
+    $valid_recurrences = ['recurrences' => [
       $valid_pair
-    ]]);
+    ]];
 
-    $valid_response = $this->postJson('/api/filterRooms',[$valid_recurrences]);
+    $valid_response = $this->postJson('/api/filterRooms',$valid_recurrences);
     $valid_response
       ->assertStatus(200)
       ->assertJson([$room->attributesToArray()]);
 
 
     // Send invalid date range of availability, assert that the room is not found
-    $invalid_pair = json_encode([
+    $invalid_pair = [
       'start_time' => Carbon::now()->addHours(8)->format('Y-m-d\TH:i'),
       'end_time' => Carbon::now()->addHours(9)->format('Y-m-d\TH:i')
-    ]);
+    ];
 
-    $invalid_recurrences = json_encode(['recurrences' => [
+    $invalid_recurrences = ['recurrences' => [
       $invalid_pair
-    ]]);
+    ]];
 
-    $invalid_response = $this->postJson('/api/filterRooms',[$invalid_recurrences]);
+    $invalid_response = $this->postJson('/api/filterRooms',$invalid_recurrences);
     $invalid_response
       ->assertStatus(200)
       ->assertJson([]);
