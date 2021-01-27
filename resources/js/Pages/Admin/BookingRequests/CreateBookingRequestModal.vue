@@ -57,14 +57,6 @@
           </div>
 
             <div class="m-6">
-                <jet-label>Upload Reference Files</jet-label>
-                <input
-                type="file"
-                @change="fieldChange"
-                multiple
-                />
-            </div>
-            <div class="m-6">
                 <jet-input-error
                     :message="createBookingRequestForm.error('availabilities')"
                     class="mt-2"
@@ -180,7 +172,7 @@ export default {
       this.createBookingRequestForm.reservations.splice(pos,1)
     },
     createBookingRequest() {
-      this.createBookingRequestForm.post("/reservation", {
+      this.createBookingRequestForm.post("/bookings/create", {
         preserveScroll: true
       }).then(response => {
         if (! this.createBookingRequestForm.hasErrors()) {

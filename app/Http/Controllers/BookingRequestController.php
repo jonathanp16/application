@@ -34,21 +34,12 @@ class BookingRequestController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         return inertia('Requestee/BookingForm', [
             // example of the expected reservations format
-            'room' => Room::find(6),
-            'reservations' => [
-                [
-                    'start_time' => now(),
-                    'end_time' => now()->addMinutes(2),
-                ],
-                [
-                    'start_time' => now()->addDay(),
-                    'end_time' => now()->addDay()->addMinutes(2),
-                ],
-            ]
+            'room' => Room::findOrFail($request->room_id),
+            'reservations' => $request->reservations,
         ]);
     }
     /**
@@ -65,18 +56,18 @@ class BookingRequestController extends Controller
 
         // validate room still available at given times
         foreach ($data['reservations'] as $value) {
-            $room->verifyDatesAreWithinRoomRestrictions($value['start_time'], $value['end_time']);
-            $room->verifyDatetimesAreWithinAvailabilities($value['start_time'], $value['end_time']);
-            //$room->verifyRoomIsFreeValidation($value['start_time'], $value['end_time']);
-        }
-        if (!$request->user()->canMakeAnotherBookingRequest($request->start_time)) {
+          $room->verifyDatesAreWithinRoomRestrictions($value['start_time'], $value['end_time']);
+          $room->verifyDatetimesAreWithinAvailabilities($value['start_time'], $value['end_time']);
+          $room->verifyRoomIsFree($value['start_time'], $value['end_time']);
+          if (!$request->user()->canMakeAnotherBookingRequest($value['start_time'])) {
             throw ValidationException::withMessages([
-                'booking_request_exceeded' => 'Cannot make more than ' .
-                    $request->user()->getUserNumberOfBookingRequestPerPeriod() .
-                    ' bookings in the next ' .
-                    $request->user()->getUserNumberOfDaysPerPeriod() .
-                    ' days.'
+              'booking_request_exceeded' => 'Cannot make more than ' .
+                $request->user()->getUserNumberOfBookingRequestPerPeriod() .
+                ' bookings in the next ' .
+                $request->user()->getUserNumberOfDaysPerPeriod() .
+                ' days.'
             ]);
+          }
         }
 
         if (array_key_exists('files', $data)) {
@@ -215,7 +206,7 @@ class BookingRequestController extends Controller
 
     public function list(Request $request)
     {
-        return inertia('Admin/BookingsList/Index', [
+        return inertia('Requestee/BookingsList', [
             'bookings' => BookingRequest::with('user','reservations.room')->get(),
 
         ]);

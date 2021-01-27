@@ -161,6 +161,26 @@ class Room extends Model
     }
   }
 
+  public function verifyRoomIsFree($startDate, $endDate, $reservation = null)
+  {
+
+    $query = Reservation::where('room_id', $this->id);
+    if($reservation){
+      $query = $query->where('id','!=', $reservation->id);
+    }
+    $query = $query->where(function ($query) use ($startDate, $endDate) {
+      $query->whereBetween('start_time', [$startDate, $endDate])
+      ->orWhereBetween('end_time', [$startDate, $endDate])
+      ->orWhere(function ($query) use ($startDate, $endDate) {
+        $query->where('start_time', '<', $startDate)->where('end_time', '>', $endDate);
+      });
+    });
+
+    if($query->count() > 0) {
+      throw ValidationException::withMessages(['time_conflict' => "This is blocked by another reservation."]);
+    }
+  }
+
   private function notWithinAvailabilities($startDate, $endDate)
   {
     $startTime = Carbon::parse($startDate)->toTimeString();

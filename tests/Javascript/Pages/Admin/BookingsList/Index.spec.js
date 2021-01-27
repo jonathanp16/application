@@ -5,7 +5,7 @@ jest.mock('laravel-jetstream')
 import {createLocalVue, mount, shallowMount} from '@vue/test-utils'
 import {InertiaApp} from '@inertiajs/inertia-vue'
 import {InertiaForm} from 'laravel-jetstream'
-import Index from '@src/Pages/Admin/BookingsList/Index'
+import Index from '@src/Pages/Requestee/BookingsList'
 import {InertiaFormMock} from "@test/__mocks__/laravel-jetstream";
 
 let localVue
