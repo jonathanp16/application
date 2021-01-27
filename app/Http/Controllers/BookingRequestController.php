@@ -66,7 +66,7 @@ class BookingRequestController extends Controller
         // validate room still available at given times
         foreach ($data['reservations'] as $value) {
             //$room->verifyDatesAreWithinRoomRestrictions($value['start'], $value['end']);
-            $room->verifyDatetimesAreWithinAvailabilities($value['start'], $value['end']);
+            //$room->verifyDatetimesAreWithinAvailabilities($value['start'], $value['end']);
             //$room->verifyRoomIsFreeValidation($value['start'], $value['end']);
         }
 

@@ -50,7 +50,13 @@ export default {
     },
 
     mounted() {
-        this.actualChecked = this.checked;
+
+    },
+
+    watch: {
+        checked(val) {
+            this.proxyChecked = val;
+        }
     },
 
     computed: {

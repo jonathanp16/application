@@ -68,7 +68,7 @@
 
                         <!-- Onsite Contact -->
                         <div class="col-span-6">
-                            <app-question v-model="show_onsite_contact_details">
+                            <app-question v-model="form.event.show.contact" @change="toggleNullableForms">
                                 <template #header>
                                     <jet-label value="Onsite Contact is different from Booking Officer?"/>
                                 </template>
@@ -264,7 +264,7 @@
 
                         <!-- Fee -->
                         <div class="col-span-6">
-                            <app-question v-model="show_fee_details">
+                            <app-question v-model="form.event.show.fee" @change="toggleNullableForms">
                                 <template #header>
                                     <jet-label value="Will there be a registration/admission fee or suggested donation?"/>
                                 </template>
@@ -277,7 +277,7 @@
 
                         <!-- Music -->
                         <div class="col-span-6">
-                            <app-question v-model="show_music_details">
+                            <app-question v-model="form.event.show.music" @change="toggleNullableForms">
                                 <template #header>
                                     <jet-label value="Will there be music or sound on site?"/>
                                 </template>
@@ -562,9 +562,6 @@ export default {
     data() {
         return {
             accept_terms: false,
-            show_onsite_contact_details: false,
-            show_fee_details: false,
-            show_music_details: false,
             form: this.$inertia.form({
                 onsite_contact: {},
                 event: {
@@ -581,7 +578,12 @@ export default {
                         //self_catered: false,
                         //caterer: "Samosas are bad",
                     },
-                    alcohol: false
+                    alcohol: false,
+                    show: {
+                        // contact: true,
+                        // fee: true,
+                        // music: true,
+                    },
                 },
                 //notes: '',
                 files: [],
@@ -625,6 +627,19 @@ export default {
         uploadedFiles(files) {
             this.form.files = files;
         },
+        toggleNullableForms() {
+            if(this.form.event.show?.contact === false) {
+                delete this.form.onsite_contact.name;
+                delete this.form.onsite_contact.phone;
+                delete this.form.onsite_contact.email;
+            }
+            if(this.form.event.show?.fee === false) {
+                delete this.form.event.fee;
+            }
+            if(this.form.event.show?.music === false) {
+                delete this.form.event.music;
+            }
+        }
     },
 
     computed: {
@@ -641,23 +656,5 @@ export default {
             return moment(this.reservation?.end).format("HH:mm");
         },
     },
-
-    watch: {
-        show_onsite_contact_details(val) {
-            if(val === false) {
-                this.form.onsite_contact = {};
-            }
-        },
-        show_fee_details(val) {
-            if(val === false) {
-                delete this.form.event.fee;
-            }
-        },
-        show_music_details(val) {
-            if(val === false) {
-                delete this.form.event.music;
-            }
-        },
-    }
 }
 </script>

@@ -67,8 +67,8 @@
                         </div>
 
                         <!-- Onsite Contact -->
-                        <div class="col-span-6">
-                            <app-question v-model="show_onsite_contact_details">
+                        <div class="col-span-6" v-if="typeof form.event.show.contact !== undefined">
+                            <app-question v-model="form.event.show.contact">
                                 <template #header>
                                     <jet-label value="Onsite Contact is different from Booking Officer?"/>
                                 </template>
@@ -263,8 +263,8 @@
                         </div>
 
                         <!-- Fee -->
-                        <div class="col-span-6">
-                            <app-question v-model="form.event.show_fee_details">
+                        <div class="col-span-6" v-if="typeof form.event.show.fee !== undefined">
+                            <app-question v-model="form.event.show.fee">
                                 <template #header>
                                     <jet-label value="Will there be a registration/admission fee or suggested donation?"/>
                                 </template>
@@ -276,24 +276,21 @@
                         </div>
 
                         <!-- Music -->
-                       <div class="col-span-6" >
-                            <div class="flex-column">
-                                    <div class="flex items-center space-x-2">
-                                        <jet-label value="Will there be music or sound on site?"/>
-                                        <jet-checkbox :checked="form.event.music"/>
-                                        <span v-if="form.event.music" class="text-md text-black">Yes</span>
-                                    </div>
-                                    <jet-label for="music" value="Please specify"/>
-                                    <jet-input id="music" type="text" class="mt-1 block w-full"
-                                           v-model="form.event.music" autofocus/>
-                                   <jet-input-error :message="form.error('event.music')" class="mt-2"/>
-                            </div>
-                        </div>
-
+                      <div class="col-span-6" v-if="typeof form.event.show.music !== undefined">
+                          <app-question v-model="form.event.show.music">
+                              <template #header>
+                                  <jet-label value="Will there be music or sound on site?"/>
+                              </template>
+                              <jet-label for="music" value="Please specify"/>
+                              <jet-input id="music" type="text" class="mt-1 block w-full"
+                                     v-model="form.event.music" autofocus/>
+                              <jet-input-error :message="form.error('event.music')" class="mt-2"/>
+                          </app-question>
+                      </div>
                             
 
                         <!-- Food -->
-                                <div class="col-span-6">
+                        <div class="col-span-6">
                                 <div class="flex-column">
                                 <div class="flex items-center space-x-2">
                                     <jet-label value="Will There be any food"/>
@@ -589,7 +586,12 @@ export default {
                         //self_catered: false,
                         //caterer: "Samosas are bad",
                     },
-                    alcohol: false
+                    alcohol: false,
+                    show: {
+                        contact: false,
+                        fee: false,
+                        music: false,
+                    },
                 },
                 //notes: '',
                 files: [],
@@ -631,6 +633,19 @@ export default {
             this.form.onsite_contact = this.booking?.onsite_contact;
             this.form.event= booking.event;      
         },
+        toggleNullableForms() {
+            if(this.form.event.show?.contact === false) {
+                delete this.form.onsite_contact.name;
+                delete this.form.onsite_contact.phone;
+                delete this.form.onsite_contact.email;
+            }
+            if(this.form.event.show?.fee === false) {
+                delete this.form.event.fee;
+            }
+            if(this.form.event.show?.music === false) {
+                delete this.form.event.music;
+            }
+        }
     },
 
     mounted() {
@@ -652,30 +667,5 @@ export default {
             return moment(this.booking.reservation?.end_time).format("HH:mm");
         },
     },
-
-    watch: {
-        show_onsite_contact_details(val) {
-            if(val === false) {
-                this.form.onsite_contact = {};
-            }
-        },
-        show_fee_details(val) {
-            if(val === false) {
-                delete this.form.event.fee;
-            }
-        },
-        show_music_details(val) {
-            if(val === false) {
-                delete this.form.event.music;
-            }
-        },
-
-        booking(booking){
-            updateForm(booking);
-        }
-
-
-    
-    }
 }
 </script>
