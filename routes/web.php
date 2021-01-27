@@ -3,6 +3,7 @@
 use App\Http\Controllers\RestrictionsController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
+use App\Notifications\SampleNotification;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,9 +26,14 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         return Inertia\Inertia::render('Dashboard');
     })->name('dashboard');
 
+    // Development route for easy email template editing of notifications (can also be a mailable).
+    Route::get('/email', function () {
+        return (new SampleNotification())->toMail(null);
+    })->name('email');
+
     Route::resource('users', UserController::class)->only(['store', 'index', 'destroy', 'update']);
 
-    Route::resource('roles',\App\Http\Controllers\RoleController::class)->except(['show', 'edit']);
+    Route::resource('roles',\App\Http\Controllers\RoleController::class)->except(['create', 'show', 'edit']);
     Route::resource('rooms',\App\Http\Controllers\RoomController::class)->only(['store', 'index', 'update', 'destroy']);
     Route::put('room/restrictions/{id}', [RestrictionsController::class, 'update'])
     ->name('room.restrictions.update')->middleware('permission:bookings.approve');
@@ -41,10 +47,4 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::resource('bookings',\App\Http\Controllers\BookingRequestController::class)->only(['store', 'index', 'update', 'destroy']);
     Route::get('bookings/download/{folder}', \App\Http\Controllers\BookingRequestController::class.'@downloadReferenceFiles');
     Route::resource('reservation',\App\Http\Controllers\ReservationsController::class);
-
-
-
-    if (env('APP_ENV') == 'local' || env('APP_ENV') == 'testing') {
-        Route::resource('demo/tables',\App\Http\Controllers\DemoController::class)->only(['index']);
-    }
 });

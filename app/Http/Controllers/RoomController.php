@@ -3,21 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Availability;
+use App\Models\Reservation;
 use App\Models\Role;
 use App\Models\Room;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use \Illuminate\Database\Eloquent\Builder;
 
 class RoomController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response|\Inertia\ResponseFactory
      */
     public function index()
     {
         return inertia('Admin/Rooms/Index', [
-            'rooms' => Room::with('restrictions')->get(),
+            'rooms' => Room::with('restrictions', 'availabilities')->get(),
             'roles' => Role::all(),
             'availableRoomTypes'=> Room::ROOM_TYPES,
         ]);
@@ -164,6 +167,20 @@ class RoomController extends Controller
             'floor' => ['required', 'integer'],
             'building' => ['required', 'string', 'max:255'],
             'status' => ['required', 'string', 'max:255'],
+            'availabilities.Monday.opening_hours' => 'nullable|required_with:availabilities.Monday.closing_hours|before:availabilities.Monday.closing_hours',
+            'availabilities.Monday.closing_hours' => 'nullable|required_with:availabilities.Monday.opening_hours|after:availabilities.Monday.opening_hours',
+            'availabilities.Tuesday.opening_hours' => 'nullable|required_with:availabilities.Tuesday.closing_hours|before:availabilities.Tuesday.closing_hours',
+            'availabilities.Tuesday.closing_hours' => 'nullable|required_with:availabilities.Tuesday.opening_hours|after:availabilities.Tuesday.opening_hours',
+            'availabilities.Wednesday.opening_hours' => 'nullable|required_with:availabilities.Wednesday.closing_hours|before:availabilities.Wednesday.closing_hours',
+            'availabilities.Wednesday.closing_hours' => 'nullable|required_with:availabilities.Wednesday.opening_hours|after:availabilities.Wednesday.opening_hours',
+            'availabilities.Thursday.opening_hours' => 'nullable|required_with:availabilities.Thursday.closing_hours|before:availabilities.Thursday.closing_hours',
+            'availabilities.Thursday.closing_hours' => 'nullable|required_with:availabilities.Thursday.opening_hours|after:availabilities.Thursday.opening_hours',
+            'availabilities.Friday.opening_hours' => 'nullable|required_with:availabilities.Friday.closing_hours|before:availabilities.Friday.closing_hours',
+            'availabilities.Friday.closing_hours' => 'nullable|required_with:availabilities.Friday.opening_hours|after:availabilities.Friday.opening_hours',
+            'availabilities.Saturday.opening_hours' => 'nullable|required_with:availabilities.Saturday.closing_hours|before:availabilities.Saturday.closing_hours',
+            'availabilities.Saturday.closing_hours' => 'nullable|required_with:availabilities.Saturday.opening_hours|after:availabilities.Saturday.opening_hours',
+            'availabilities.Sunday.opening_hours' => 'nullable|required_with:availabilities.Sunday.closing_hours|before:availabilities.Sunday.closing_hours',
+            'availabilities.Sunday.closing_hours' => 'nullable|required_with:availabilities.Sunday.opening_hours|after:availabilities.Sunday.opening_hours',
             'room_type' => ['required', 'string', 'max:255']
         ]);
 
@@ -189,6 +206,31 @@ class RoomController extends Controller
         ];
 
         $room->save();
+
+        if ($request->has('availabilities')) {
+            foreach ($request->availabilities as $weekday => $availability) {
+                if (!empty($availability['opening_hours']) && !empty($availability['closing_hours'])) {
+
+                    if ($availabilityModel =
+                        Availability::query()
+                            ->where('room_id', '=', $room->id)
+                            ->where('weekday', '=', $weekday)
+                            ->first()
+                    ) {
+                        $availabilityModel->opening_hours = $availability['opening_hours'];
+                        $availabilityModel->closing_hours = $availability['closing_hours'];
+                        $availabilityModel->save();
+                    } else {
+                        Availability::create([
+                            'weekday' => $weekday,
+                            'opening_hours' => $availability['opening_hours'],
+                            'closing_hours' => $availability['closing_hours'],
+                            'room_id' => $room->id
+                        ]);
+                    }
+                }
+            }
+        }
 
         return redirect(route('rooms.index'))->with('flash', ['updated' => $room]);
     }
@@ -234,11 +276,33 @@ class RoomController extends Controller
         'ambiant_music' => ['boolean'],
         'sale_for_profit' => ['boolean'],
         'fundraiser' => ['boolean'],
+        'recurrences' => ['array']
       ]);
+
+
+
 
       // If param value boolean, filter for boolean and if
       // numeric filter greater than integer in that column
       $query = Room::query();
+      if($request->recurrences){
+        foreach ($request->recurrences as $pair){
+          $query->whereHas('availabilities', function (Builder $builder) use ($pair)
+          {
+            $start_day = Carbon::parse($pair['start_time']);
+            $end_day = Carbon::parse($pair['end_time']);
+
+            $builder
+              ->where('weekday', $start_day->format('l'))
+              ->where('weekday', $end_day->format('l'))
+              ->where('opening_hours', '<', $start_day)
+              ->where('closing_hours', '>', $end_day);
+          }
+          );
+        }
+      }
+
+
       foreach ($request->toArray() as $key => $value){
         if(is_numeric($value)){
           $query->where('attributes->' . $key, '>=', $value);
