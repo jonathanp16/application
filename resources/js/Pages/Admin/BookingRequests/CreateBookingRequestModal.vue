@@ -17,8 +17,8 @@
                 />
                 <jet-input-error :message="createBookingRequestForm.error('room_id')" class="mt-2" />
             </div>
-            <div v-for="(dates, index) in createBookingRequestForm.recurrences" :key="index">
-              <jet-input-error :message="createBookingRequestForm.error('recurrences.'+index)" class="mt-2" />
+            <div v-for="(dates, index) in createBookingRequestForm.reservations" :key="index">
+              <jet-input-error :message="createBookingRequestForm.error('reservations.'+index)" class="mt-2" />
               <jet-label  :value="index+1" />
               <div class="m-6">
                   <jet-label for="start_time" value="Start Time" />
@@ -29,7 +29,7 @@
                       v-model="dates.start_time"
                       autofocus
                   />
-                  <jet-input-error :message="createBookingRequestForm.error('recurrences.'+index+'.start_time')" class="mt-2" />
+                  <jet-input-error :message="createBookingRequestForm.error('reservations.'+index+'.start_time')" class="mt-2" />
               </div>
 
               <div class="m-6">
@@ -42,7 +42,7 @@
                       autofocus
                   />
                   <jet-input-error
-                      :message="createBookingRequestForm.error('recurrences.'+index+'.start_time')"
+                      :message="createBookingRequestForm.error('reservations.'+index+'.start_time')"
                       class="mt-2"
                   />
               </div>
@@ -128,7 +128,7 @@ export default {
   },
   computed: {
     numDates: function() {
-      return this.createBookingRequestForm.recurrences.length;
+      return this.createBookingRequestForm.reservations.length;
     },
   },
   data() {
@@ -136,7 +136,7 @@ export default {
       createBookingRequestForm: this.$inertia.form(
         {
           room_id: null,
-          recurrences:[
+          reservations:[
             {
               start_time: "",
               end_time: "",
@@ -155,7 +155,7 @@ export default {
   methods: {
     closeModal() {
         this.createBookingRequestForm.room_id = null;
-        this.createBookingRequestForm.recurrences = [
+        this.createBookingRequestForm.reservations = [
           {
             start_time: "",
             end_time: "",
@@ -165,13 +165,13 @@ export default {
         this.$emit("close");
     },
     addDate() {
-      this.createBookingRequestForm.recurrences.push({
+      this.createBookingRequestForm.reservations.push({
         start_time: "",
         end_time: "",
       })
     },
     removeDate(pos) {
-      this.createBookingRequestForm.recurrences.splice(pos,1)
+      this.createBookingRequestForm.reservations.splice(pos,1)
     },
     createBookingRequest() {
       this.createBookingRequestForm.post("/reservation", {

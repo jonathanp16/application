@@ -56,13 +56,13 @@ class BookingRequestControllerTest extends TestCase
       'room_id' => $room->id,
       'reservations' => [
         [
-          'start' => $start->format('Y-m-d\TH:i:00'),
-          'end' => $end->format('Y-m-d\TH:i:00')
+          'start_time' => $start->format('Y-m-d\TH:i:00'),
+          'end_time' => $end->format('Y-m-d\TH:i:00')
         ]
       ],
       'event' => [
-        'start' => $start->copy()->addMinute()->format('H:i'),
-        'end' => $end->copy()->subMinute()->format('H:i'),
+        'start_time' => $start->copy()->addMinute()->format('H:i'),
+        'end_time' => $end->copy()->subMinute()->format('H:i'),
         'title' => $this->faker->word,
         'type' => $this->faker->word,
         'description' => $this->faker->paragraph,
@@ -109,13 +109,13 @@ class BookingRequestControllerTest extends TestCase
       'room_id' => $room->id,
       'reservations' => [
         [
-          'start' => $reservation->start_time->format('Y-m-d\TH:i:00'),
-          'end' => $reservation->end_time->format('Y-m-d\TH:i:00')
+          'start_time' => $reservation->start_time->format('Y-m-d\TH:i:00'),
+          'end_time' => $reservation->end_time->format('Y-m-d\TH:i:00')
         ]
       ],
       'event' => [
-        'start' => $reservation->start_time->copy()->format('H:i'),
-        'end' => $reservation->end_time->copy()->format('H:i'),
+        'start_time' => $reservation->start_time->copy()->format('H:i'),
+        'end_time' => $reservation->end_time->copy()->format('H:i'),
         'title' => $this->faker->word,
         'type' => $this->faker->word,
         'description' => $this->faker->paragraph,
@@ -152,13 +152,13 @@ class BookingRequestControllerTest extends TestCase
         'room_id' => $room->id,
         'reservations' => [
           [
-            'start' => $reservation->start_time->format('Y-m-d\TH:i:00'),
-            'end' => $reservation->end_time->format('Y-m-d\TH:i:00')
+            'start_time' => $reservation->start_time->format('Y-m-d\TH:i:00'),
+            'end_time' => $reservation->end_time->format('Y-m-d\TH:i:00')
           ]
         ],
         'event' => [
-          'start' => $reservation->start_time->copy()->format('H:i'),
-          'end' => $reservation->end_time->copy()->format('H:i'),
+          'start_time' => $reservation->start_time->copy()->format('H:i'),
+          'end_time' => $reservation->end_time->copy()->format('H:i'),
           'title' => $this->faker->word,
           'type' => $this->faker->word,
           'description' => $this->faker->paragraph,
@@ -197,13 +197,13 @@ class BookingRequestControllerTest extends TestCase
       'room_id' => $room->id,
       'reservations' => [
         [
-          'start' => $start->format('Y-m-d\TH:i:00'),
-          'end' => $end->format('Y-m-d\TH:i:00')
+          'start_time' => $start->format('Y-m-d\TH:i:00'),
+          'end_time' => $end->format('Y-m-d\TH:i:00')
         ]
       ],
       'event' => [
-        'start' => $start->copy()->addMinute()->format('H:i'),
-        'end' => $end->copy()->subMinute()->format('H:i'),
+        'start_time' => $start->copy()->addMinute()->format('H:i'),
+        'end_time' => $end->copy()->subMinute()->format('H:i'),
         'title' => $this->faker->word,
         'type' => $this->faker->word,
         'description' => $this->faker->paragraph,
@@ -241,13 +241,13 @@ class BookingRequestControllerTest extends TestCase
       'room_id' => $room->id,
       'reservations' => [
         [
-          'start' => $start->format('Y-m-d\TH:i:00'),
-          'end' => $end->format('Y-m-d\TH:i:00')
+          'start_time' => $start->format('Y-m-d\TH:i:00'),
+          'end_time' => $end->format('Y-m-d\TH:i:00')
         ]
       ],
       'event' => [
-        'start' => $start->copy()->addMinute()->format('H:i'),
-        'end' => $end->copy()->subMinute()->format('H:i'),
+        'start_time' => $start->copy()->addMinute()->format('H:i'),
+        'end_time' => $end->copy()->subMinute()->format('H:i'),
         'title' => $this->faker->word,
         'type' => $this->faker->word,
         'description' => $this->faker->paragraph,
@@ -435,13 +435,13 @@ class BookingRequestControllerTest extends TestCase
       'room_id' => $room->id,
       'reservations' => [
         [
-          'start' => $reservation->start_time->format('Y-m-d\TH:i:00'),
-          'end' => $reservation->end_time->format('Y-m-d\TH:i:00')
+          'start_time' => $reservation->start_time->format('Y-m-d\TH:i:00'),
+          'end_time' => $reservation->end_time->format('Y-m-d\TH:i:00')
         ]
       ],
       'event' => [
-        'start' => $reservation->start_time->format('H:i'),
-        'end' => $reservation->end_time->format('H:i'),
+        'start_time' => $reservation->start_time->format('H:i'),
+        'end_time' => $reservation->end_time->format('H:i'),
         'title' => $this->faker->word,
         'type' => $this->faker->word,
         'description' => $this->faker->paragraph,

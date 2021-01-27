@@ -192,8 +192,8 @@
                                 <div class="flex-1">
                                     <jet-label for="event_start" value="Start"/>
                                     <jet-input id="event_start" type="time" class="mt-1 block w-full"
-                                               v-model="form.event.start" autofocus/>
-                                    <jet-input-error :message="form.error('event.start')" class="mt-2"/>
+                                               v-model="form.event.start_time" autofocus/>
+                                    <jet-input-error :message="form.error('event.start_time')" class="mt-2"/>
                                 </div>
 
                                 <span class="mt-4 text-lg font-medium text-gray-900"> To </span>
@@ -201,8 +201,8 @@
                                 <div class="flex-1">
                                     <jet-label for="event_end" value="Finish"/>
                                     <jet-input id="event_end" type="time" class="mt-1 block w-full"
-                                               v-model="form.event.end" autofocus/>
-                                    <jet-input-error :message="form.error('event.end')" class="mt-2"/>
+                                               v-model="form.event.end_time" autofocus/>
+                                    <jet-input-error :message="form.error('event.end_time')" class="mt-2"/>
                                 </div>
                             </div>
                         </div>
@@ -573,8 +573,8 @@ export default {
             form: this.$inertia.form({
                 onsite_contact: {},
                 event: {
-/*                 start: this.minStart,
-                 end: this.maxEnd,
+/*                 start_time: this.minStart,
+                 end_time: this.maxEnd,
                  title: '',
                     type: '',
                     description: '',

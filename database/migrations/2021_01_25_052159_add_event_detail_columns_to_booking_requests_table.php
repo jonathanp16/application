@@ -14,8 +14,8 @@ class AddEventDetailColumnsToBookingRequestsTable extends Migration
     public function up()
     {
         Schema::table('booking_requests', function (Blueprint $table) {
-            $table->json('onsite_contact');
-            $table->json('event');
+            $table->jsonb('onsite_contact');
+            $table->jsonb('event');
             $table->mediumText('notes');
         });
     }

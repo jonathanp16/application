@@ -41,12 +41,12 @@ class BookingRequestController extends Controller
             'room' => Room::get()->random(),
             'reservations' => [
                 [
-                    'start' => now(),
-                    'end' => now()->addMinutes(2),
+                    'start_time' => now(),
+                    'end_time' => now()->addMinutes(2),
                 ],
                 [
-                    'start' => now()->addDay(),
-                    'end' => now()->addDay()->addMinutes(2),
+                    'start_time' => now()->addDay(),
+                    'end_time' => now()->addDay()->addMinutes(2),
                 ],
             ]
         ]);
@@ -65,14 +65,14 @@ class BookingRequestController extends Controller
 
         // validate room still available at given times
         foreach ($data['reservations'] as $value) {
-            //$room->verifyDatesAreWithinRoomRestrictions($value['start'], $value['end']);
-            //$room->verifyDatetimesAreWithinAvailabilities($value['start'], $value['end']);
-            //$room->verifyRoomIsFreeValidation($value['start'], $value['end']);
+            $room->verifyDatesAreWithinRoomRestrictions($value['start_time'], $value['end_time']);
+            $room->verifyDatetimesAreWithinAvailabilities($value['start_time'], $value['end_time']);
+            //$room->verifyRoomIsFreeValidation($value['start_time'], $value['end_time']);
         }
 
         if (array_key_exists('files', $data)) {
             // save the uploaded files
-            $referenceFolder = "{$room->id}_".strtotime($reservation['start']).'_reference';
+            $referenceFolder = "{$room->id}_".strtotime($reservation['start_time']).'_reference';
 
             foreach($data['files'] as $file) {
                 $name = $file->getClientOriginalName();
@@ -84,8 +84,8 @@ class BookingRequestController extends Controller
         // store booking in db
         $booking = BookingRequest::create([
             'user_id' => $request->user()->id,
-            'start_time' => $reservation['start'],
-            'end_time' => $reservation['end'],
+            'start_time' => $reservation['start_time'],
+            'end_time' => $reservation['end_time'],
             'status' => 'review',
             'event' => $data['event'],
             'onsite_contact' => $data['onsite_contact'] ?? [],
@@ -99,8 +99,8 @@ class BookingRequestController extends Controller
             Reservation::create([
                 'room_id' => $room->id,
                 'booking_request_id' => $booking->id,
-                'start_time' => $reservation['start'],
-                'end_time' => $reservation['end'],
+                'start_time' => $reservation['start_time'],
+                'end_time' => $reservation['end_time'],
             ]);
         }
 
