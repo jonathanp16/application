@@ -76,8 +76,16 @@
     "babel": {
         "presets": [
             "@babel/preset-env"
+        ],
+        "plugins": [
+          [
+            "@babel/plugin-transform-runtime", {
+            "corejs": false,
+            "regenerator": true
+          }
+          ]
         ]
-    },
+      },
     "jestSonar": {
         "reportPath": "reports/js"
     }

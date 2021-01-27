@@ -10,7 +10,6 @@ use App\Models\Room;
 use App\Events\BookingRequestUpdated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use ZipArchive;
 use File;
@@ -66,10 +65,21 @@ class BookingRequestController extends Controller
 
         // validate room still available at given times
         foreach ($data['reservations'] as $value) {
-            //$room->verifyDatesAreWithinRoomRestrictions($value['start_time'], $value['end_time']);
-            //$room->verifyDatetimesAreWithinAvailabilities($value['start_time'], $value['end_time']);
+            $room->verifyDatesAreWithinRoomRestrictions($value['start_time'], $value['end_time']);
+            $room->verifyDatetimesAreWithinAvailabilities($value['start_time'], $value['end_time']);
             //$room->verifyRoomIsFreeValidation($value['start_time'], $value['end_time']);
         }
+        if (!$request->user()->canMakeAnotherBookingRequest($request->start_time)) {
+            throw ValidationException::withMessages([
+                'booking_request_exceeded' => 'Cannot make more than ' .
+                    $request->user()->getUserNumberOfBookingRequestPerPeriod() .
+                    ' bookings in the next ' .
+                    $request->user()->getUserNumberOfDaysPerPeriod() .
+                    ' days.'
+            ]);
+        }
+
+        $referenceFolder = NULL;
 
         if (array_key_exists('files', $data)) {
             // save the uploaded files
@@ -132,7 +142,7 @@ class BookingRequestController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(BookingRequest $booking)
-    { 
+    {
         return inertia('Requestee/EditBookingForm', [
             'booking' => $booking->load('user', 'reservations', 'reservations.room'),
         ]);

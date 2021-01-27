@@ -33,7 +33,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
     Route::resource('users', UserController::class)->only(['store', 'index', 'destroy', 'update']);
 
-    Route::resource('roles',\App\Http\Controllers\RoleController::class)->except(['show', 'edit']);
+    Route::resource('roles',\App\Http\Controllers\RoleController::class)->except(['create', 'show', 'edit']);
     Route::resource('rooms',\App\Http\Controllers\RoomController::class)->only(['store', 'index', 'update', 'destroy']);
     Route::put('room/restrictions/{id}', [RestrictionsController::class, 'update'])
     ->name('room.restrictions.update')->middleware('permission:bookings.approve');
@@ -50,9 +50,4 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
     Route::as('bookings.list')->get('bookingsList',[\App\Http\Controllers\BookingRequestController::class, 'list']);
     Route::get('bookings/{booking}/edit',[\App\Http\Controllers\BookingRequestController::class, 'edit']);
-
-
-    if (env('APP_ENV') == 'local' || env('APP_ENV') == 'testing') {
-        Route::resource('demo/tables',\App\Http\Controllers\DemoController::class)->only(['index']);
-    }
 });
