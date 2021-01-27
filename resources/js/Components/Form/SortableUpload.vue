@@ -64,14 +64,14 @@
                              class="absolute inset-0 z-0 object-cover w-full h-full border-4 border-white preview"
                              :src="loadFile(file)" :alt="file.name"/>
 
-                       <video v-if="file.type.includes('video/')"
+<!--                       <video v-if="file.type.includes('video/')"
                             class="absolute inset-0 object-cover w-full h-full border-4 border-white pointer-events-none preview"
                             :src="loadFile(file)" type="video/mp4">
-                        </video>
+                        </video>-->
 
                         <div class="absolute bottom-0 left-0 right-0 flex flex-col p-2 text-xs bg-white bg-opacity-50">
                         <span class="w-full font-bold text-gray-900 truncate">{{file.name}}</span>
-                            <span class="text-xs text-gray-900">{{ file.size | humanFileSize}}</span>
+                            <span class="text-xs text-gray-900">{{humanFileSize(file.size)}}</span>
                         </div>
 
                         <div class="absolute inset-0 z-40 transition-colors duration-300"
@@ -118,14 +118,7 @@ import createFileList from "create-file-list";
             }
         },
         filters: {
-            humanFileSize(size) {
-                const i = Math.floor(Math.log(size) / Math.log(1024));
-                return (
-                    (size / Math.pow(1024, i)).toFixed(2) * 1 +
-                    " " +
-                    ["B", "kB", "MB", "GB", "TB"][i]
-                );
-            },
+
         },
         methods: {
             dragAddStyle() {
@@ -181,6 +174,14 @@ import createFileList from "create-file-list";
             addFiles(e) {
                 this.files = createFileList([...this.files], [...e.target.files]);
                 this.$emit("change", this.files);
+            },
+            humanFileSize(size) {
+                const i = Math.floor(Math.log(size) / Math.log(1024));
+                return (
+                    (size / Math.pow(1024, i)).toFixed(2) * 1 +
+                    " " +
+                    ["B", "kB", "MB", "GB", "TB"][i]
+                );
             },
         },
     }

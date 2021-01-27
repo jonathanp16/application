@@ -5,7 +5,7 @@ jest.mock('laravel-jetstream')
 import {createLocalVue, mount, shallowMount} from '@vue/test-utils'
 import {InertiaApp} from '@inertiajs/inertia-vue'
 import {InertiaForm} from 'laravel-jetstream'
-import Component from '@src/Components/Form/SortableUpload'
+import SortableUpload from '@src/Components/Form/SortableUpload'
 
 let localVue
 
@@ -17,19 +17,55 @@ beforeEach(() => {
 });
 
 test('should mount without crashing', () => {
-    const wrapper = shallowMount(Component, {localVue});
+    const wrapper = shallowMount(SortableUpload, {localVue});
 
     expect(wrapper.text()).toBeDefined();
 })
 
-test('verify computed proxy field', () => {
-    const wrapper = shallowMount(Component, {localVue});
+test('should add and remove styles', () => {
+    const wrapper = shallowMount(SortableUpload, {localVue});
 
-    wrapper.vm.proxyChecked = true;
+    expect(wrapper.vm.$refs.dnd.classList.contains('border-blue-400')).toBeFalsy()
+    expect(wrapper.vm.$refs.dnd.classList.contains('ring-4')).toBeFalsy()
+    expect(wrapper.vm.$refs.dnd.classList.contains('ring-inset')).toBeFalsy()
 
-    expect(wrapper.vm.proxyChecked).toBe(true);
-    wrapper.vm.$nextTick(() => {
-        expect(wrapper.emitted().change).toBeTruthy()
-    })
+    wrapper.find('input').trigger('dragover');
+
+    expect(wrapper.vm.$refs.dnd.classList.contains('border-blue-400')).toBeTruthy()
+    expect(wrapper.vm.$refs.dnd.classList.contains('ring-4')).toBeTruthy()
+    expect(wrapper.vm.$refs.dnd.classList.contains('ring-inset')).toBeTruthy()
+
+    wrapper.find('input').trigger('drop');
+    wrapper.find('input').trigger('dragleave');
+
+    expect(wrapper.vm.$refs.dnd.classList.contains('border-blue-400')).toBeFalsy()
+    expect(wrapper.vm.$refs.dnd.classList.contains('ring-4')).toBeFalsy()
+    expect(wrapper.vm.$refs.dnd.classList.contains('ring-inset')).toBeFalsy()
 
 })
+
+test('should return human readable size', () => {
+    const wrapper = shallowMount(SortableUpload, {localVue});
+
+    wrapper.vm.humanFileSize(1);
+    expect(wrapper.vm.humanFileSize(1024)).toBe("1 kB");
+})
+
+test('should cover drag', () => {
+    const wrapper = shallowMount(SortableUpload, {localVue});
+
+    wrapper.findAll('div').trigger('dragstart');
+    wrapper.findAll('div').trigger('dragend');
+    wrapper.findAll('div').trigger('dragenter');
+    wrapper.findAll('div').trigger('dragleave');
+
+    expect(wrapper.text()).toBeDefined();
+})
+
+/*
+test('should change when remove', () => {
+    const wrapper = shallowMount(SortableUpload, {localVue});
+    // breaks when calling createFileList because it calls Clipboard
+    wrapper.vm.remove(1);
+    expect(wrapper.emitted().change).toBeTruthy();
+})*/
