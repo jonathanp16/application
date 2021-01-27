@@ -604,16 +604,6 @@ export default {
 
     },
 
-
-    filters: {
-        only_date: function (date) {
-            return moment(date).format("dddd, Do MMMM YYYY");
-        },
-        only_time: function (date) {
-            return moment(date).format("LT");
-        },
-    },
-
     methods: {
         submitBooking() {
             this.form.post('/bookings', {
