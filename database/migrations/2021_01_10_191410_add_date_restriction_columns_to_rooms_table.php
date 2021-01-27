@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddStatusToRooms extends Migration
+class AddDateRestrictionColumnsToRoomsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,8 @@ class AddStatusToRooms extends Migration
     public function up()
     {
         Schema::table('rooms', function (Blueprint $table) {
-            $table->string('status')->default('');
+            $table->integer('min_days_advance')->nullable();
+			      $table->integer('max_days_advance')->nullable();
         });
     }
 
@@ -26,7 +27,7 @@ class AddStatusToRooms extends Migration
     public function down()
     {
         Schema::table('rooms', function (Blueprint $table) {
-            $table->dropColumn('status');
+            $table->dropColumn('min_days_advance');
         });
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddReference extends Migration
+class AddNameColumnToBlackoutsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddReference extends Migration
      */
     public function up()
     {
-        Schema::table('booking_requests', function (Blueprint $table) {
-            $table->jsonb('reference')->nullable();
+        Schema::table('blackouts', function (Blueprint $table) {
+            $table->text('name')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddReference extends Migration
      */
     public function down()
     {
-        Schema::table('booking_requests', function (Blueprint $table) {
-            $table->dropColumn(['reference']);
+        Schema::table('blackouts', function (Blueprint $table) {
+            $table->dropColumn('name');
         });
     }
 }

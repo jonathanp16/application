@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddAttributesColumnsToRoomsTable extends Migration
+class AddReferenceColumnToBookingRequestsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AddAttributesColumnsToRoomsTable extends Migration
      */
     public function up()
     {
-        Schema::table('rooms', function (Blueprint $table) {
-            $table->jsonb('attributes')->nullable();
-
+        Schema::table('booking_requests', function (Blueprint $table) {
+            $table->jsonb('reference')->nullable();
         });
     }
 
@@ -26,10 +25,8 @@ class AddAttributesColumnsToRoomsTable extends Migration
      */
     public function down()
     {
-        Schema::table('rooms', function (Blueprint $table) {
-            $table->dropColumn(
-                ['attributes'],
-            );
+        Schema::table('booking_requests', function (Blueprint $table) {
+            $table->dropColumn(['reference']);
         });
     }
 }

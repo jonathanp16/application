@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumToBlackouts extends Migration
+class AddStatusToRoomsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddColumToBlackouts extends Migration
      */
     public function up()
     {
-        Schema::table('blackouts', function (Blueprint $table) {
-            $table->text('name')->nullable();
+        Schema::table('rooms', function (Blueprint $table) {
+            $table->string('status')->default('');
         });
     }
 
@@ -25,8 +25,8 @@ class AddColumToBlackouts extends Migration
      */
     public function down()
     {
-        Schema::table('blackouts', function (Blueprint $table) {
-            $table->dropColumn('name');
+        Schema::table('rooms', function (Blueprint $table) {
+            $table->dropColumn('status');
         });
     }
 }
