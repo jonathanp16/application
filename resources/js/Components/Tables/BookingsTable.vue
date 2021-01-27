@@ -1,10 +1,6 @@
 <template>
   <div class="table-container">
     <div class="table-filter-container">
-      <input type="text"
-         placeholder="Search Bookings"
-         v-model="filter" 
-         />
     </div>
      
     <table class="table-auto responsive-spaced">
@@ -16,6 +12,7 @@
           <th class="lt-grey" id="id_booking_date">Date/Time</th>
           <th class="lt-grey" id="id_booking_status">Status</th>
           <th class="lt-grey" id="id_booking_action">Action</th>
+          <th class="lt-grey" id="id_booking_download">Download</th>
         </tr>
       </thead>
       <tbody>
@@ -30,6 +27,20 @@
                 Edit
               </button>
             </a>
+            </td>
+            <td class="text-center lt-grey">
+            <div class="text-md mx-3">
+                  <a
+                    v-if="booking.reference.path"
+                    @click="setReference(booking);"
+                    class="cursor-pointer text-sm text-blue-800 focus:outline-none"
+                    :href="href"
+                  >Download</a>
+                  <a
+                    v-else
+                    class="text-sm focus:outline-none"
+                  >No Files Submitted</a>
+                </div>
             </td>
         </tr>
       </tbody>
@@ -51,7 +62,8 @@ export default {
   data() {
       return {
           filter: '',
-          roomBeingBooked: null
+          roomBeingBooked: null,
+           bookingReference: '',
       }
   },
       methods: {
@@ -60,9 +72,18 @@ export default {
             },
             formatDateMonth(date) {
                 return moment(date).format('MMM Do YYYY')
-            }
+            },
+              setReference(e) {
+                this.bookingReference = e.reference.path;
+              }
+                    
+        },
+        computed: {
+        href () {
+          return 'bookings/download/' + this.bookingReference;
+        },
+    }
 
-        }
 
 
 };
