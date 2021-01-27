@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateBookingRequest extends FormRequest
+class UpdateBookingRequest extends FormRequest
 {
 
     /**
@@ -12,7 +12,7 @@ class CreateBookingRequest extends FormRequest
      *
      * @var string
      */
-    protected $errorBag = 'createBookingRequest';
+    protected $errorBag = 'updateBookingRequest';
 
     /**
      * Get the validation rules that apply to the request.
@@ -22,26 +22,21 @@ class CreateBookingRequest extends FormRequest
     public function rules()
     {
         return [
-            'room_id' => ['required', 'integer'],
 
-            'reservations' => ['required'],
-            'reservations.*.start_time' => ['required', 'date'],
-            'reservations.*.end_time' => ['required', 'date'],
-
+            'onsite_contact' => ['array'],
             'onsite_contact.name' => ['required_with:onsite_contact.phone,onsite_contact.email','string', 'max:255'],
             'onsite_contact.phone' => ['required_with:onsite_contact.name,onsite_contact.email','string'],
             'onsite_contact.email' => ['required_with:onsite_contact.name,onsite_contact.phone','email'],
 
+            'event' => ['array'],
             'event.start_time' => [
                 'required',
                 'date_format:H:i',
-                //'after_or_equal:reservations.0.start_time',
             ],
             'event.end_time' => [
                 'required',
                 'date_format:H:i',
                 'after:event.start_time',
-                //'before_or_equal:reservations.0.end_time',
             ],
             'event.title' => ['required','string', 'max:100'],
             'event.type' => ['required','string', 'max:50'],

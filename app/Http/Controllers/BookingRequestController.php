@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateBookingRequest;
+use App\Http\Requests\UpdateBookingRequest;
 use App\Models\BookingRequest;
 use App\Models\Reservation;
 use App\Models\Room;
@@ -38,7 +39,7 @@ class BookingRequestController extends Controller
     {
         return inertia('Requestee/BookingForm', [
             // example of the expected reservations format
-            'room' => Room::get()->random(),
+            'room' => Room::find(6),
             'reservations' => [
                 [
                     'start_time' => now(),
@@ -65,8 +66,8 @@ class BookingRequestController extends Controller
 
         // validate room still available at given times
         foreach ($data['reservations'] as $value) {
-            $room->verifyDatesAreWithinRoomRestrictions($value['start_time'], $value['end_time']);
-            $room->verifyDatetimesAreWithinAvailabilities($value['start_time'], $value['end_time']);
+            //$room->verifyDatesAreWithinRoomRestrictions($value['start_time'], $value['end_time']);
+            //$room->verifyDatetimesAreWithinAvailabilities($value['start_time'], $value['end_time']);
             //$room->verifyRoomIsFreeValidation($value['start_time'], $value['end_time']);
         }
 
@@ -106,10 +107,10 @@ class BookingRequestController extends Controller
 
         \DB::commit();
 
-        $log = '[' . date("F j, Y, g:i a") . ']' . ' - Created booking request';
+        $log = '[' . date("F j, Y, g:i a") . '] - Created booking request';
         BookingRequestUpdated::dispatch($booking, $log);
 
-        return redirect()->route('bookings.index')
+        return redirect()->route('bookings.list')
             ->with('flash', ['banner' => 'Your Booking Request was submitted']);
     }
 
@@ -140,59 +141,30 @@ class BookingRequestController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  UpdateBookingRequest  $request
      * @param  \App\Models\BookingRequest  $booking
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, BookingRequest $booking)
+    public function update(UpdateBookingRequest $request, BookingRequest $booking)
     {
-        $date_format = "F j, Y, g:i a";
+        $update = collect($request->validated())->except(['files']);
+        $booking->fill($update->toArray())->save();
 
-        $request->validateWithBag('updateBookingRequest', array(
-            'room_id' => ['required', 'integer'],
-            'start_time' => ['required', 'string', 'max:255'],
-            'end_time' => ['required', 'string', 'max:255'],
-        ));
-
-        $room = Room::query()->findOrFail($request->room_id);
-        $room->verifyDatetimesAreWithinAvailabilities($request->get('start_time'), $request->get('end_time'));
-        $room->verifyDatesAreWithinRoomRestrictions($request->get('start_time'), $request->get('end_time'));
-
-        $booking->fill($request->except(['reference']))->save();
-
-        if($booking->wasChanged())
-        {
-            $log = '[' . date($date_format) . ']' . ' - Updated booking request location and/or date';
+        if($booking->wasChanged()) {
+            $log = '[' . date("F j, Y, g:i a"). '] - Updated booking request location and/or date';
             BookingRequestUpdated::dispatch($booking, $log);
         }
 
-        if($request->file())
-        {
-            $referenceFolder = $request->room_id.'_'.strtotime($request->start_time).'_reference';
-
-            if(isset($booking->reference["path"]))
-            {
-                $referenceFolder = $booking->reference["path"];
-            }
-            foreach($request->reference as $file)
-            {
+        if ($request->file()) {
+            // save the uploaded files
+            foreach($request->files as $file) {
                 $name = $file->getClientOriginalName();
-                Storage::disk('public')->putFileAs($referenceFolder . '/', $file, $name);
+                Storage::disk('public')->putFileAs($booking->reference['path'] . '/', $file, $name);
             }
-            $booking->reference = ['path' => $referenceFolder];
-            $booking->save();
-
-            $log = '[' . date($date_format) . ']' . ' - Updated booking request reference file(s)';
-            BookingRequestUpdated::dispatch($booking, $log);
         }
-        //for now only one
-        $reservation = $booking->reservations()->first();
-        $reservation->room_id = $request->room_id;
-        $reservation->start_time = $request->start_time;
-        $reservation->end_time = $request->end_time;
-        $reservation->save();
 
-        return back();
+        return redirect(route('bookings.list'))
+            ->with('flash', ['banner' => 'Your Booking Request was updated!']);
     }
 
     /**
