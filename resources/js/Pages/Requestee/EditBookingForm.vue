@@ -157,7 +157,7 @@
                             <jet-label value="Date"/>
                             <div class="flex space-x-2 py-2">
                                 <h3 class="text-lg font-medium text-gray-900">
-                                    {{ reservation.start_time | only_date }}
+                                    {{ only_date(reservation.start_time) }}
                                 </h3>
                                 <div v-if="isRecurring">
                                     <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -176,11 +176,11 @@
 
                             <div class="flex items-start justify-center py-2 space-x-5">
                                 <h3 class="text-lg font-medium text-gray-900">
-                                    {{ reservation.start_time | only_time }}
+                                    {{ only_time(reservation.start_time) }}
                                 </h3>
                                 <span class="block font-medium text-sm text-gray-700"> To </span>
                                 <h3 class="text-lg font-medium text-gray-900">
-                                    {{ reservation.end_time | only_time }}
+                                    {{ only_time(reservation.end_time) }}
                                 </h3>
                             </div>
                         </div>
@@ -645,7 +645,13 @@ export default {
             if(this.form.event.show?.music === false) {
                 delete this.form.event.music;
             }
-        }
+        },
+        only_date(date) {
+            return moment(date).format("dddd, Do MMMM YYYY");
+        },
+        only_time(date) {
+            return moment(date).format("LT");
+        },
     },
 
     mounted() {
