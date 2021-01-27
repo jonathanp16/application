@@ -22,7 +22,7 @@
          <tr v-for="booking in bookings" :key="booking.id">
             <td class="text-center lt-grey">{{booking.reservations[0].room.name}}</td>
             <td class="text-center lt-grey">{{booking.reservations[0].room.number}}</td>
-            <td class="text-center lt-grey">{{formatDateMonth(booking.start_time)}} From:  {{formatDateTime(booking.start_time)}} To: {{formatDateTime(booking.start_end)}}</td>
+            <td class="text-center lt-grey">{{formatDateMonth(booking.reservations[0].start_time)}} From:  {{formatDateTime(booking.reservations[0].start_time)}} To: {{formatDateTime(booking.reservations[0].end_time)}}</td>
             <td class="text-center lt-grey">{{booking.status}}</td>
             <td class="text-center lt-grey">
             <a :href="'/bookings/'+booking.id+'/edit'">
