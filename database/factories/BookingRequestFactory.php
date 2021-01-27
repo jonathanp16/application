@@ -34,9 +34,11 @@ class BookingRequestFactory extends Factory
                 'email' => $this->faker->email,
             ],
             'event' => [
-                'name' => $this->faker->name,
-                'phone' => $this->faker->phoneNumber,
-                'email' => $this->faker->email,
+                'title' => $this->faker->word,
+                'type' => $this->faker->word,
+                'description' => $this->faker->paragraph,
+                'guest_speakers' => $this->faker->name,
+                'attendees' => $this->faker->numberBetween(100),
             ],
             'notes' => $this->faker->paragraphs(3, true),
         ];

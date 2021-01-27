@@ -79,8 +79,6 @@ class BookingRequestController extends Controller
             ]);
         }
 
-        $referenceFolder = NULL;
-
         if (array_key_exists('files', $data)) {
             // save the uploaded files
             $referenceFolder = "{$room->id}_".strtotime($reservation['start_time']).'_reference';
@@ -166,8 +164,11 @@ class BookingRequestController extends Controller
         }
 
         if ($request->file()) {
+/*            if(!array_key_exists('path', $booking->reference)) {
+              $referenceFolder = "{$room->id}_".strtotime($reservation['start_time']).'_reference';
+            }*/
             // save the uploaded files
-            foreach($request->files as $file) {
+            foreach($request->allFiles()['files'] as $file) {
                 $name = $file->getClientOriginalName();
                 Storage::disk('public')->putFileAs($booking->reference['path'] . '/', $file, $name);
             }
