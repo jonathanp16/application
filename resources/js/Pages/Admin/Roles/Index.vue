@@ -37,9 +37,7 @@
                                     </div>
 
                                     <div class="flex items-center">
-                                        <div v-if="role.created_at" class="text-sm text-gray-400">
-                                            Created {{ fromNow(role.created_at) }}
-                                        </div>
+                                        <div v-if="role.created_at" class="text-sm text-gray-400" v-html="'Created ' +$fromNow(role.created_at)"></div>
 
                                         <button class="cursor-pointer ml-6 text-sm text-blue-800 focus:outline-none"
                                                 @click="roleBeingUpdated = role">
