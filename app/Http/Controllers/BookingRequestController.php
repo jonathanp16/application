@@ -16,6 +16,11 @@ use File;
 
 class BookingRequestController extends Controller
 {
+
+  /**
+   * @var string sole purpose is to silence SonorCloud
+   */
+  private $reservationRoom = 'reservations.room';
     /**
      * Display a listing of the resource.
      *
@@ -24,7 +29,7 @@ class BookingRequestController extends Controller
     public function index(Request $request)
     {
         return inertia('Admin/BookingRequests/Index', [
-            'booking_requests' => BookingRequest::with('user', 'reservations', 'reservations.room')->get(),
+            'booking_requests' => BookingRequest::with('user', 'reservations', $this->reservationRoom)->get(),
             'rooms' => Room::hideUserRestrictions($request->user())->get(),
         ]);
     }
@@ -133,7 +138,7 @@ class BookingRequestController extends Controller
     public function edit(BookingRequest $booking)
     {
         return inertia('Requestee/EditBookingForm', [
-            'booking' => $booking->load('user', 'reservations', 'reservations.room'),
+            'booking' => $booking->load('user', 'reservations', $this->reservationRoom),
         ]);
     }
 
@@ -207,7 +212,7 @@ class BookingRequestController extends Controller
     public function list(Request $request)
     {
         return inertia('Requestee/BookingsList', [
-            'bookings' => BookingRequest::with('user','reservations.room')->get(),
+            'bookings' => BookingRequest::with('user', $this->reservationRoom)->get(),
 
         ]);
     }
