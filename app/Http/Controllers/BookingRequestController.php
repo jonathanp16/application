@@ -57,7 +57,6 @@ class BookingRequestController extends Controller
         'required',
         'date',
         'date_format:Y-m-d\TH:i',
-        'after:event.start_time'
       ],
     ]);
 
@@ -153,7 +152,7 @@ class BookingRequestController extends Controller
         $log = '[' . date("F j, Y, g:i a") . '] - Created booking request';
         BookingRequestUpdated::dispatch($booking, $log);
 
-        return redirect()->route('dashboard')->with('flash', ['banner' => 'Your Booking Request was submitted']);
+        return redirect()->route('bookings.list')->with('flash', ['banner' => 'Your Booking Request was submitted']);
     }
 
     /**

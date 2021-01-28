@@ -495,7 +495,7 @@
                 <app-warning v-if="form.hasErrors()" class="pr-4">
                     This booking cannot be submitted.
                     <strong v-if="form.error('availabilities')">
-                        The room is no longer available.
+                        {{form.error('availabilities')}}
                     </strong>
                 </app-warning>
 
