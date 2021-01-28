@@ -569,26 +569,11 @@ export default {
         },      
     },
 
-  /*
-
-              onsite_contact: {},
-              event: {
-                food: {
-                  low_risk: false,
-                  high_risk: false,
-                  self_catered: false,
-                },
-                show: {
-                  contact: false,
-                  fee: false,
-                  music: false,
-                },
-              }
-   */
     data() {
         return {
             accept_terms: false,
             form: this.$inertia.form({
+                '_method': 'PUT',
                 onsite_contact: {},
                 event: {
                     food: {
@@ -607,7 +592,6 @@ export default {
                 reservations: [],
             }, {
                 bag: 'updateBookingRequest',
-                resetOnSuccess: true,
             })
         }
 
@@ -619,9 +603,6 @@ export default {
                 preserveScroll: true,
             }).then(response => {
                 this.form.processing = false;
-                if (this.form.recentlySuccessful) {
-                    this.form.reset();
-                }
             })
         },
         uploadedFiles(files) {

@@ -50,7 +50,7 @@ class UpdateBookingRequest extends FormRequest
             'event.food.low_risk' => ['boolean'],
             'event.food.high_risk' => ['boolean'],
             'event.food.self_catered' => ['required_if:event.food.high_risk,true','boolean'],
-            'event.food.caterer' => ['required_if:event.food.self_catered,false','string', 'max:100'],
+            'event.food.caterer' => ['string', 'max:100'],
             'event.alcohol' => ['boolean'],
             // remember open states of questions
             'event.show.contact' => ['boolean'],
@@ -66,7 +66,7 @@ class UpdateBookingRequest extends FormRequest
 
             'notes' => ['nullable','string', 'max:500'],
             'files' => [
-                'required_if:event.food.high_risk,true',
+                'required_if:event.food.self_catered,true',
                 'required_if:event.alcohol,true',
                 'required_if:event.children,true',
                 'required_if:event.appliances,true',
@@ -75,5 +75,35 @@ class UpdateBookingRequest extends FormRequest
                 'max:50000', // 50Mb
             ],
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $merge = array_replace_recursive($this->event, [
+            'food' => [
+              'low_risk' => (boolean) ($this->event['food']['low_risk'] ?? false),
+              'high_risk' => (boolean) ($this->event['food']['high_risk'] ?? false),
+              'self_catered' => (boolean) ($this->event['food']['self_catered'] ?? false),
+            ],
+            'alcohol' => (boolean) ($this->event['alcohol'] ?? false),
+            'show' => [
+                'contact' => (boolean) ($this->event['show']['contact'] ?? false),
+                'fee' => (boolean) ($this->event['show']['fee'] ?? false),
+                'music' => (boolean) ($this->event['show']['music'] ?? false),
+            ],
+            'children' => (boolean) ($this->event['children'] ?? false),
+            'appliances' => (boolean) ($this->event['appliances'] ?? false),
+            'av' => (boolean) ($this->event['av'] ?? false),
+            'furniture' => (boolean) ($this->event['furniture'] ?? false),
+            'bake_sale' => (boolean) ($this->event['bake_sale'] ?? false),
+            'internal_meeting' => (boolean) ($this->event['internal_meeting'] ?? false),
+        ]);
+
+        $this->merge(['event' => $merge]);
     }
 }

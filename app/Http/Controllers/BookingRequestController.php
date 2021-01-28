@@ -114,8 +114,7 @@ class BookingRequestController extends Controller
         $log = '[' . date("F j, Y, g:i a") . '] - Created booking request';
         BookingRequestUpdated::dispatch($booking, $log);
 
-        return redirect()->route('bookings.list')
-            ->with('flash', ['banner' => 'Your Booking Request was submitted']);
+        return back()->with('flash', ['banner' => 'Your Booking Request was submitted']);
     }
 
     /**
@@ -151,6 +150,8 @@ class BookingRequestController extends Controller
      */
     public function update(UpdateBookingRequest $request, BookingRequest $booking)
     {
+        $reservation = $booking->reservations->first();
+
         $update = collect($request->validated())->except(['files']);
         $booking->fill($update->toArray())->save();
 
@@ -160,9 +161,10 @@ class BookingRequestController extends Controller
         }
 
         if ($request->file()) {
-/*            if(!array_key_exists('path', $booking->reference)) {
-              $referenceFolder = "{$room->id}_".strtotime($reservation['start_time']).'_reference';
-            }*/
+            if(!array_key_exists('path', $booking->reference)) {
+              $referenceFolder = "{$reservation->room_id}_".strtotime($reservation->start_time).'_reference';
+              $booking->fill(['reference' => ['path' => $referenceFolder]])->save();
+            }
             // save the uploaded files
             foreach($request->allFiles()['files'] as $file) {
                 $name = $file->getClientOriginalName();

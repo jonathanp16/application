@@ -481,6 +481,8 @@ class BookingRequestControllerTest extends TestCase
 
     $room = Room::factory()->create(['status' => 'available']);
     $date = $this->faker->dateTimeInInterval('+'.$room->min_days_advance.' days', '+'.($room->max_days_advance-$room->min_days_advance).' days');
+    $start = Carbon::parse($date);
+    $end = $start->copy()->addMinutes(4);
 
     $this->createReservationAvailabilities($date, $room);
     $booking = $this->createBookingRequest(true, ['status' => 'approved']);
@@ -494,11 +496,24 @@ class BookingRequestControllerTest extends TestCase
 
     $response = $this->actingAs($user)->post('/bookings', [
       'room_id' => $room->id,
-      'start_time' => $date->format('Y-m-d\TH:i:00'),
-      'end_time' => Carbon::parse($date)->addMinutes(1)->toDateTime()->format('Y-m-d\TH:i:00'),
-      'status' => 'review'
+      'reservations' => [
+        [
+          'start_time' => $start->format('Y-m-d\TH:i:00'),
+          'end_time' => $end->format('Y-m-d\TH:i:00')
+        ]
+      ],
+      'event' => [
+        'start_time' => $start->copy()->addMinute()->format('H:i'),
+        'end_time' => $end->copy()->subMinute()->format('H:i'),
+        'title' => $this->faker->word,
+        'type' => $this->faker->word,
+        'description' => $this->faker->paragraph,
+        'guest_speakers' => $this->faker->name,
+        'attendees' => $this->faker->numberBetween(100),
+      ]
     ]);
 
+    $response->assertSessionHasErrors();
     $response->assertStatus(302);
     $this->assertDatabaseCount('booking_requests', 1);
   }

@@ -598,6 +598,7 @@ export default {
     },
 
     mounted() {
+        
         this.form.room_id = this.room.id;
         this.form.reservations = this.reservations;
         this.form.event.start_time = this.minStart;

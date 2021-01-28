@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\ValidationException;
 
-class CreateBookingRequest extends FormRequest
+class CreateBookingRequest extends UpdateBookingRequest
 {
 
     /**
@@ -21,7 +22,7 @@ class CreateBookingRequest extends FormRequest
      */
     public function rules()
     {
-        return array_replace_recursive((new UpdateBookingRequest())->rules(), [
+        return array_replace_recursive(parent::rules(), [
             'room_id' => ['required', 'integer'],
 
             'reservations' => ['required'],
@@ -29,4 +30,5 @@ class CreateBookingRequest extends FormRequest
             'reservations.*.end_time' => ['required', 'date'],
         ]);
     }
+
 }
