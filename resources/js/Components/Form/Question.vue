@@ -49,10 +49,6 @@ export default {
         }
     },
 
-    mounted() {
-
-    },
-
     watch: {
         checked(val) {
             this.proxyChecked = val;

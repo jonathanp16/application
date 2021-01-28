@@ -37,7 +37,7 @@ test('should mount without crashing', () => {
           }
       },
     })
-  
+
     expect(wrapper.text()).toBeDefined()
   })
 
@@ -48,7 +48,7 @@ test('should mount without crashing', () => {
       reference:{"path":"9_1611689494_reference"},
       onsite_contact: {}
       }
-  
+
      wrapper = shallowMount(EditBookingForm, {
         localVue,
         propsData: {
@@ -103,20 +103,6 @@ test('filter returns time', () => {
   expect(wrapper.vm.only_time(moment())).toBe(moment().format("LT"));
 })
 
-// test('computed reservation should match res[0]', () => {
-//   wrapper = shallowMount(EditBookingForm, {localVue,
-//         propsData: {
-//             booking:{
-//             reservations: [
-//                 { start_time: "2020-01-20T18:02", end_time: "2020-01-20T18:05" },
-//                 { start_time: "2020-01-21T18:02", end_time: "2020-01-21T18:05" },
-//             ]
-//           }
-//         },
-//       })
-//     expect(wrapper.vm.reservation).toStrictEqual({ start_time: "", end_time: "" });
-// })
-
 test('computed isRecurring should be false based on given data', () => {
     expect(wrapper.vm.isRecurring).toBe(false);
 })
@@ -140,5 +126,5 @@ test('computed minStart and maxEnd should be true based on given data', () => {
 
 
 
-  
+
 
