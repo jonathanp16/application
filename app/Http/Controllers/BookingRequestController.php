@@ -8,9 +8,14 @@ use App\Models\BookingRequest;
 use App\Models\Reservation;
 use App\Models\Room;
 use App\Events\BookingRequestUpdated;
+use DB;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use Inertia\ResponseFactory;
 use ZipArchive;
 use File;
 
@@ -20,11 +25,14 @@ class BookingRequestController extends Controller
   /**
    * @var string sole purpose is to silence SonorCloud
    */
-  private $reservationRoom = 'reservations.room';
+  private string $reservationRoom = 'reservations.room';
+
+
+  private const reservationsSessionKey = "create_booking_form";
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response|\Inertia\Response|\Inertia\ResponseFactory
+     * @return Response|\Inertia\Response|ResponseFactory
      */
     public function index(Request $request)
     {
@@ -34,24 +42,55 @@ class BookingRequestController extends Controller
         ]);
     }
 
+  public function createInit(Request $request)
+  {
+
+    $data = $request->validate([
+      'room_id' => ['integer', 'exists:rooms,id'],
+      'reservations' => ['required'],
+      'reservations.*.start_time' => [
+        'required',
+        'date',
+        'date_format:Y-m-d\TH:i'
+      ],
+      'reservations.*.end_time' => [
+        'required',
+        'date',
+        'date_format:Y-m-d\TH:i',
+        'after:event.start_time'
+      ],
+    ]);
+
+    Session::remove(self::reservationsSessionKey);
+    Session::push(self::reservationsSessionKey, $data);
+
+    return redirect()->route('bookings.create');
+  }
+
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Inertia\Response
+     * @return RedirectResponse|\Inertia\Response
      */
-    public function create(Request $request)
+    public function create()
     {
+      if (!Session::has(self::reservationsSessionKey)) {
+        return redirect()->route('bookings.list');
+      } else {
+        $data = Session::get(self::reservationsSessionKey)[0];
+
         return inertia('Requestee/BookingForm', [
-            // example of the expected reservations format
-            'room' => Room::findOrFail($request->room_id),
-            'reservations' => $request->reservations,
+          // example of the expected reservations format
+          'room' => Room::findOrFail($data['room_id']),
+          'reservations' => $data['reservations'],
         ]);
+      }
     }
     /**
      * Store a newly created resource in storage.
      *
      * @param  CreateBookingRequest $request
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
     public function store(CreateBookingRequest $request)
     {
@@ -84,7 +123,7 @@ class BookingRequestController extends Controller
                 Storage::disk('public')->putFileAs($referenceFolder. '/', $file, $name);
             }
         }
-        \DB::beginTransaction();
+        DB::beginTransaction();
 
         // store booking in db
         $booking = BookingRequest::create([
@@ -109,30 +148,19 @@ class BookingRequestController extends Controller
             ]);
         }
 
-        \DB::commit();
+        DB::commit();
 
         $log = '[' . date("F j, Y, g:i a") . '] - Created booking request';
         BookingRequestUpdated::dispatch($booking, $log);
 
-        return back()->with('flash', ['banner' => 'Your Booking Request was submitted']);
+        return redirect()->route('dashboard')->with('flash', ['banner' => 'Your Booking Request was submitted']);
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\BookingRequest  $bookingRequest
-     * @return \Illuminate\Http\Response
-     */
-    // public function show(BookingRequest $bookingRequest)
-    // {
-    //     //
-    // }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\BookingRequest  $bookingRequest
-     * @return \Illuminate\Http\Response
+     * @param BookingRequest $bookingRequest
+     * @return Response
      */
     public function edit(BookingRequest $booking)
     {
@@ -145,8 +173,8 @@ class BookingRequestController extends Controller
      * Update the specified resource in storage.
      *
      * @param  UpdateBookingRequest  $request
-     * @param  \App\Models\BookingRequest  $booking
-     * @return \Illuminate\Http\Response
+     * @param BookingRequest $booking
+     * @return Response
      */
     public function update(UpdateBookingRequest $request, BookingRequest $booking)
     {
@@ -179,8 +207,8 @@ class BookingRequestController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\BookingRequest  $bookingRequest
-     * @return \Illuminate\Http\Response
+     * @param BookingRequest $bookingRequest
+     * @return Response
      */
     public function destroy(BookingRequest $booking)
     {

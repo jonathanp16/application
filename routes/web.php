@@ -44,8 +44,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::post('settings/app_logo', SettingsController::class.'@storeAppLogo')->name('app.logo.change');
     Route::post('settings/app_name', SettingsController::class.'@storeAppName')->name('app.name.change');
 
-    Route::resource('bookings',\App\Http\Controllers\BookingRequestController::class)->except('create');
-    Route::post('bookings/create',[\App\Http\Controllers\BookingRequestController::class, 'create'])->name('bookings.create');
+  Route::post('bookings/create',[\App\Http\Controllers\BookingRequestController::class, 'createInit']);
+  Route::resource('bookings',\App\Http\Controllers\BookingRequestController::class)->except('show');
     Route::get('bookingsList',[\App\Http\Controllers\BookingRequestController::class, 'list'])->name('bookings.list');
     Route::get('bookings/download/{folder}', \App\Http\Controllers\BookingRequestController::class.'@downloadReferenceFiles');
 
