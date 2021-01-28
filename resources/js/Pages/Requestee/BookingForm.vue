@@ -455,7 +455,7 @@
                                                  @change="uploadedFiles($event)"/>
                             <jet-input-error :message="form.error('files')" class="mt-2"/>
                         </div>
-                        
+
                         <!-- Additional Info -->
                         <div class="col-span-6">
                             <jet-label for="notes" value="Additional Information (Optional)"/>
@@ -598,7 +598,8 @@ export default {
     },
 
     mounted() {
-        
+        //make sure overflow is available.
+        document.body.style.overflow = null
         this.form.room_id = this.room.id;
         this.form.reservations = this.reservations;
         this.form.event.start_time = this.minStart;
