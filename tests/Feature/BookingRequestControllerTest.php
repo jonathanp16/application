@@ -68,9 +68,9 @@ class BookingRequestControllerTest extends TestCase
   public function user_can_view_booking_edit() {
     $booking = BookingRequest::factory()->create();
 
-    $reponse = $this->get(route('bookings.update', $booking));
-    $reponse->assertRedirect();
-    $reponse->assertSessionHasNoErrors();
+    $response = $this->get(route('bookings.edit', $booking));
+    $response->assertRedirect();
+    $response->assertSessionHasNoErrors();
   }
 
   /**
