@@ -64,11 +64,6 @@
                              class="absolute inset-0 z-0 object-cover w-full h-full border-4 border-white preview"
                              :src="loadFile(file)" :alt="file.name"/>
 
-<!--                       <video v-if="file.type.includes('video/')"
-                            class="absolute inset-0 object-cover w-full h-full border-4 border-white pointer-events-none preview"
-                            :src="loadFile(file)" type="video/mp4">
-                        </video>-->
-
                         <div class="absolute bottom-0 left-0 right-0 flex flex-col p-2 text-xs bg-white bg-opacity-50">
                         <span class="w-full font-bold text-gray-900 truncate">{{file.name}}</span>
                             <span class="text-xs text-gray-900">{{humanFileSize(file.size)}}</span>

@@ -9,13 +9,17 @@ use App\Models\Reservation;
 use App\Models\Room;
 use App\Events\BookingRequestUpdated;
 use DB;
+use Exception;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Inertia\ResponseFactory;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use ZipArchive;
 use File;
 
@@ -28,12 +32,14 @@ class BookingRequestController extends Controller
   private string $reservationRoom = 'reservations.room';
 
 
-  private const reservationsSessionKey = "create_booking_form";
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response|\Inertia\Response|ResponseFactory
-     */
+  private const RESERVATIONS_SESSION_KEY = "create_booking_form";
+
+  /**
+   * Display a listing of the resource.
+   *
+   * @param Request $request
+   * @return Response|\Inertia\Response|ResponseFactory
+   */
     public function index(Request $request)
     {
         return inertia('Admin/BookingRequests/Index', [
@@ -60,8 +66,8 @@ class BookingRequestController extends Controller
       ],
     ]);
 
-    Session::remove(self::reservationsSessionKey);
-    Session::push(self::reservationsSessionKey, $data);
+    Session::remove(self::RESERVATIONS_SESSION_KEY);
+    Session::push(self::RESERVATIONS_SESSION_KEY, $data);
 
     return redirect()->route('bookings.create');
   }
@@ -73,10 +79,10 @@ class BookingRequestController extends Controller
      */
     public function create()
     {
-      if (!Session::has(self::reservationsSessionKey)) {
+      if (!Session::has(self::RESERVATIONS_SESSION_KEY)) {
         return redirect()->route('bookings.list');
       } else {
-        $data = Session::get(self::reservationsSessionKey)[0];
+        $data = Session::get(self::RESERVATIONS_SESSION_KEY)[0];
 
         return inertia('Requestee/BookingForm', [
           // example of the expected reservations format
@@ -85,12 +91,14 @@ class BookingRequestController extends Controller
         ]);
       }
     }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  CreateBookingRequest $request
-     * @return RedirectResponse
-     */
+
+  /**
+   * Store a newly created resource in storage.
+   *
+   * @param CreateBookingRequest $request
+   * @return RedirectResponse
+   * @throws ValidationException
+   */
     public function store(CreateBookingRequest $request)
     {
         $data = $request->validated();
@@ -99,7 +107,7 @@ class BookingRequestController extends Controller
 
         // validate room still available at given times
         foreach ($data['reservations'] as $value) {
-          $room->verifyDatesAreWithinRoomRestrictions($value['start_time'], $value['end_time']);
+          $room->verifyDatesAreWithinRoomRestrictions($value['start_time']);
           $room->verifyDatetimesAreWithinAvailabilities($value['start_time'], $value['end_time']);
           $room->verifyRoomIsFree($value['start_time'], $value['end_time']);
           if (!$request->user()->canMakeAnotherBookingRequest($value['start_time'])) {
@@ -113,6 +121,7 @@ class BookingRequestController extends Controller
           }
         }
 
+        $referenceFolder = null;
         if (array_key_exists('files', $data)) {
             // save the uploaded files
             $referenceFolder = "{$room->id}_".strtotime($reservation['start_time']).'_reference';
@@ -155,12 +164,12 @@ class BookingRequestController extends Controller
         return redirect()->route('bookings.list')->with('flash', ['banner' => 'Your Booking Request was submitted']);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param BookingRequest $bookingRequest
-     * @return Response
-     */
+  /**
+   * Show the form for editing the specified resource.
+   *
+   * @param BookingRequest $booking
+   * @return Response|\Inertia\Response|ResponseFactory
+   */
     public function edit(BookingRequest $booking)
     {
         return inertia('Requestee/EditBookingForm', [
@@ -173,7 +182,7 @@ class BookingRequestController extends Controller
      *
      * @param  UpdateBookingRequest  $request
      * @param BookingRequest $booking
-     * @return Response
+     * @return RedirectResponse
      */
     public function update(UpdateBookingRequest $request, BookingRequest $booking)
     {
@@ -203,18 +212,19 @@ class BookingRequestController extends Controller
             ->with('flash', ['banner' => 'Your Booking Request was updated!']);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param BookingRequest $bookingRequest
-     * @return Response
-     */
+  /**
+   * Remove the specified resource from storage.
+   *
+   * @param BookingRequest $booking
+   * @return RedirectResponse
+   * @throws Exception
+   */
     public function destroy(BookingRequest $booking)
     {
         Reservation::where('booking_request_id', $booking->id)->delete();
         $booking->delete();
 
-        return redirect(route('bookings.index'));
+        return redirect()->route('bookings.index');
     }
 
     public function downloadReferenceFiles($folder)
