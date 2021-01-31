@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\AcademicDate;
 use Carbon\Carbon;
-use DateInterval;
-use DatePeriod;
 use DateTime;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\Blackout;
@@ -14,32 +14,18 @@ use Illuminate\Validation\ValidationException;
 
 class BlackoutController extends Controller
 {
-  /**
-   * Display a listing of the resource.
-   *
-   * @return \Illuminate\Http\Response
-   *public function index()
-   *{
-   *}
-   */
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
 
   /**
    * Store a newly created resource in storage.
    *
-   * @param \Illuminate\Http\Request $request
-   * @return \Illuminate\Http\Response
-   * @throws \Exception
+   * @param Request $request
+   * @param Room $room
+   * @return RedirectResponse
+   * @throws ValidationException
    */
-  public function store(Request $request)
+  public function store(Request $request, Room $room)
   {
-
     $request->validateWithBag('createBlackout', [
-      'room_id' => ['required', 'integer', 'exists:' . Room::class . ",id"],
       'start' => ['required', 'date'],
       'end' => ['required', 'date', "after:start"],
       'name' => ['required', 'string']
@@ -67,7 +53,7 @@ class BlackoutController extends Controller
             'start_time' => $i->format("Y-m-d") . $startDatetime->toTimeString(),
             'end_time' => $i->format("Y-m-d") . $endDatetime->toTimeString(),
             'name' => $request->name
-          ])->rooms()->attach($request->room_id);
+          ])->rooms()->attach($room);
         }
         break;
       case 'weekly':
@@ -85,7 +71,7 @@ class BlackoutController extends Controller
             'start_time' => $startDatetime->format("Y-m-d") . $startDatetime->toTimeString(),
             'end_time' => $endDatetime->format("Y-m-d") . $endDatetime->toTimeString(),
             'name' => $request->name
-          ])->rooms()->attach($request->room_id);
+          ])->rooms()->attach($room);
           $startDatetime->addWeek();
           $endDatetime->addWeek();
         }
@@ -95,7 +81,7 @@ class BlackoutController extends Controller
           'start_time' => $request->start,
           'end_time' => $request->end,
           'name' => $request->name
-        ])->rooms()->attach($request->room_id);
+        ])->rooms()->attach($room);
         break;
     }
 
@@ -103,27 +89,15 @@ class BlackoutController extends Controller
   }
 
   /**
-   * Display the specified resource.
-   *
-   * @param int $id
-   * @return \Illuminate\Http\Response
-   */
-
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param int $id
-   * @param \Illuminate\Http\Request $request
-   * @param int $id
-   * @return \Illuminate\Http\Response
-   *public function edit($id)
-   *{
-   *}
    * Update the specified resource in storage.
    *
-   * @return \Illuminate\Http\Response
+   * @param Request $request
+   * @param Room $room
+   * @param Blackout $blackout
+   * @return RedirectResponse
+   * @noinspection PhpUnusedParameterInspection
    */
-  public function update(Request $request, Blackout $blackout)
+  public function update(Request $request, Room $room, Blackout $blackout)
   {
     $request->validateWithBag('createBlackout', [
       'start' => ['required', 'date'],
@@ -145,22 +119,24 @@ class BlackoutController extends Controller
   /**
    * Remove the specified resource from storage.
    *
-   * @param int $id
-   * @return \Illuminate\Http\Response
+   * @param Room $room
+   * @param Blackout $blackout
+   * @return RedirectResponse
+   * @throws Exception
+   * @noinspection PhpUnusedParameterInspection
    */
-  public function destroy(Blackout $blackout)
+  public function destroy(Room $room, Blackout $blackout)
   {
     $blackout->rooms()->sync([]);
     $blackout->delete();
     return back()->with('flash', ['deleted']);
   }
 
-  public function room(Room $room)
+  public function index(Room $room)
   {
     return inertia('Admin/Blackouts/Room', [
       "blackouts" => $room->blackouts()->get(),
       "room" => $room]);
-
   }
 
 }

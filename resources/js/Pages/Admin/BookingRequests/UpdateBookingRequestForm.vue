@@ -8,11 +8,11 @@
             <div class="m-6">
                 <jet-label for="name" value="Room" />
                 <select v-model="form.room_id" class="mt-1 block w-full" name="rooms" id="room_id">
-                    <option v-for="room in availableRooms" :key="room.id" :value="room.id" :selected="{ selected: room.id == form.room_id}">{{room.name}}</option>
+                    <option v-for="room in availableRooms" :key="room.id" :value="room.id" :selected="{ selected: room.id === form.room_id}">{{room.name}}</option>
                 </select>
                 <jet-input-error :message="form.error('room_id')" class="mt-2" />
             </div>
-          <jet-input-error :message="form.error('recurrences.0')" class="mt-2" />
+          <jet-input-error :message="form.error('reservations.0')" class="mt-2" />
 
             <div class="m-6">
                 <jet-label for="start_time" value="Start Time" />
@@ -20,10 +20,10 @@
                     id="start_time"
                     type="datetime-local"
                     class="mt-1 block w-full"
-                    v-model="form.recurrences[0].start_time"
+                    v-model="form.reservations[0].start_time"
                     autofocus
                 />
-                <jet-input-error :message="form.error('recurrences.0.start_time')" class="mt-2" />
+                <jet-input-error :message="form.error('reservations.0.start_time')" class="mt-2" />
             </div>
 
             <div class="m-6">
@@ -32,11 +32,11 @@
                     id="end_time"
                     type="datetime-local"
                     class="mt-1 block w-full"
-                    v-model="form.recurrences[0].end_time"
+                    v-model="form.reservations[0].end_time"
                     autofocus
                 />
                 <jet-input-error
-                    :message="form.error('recurrences.0.end_time')"
+                    :message="form.error('reservations.0.end_time')"
                     class="mt-2"
                 />
             </div>
@@ -125,7 +125,7 @@ export default {
                 {
                     booking_request_id: null,
                     room_id: null,
-                    recurrences: [{
+                    reservations: [{
                       start_time: null,
                       end_time: null,
                     }],
@@ -151,7 +151,7 @@ export default {
             this.form.post("/reservation/" + this.booking_request?.id, {
                     preserveState: true
                 })
-                .then(response => {
+                .then(() => {
                     if (this.form.successful) {
                         this.closeModal();
                     }

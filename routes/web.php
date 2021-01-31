@@ -1,9 +1,13 @@
 <?php
 
+use App\Http\Controllers\BlackoutController;
+use App\Http\Controllers\BookingRequestController;
+use App\Http\Controllers\ReservationsController;
 use App\Http\Controllers\RestrictionsController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\RoomController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
-use App\Notifications\SampleNotification;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,33 +22,38 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect()->route('login');
+  return redirect()->route('login');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function() {
-    Route::get('/dashboard', function () {
-        return Inertia\Inertia::render('Dashboard');
-    })->name('dashboard');
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+  Route::get('/dashboard', function () {
+    return Inertia\Inertia::render('Dashboard');
+  })->name('dashboard');
 
-    // Development route for easy email template editing of notifications (can also be a mailable).
-    Route::get('/email', function () {
-        return (new SampleNotification())->toMail(null);
-    })->name('email');
-
+  Route::name('admin.')->prefix('admin')->group(function () {
+    //TODO: Admin index route
     Route::resource('users', UserController::class)->only(['store', 'index', 'destroy', 'update']);
+    Route::resource('roles', RoleController::class)->except(['create', 'show', 'edit']);
 
-    Route::resource('roles',\App\Http\Controllers\RoleController::class)->except(['create', 'show', 'edit']);
-    Route::resource('rooms',\App\Http\Controllers\RoomController::class)->only(['store', 'index', 'update', 'destroy']);
-    Route::put('room/restrictions/{id}', [RestrictionsController::class, 'update'])
-    ->name('room.restrictions.update')->middleware('permission:bookings.approve');
-    Route::resource('blackouts',\App\Http\Controllers\BlackoutController::class)->only(['index', 'store', 'destroy', 'update']);
-    Route::get('rooms/{room}/blackouts',[\App\Http\Controllers\BlackoutController::class, 'room']);
+    Route::resource('rooms', RoomController::class)->only(['store', 'index', 'update', 'destroy']);
+    Route::put('rooms/{room}/restrictions', [RestrictionsController::class, 'update'])
+      ->name('room.restrictions.update')->middleware('permission:bookings.approve');
+    Route::resource('rooms.blackouts', BlackoutController::class)->only(['index', 'store', 'destroy', 'update']);
 
-    Route::resource('settings',SettingsController::class)->only(['index']);
-    Route::post('settings/app_logo', SettingsController::class.'@storeAppLogo')->name('app.logo.change');
-    Route::post('settings/app_name', SettingsController::class.'@storeAppName')->name('app.name.change');
+    Route::name('settings.')->prefix('settings')->group(function () {
+      Route::get('/', [SettingsController::class, 'index'])->name('index');
+      Route::post('app_logo', [SettingsController::class, 'storeAppLogo'])->name('app.logo');
+      Route::post('app_name', [SettingsController::class, 'storeAppName'])->name('app.name');
+    });
+  });
 
-    Route::resource('bookings',\App\Http\Controllers\BookingRequestController::class)->only(['store', 'index', 'update', 'destroy']);
-    Route::get('bookings/download/{folder}', \App\Http\Controllers\BookingRequestController::class.'@downloadReferenceFiles');
-    Route::resource('reservation',\App\Http\Controllers\ReservationsController::class);
+  Route::prefix('bookings')->name('bookings.')->group(function () {
+    Route::resource('', BookingRequestController::class)->except('show')->parameters(['' => 'booking']);
+    Route::post('create', [BookingRequestController::class, 'createInit'])->name('createInit');
+    Route::get('list', [BookingRequestController::class, 'list'])->name('list');
+    Route::get('download/{folder}', [BookingRequestController::class, 'downloadReferenceFiles'])->name('download');
+  });
+
+  Route::resource('reservation', ReservationsController::class);
+
 });

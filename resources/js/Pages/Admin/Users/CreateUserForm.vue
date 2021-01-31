@@ -35,7 +35,7 @@
                     Created.
                 </jet-action-message>
 
-                <jet-button :class="{ 'opacity-25': createUserForm.processing }" :disabled="createUserForm.processing">
+                <jet-button id="create" :class="{ 'opacity-25': createUserForm.processing }" :disabled="createUserForm.processing">
                     Create
                 </jet-button>
             </template>
@@ -77,7 +77,7 @@ export default {
     },
     methods: {
         createUser() {
-            this.createUserForm.post('/users', {
+            this.createUserForm.post('/admin/users', {
                 preserveScroll: true,
             })
         },

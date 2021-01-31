@@ -2,12 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\Availability;
 use Tests\TestCase;
 use App\Models\Room;
 use App\Models\User;
-use App\Models\Permission;
-use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RoomControllerTest extends TestCase
@@ -22,10 +19,9 @@ class RoomControllerTest extends TestCase
     {
         $room = Room::factory()->make();
         $user = User::factory()->make();
-
         $this->assertDatabaseMissing('rooms', ['name' => $room->name]);
 
-        $response = $this->actingAs($user)->post('/rooms', [
+        $response = $this->actingAs($user)->post('/admin/rooms', [
             'name' => $room->name,
             'number' => $room->number,
             'floor' => $room->floor,
@@ -48,8 +44,10 @@ class RoomControllerTest extends TestCase
             'ambiant_music' => $room->attributes['ambiant_music'],
             'sale_for_profit' => $room->attributes['sale_for_profit'],
             'fundraiser' => $room->attributes['fundraiser'],
+            'min_days_advance' => $room->min_days_advance,
+            'max_days_advance' => $room->max_days_advance,
         ]);
-
+        $response->assertSessionHasNoErrors();
         $response->assertStatus(302);
         $this->assertDatabaseHas('rooms', [
             'name' => $room->name,
@@ -76,6 +74,8 @@ class RoomControllerTest extends TestCase
                 'sale_for_profit' => $room->attributes['sale_for_profit'],
                 'fundraiser' => $room->attributes['fundraiser'],
             ]),
+            'min_days_advance' => $room->min_days_advance,
+            'max_days_advance' => $room->max_days_advance,
         ]);
     }
 
@@ -90,14 +90,13 @@ class RoomControllerTest extends TestCase
         $this->assertDatabaseMissing('rooms', ['name' => $room->name]);
 
         $response = $this->actingAs($user)->post(
-            '/rooms',
+            '/admin/rooms',
             [
                 'name' => $room->name,
                 'number' => $room->number,
                 'floor' => $room->floor,
                 'building' => $room->building,
                 'status' => $room->status,
-                'room_type' => $room->room_type,
                 'capacity_standing' => $room->attributes['capacity_standing'],
                 'capacity_sitting' => $room->attributes['capacity_sitting'],
                 'food' => $room->attributes['food'],
@@ -170,7 +169,7 @@ class RoomControllerTest extends TestCase
     public function testUsersIndexPageLoads()
     {
         $user = User::factory()->make();
-        $response = $this->actingAs($user)->get('/rooms');
+        $response = $this->actingAs($user)->get('/admin/rooms');
         $response->assertOk();
         $response->assertSee("Rooms");
     }
@@ -189,7 +188,7 @@ class RoomControllerTest extends TestCase
             'status' => $room->status,'attributes' => json_encode($room->attributes),
         ]);
 
-        $response = $this->actingAs($user)->put('/rooms/' . $room->id, [
+        $response = $this->actingAs($user)->put('/admin/rooms/' . $room->id, [
             'name' => 'the room',
             'number' => '24',
             'floor' => '2009',
@@ -258,7 +257,7 @@ class RoomControllerTest extends TestCase
             'status' => $room->status, 'attributes' => json_encode($room->attributes),
         ]);
 
-        $response = $this->actingAs($user)->put('/rooms/' . $room->id, [
+        $response = $this->actingAs($user)->put('/admin/rooms/' . $room->id, [
             'name' => 'the room',
             'number' => '24',
             'floor' => '2009',
@@ -341,7 +340,7 @@ class RoomControllerTest extends TestCase
       'status' => $room->status, 'attributes' => json_encode($room->attributes),
     ]);
 
-    $response = $this->actingAs($user)->put('/rooms/' . $room->id, [
+    $response = $this->actingAs($user)->put('/admin/rooms/' . $room->id, [
       'name' => 'the room',
       'number' => '24',
       'floor' => '2009',
@@ -409,7 +408,7 @@ class RoomControllerTest extends TestCase
       ]
     );
 
-    $response = $this->actingAs($user)->put('/rooms/' . $room->id, [
+    $response = $this->actingAs($user)->put('/admin/rooms/' . $room->id, [
       'name' => 'the room',
       'number' => '24',
       'floor' => '2009',
@@ -474,7 +473,7 @@ class RoomControllerTest extends TestCase
             'floor' => $room->floor, 'building' => $room->building
         ]);
 
-        $response = $this->actingAs($user)->delete('/rooms/' . $room->id);
+        $response = $this->actingAs($user)->delete('/admin/rooms/' . $room->id);
 
         $response->assertStatus(302);
         $this->assertDatabaseMissing('rooms', ['name' => $room->name]);

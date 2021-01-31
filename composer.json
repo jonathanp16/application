@@ -18,7 +18,8 @@
         "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.0",
         "spatie/laravel-permission": "^3.17",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-zip": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",
@@ -119,6 +120,10 @@
         "ide:full": [
             "@ide",
             "@ide:models"
+        ],
+        "routes":
+        [
+          "@php artisan route:list --columns=name,uri,method"
         ]
     }
 }

@@ -45,7 +45,7 @@ class ReservationControllerTest extends TestCase
 //    $reservation2->end_time = Carbon::parse($reservation2->end_time)->addDay()->format('Y-m-d\TH:i');
     $response = $this->actingAs($user)->post('/reservation' , [
       'room_id' => $room->id,
-      'recurrences' => [
+      'reservations' => [
         ['start_time' => $reservation->start_time->format('Y-m-d\TH:i:00'), 'end_time' => $reservation->end_time->format('Y-m-d\TH:i:00')],
         ['start_time' => $reservation2->start_time->format('Y-m-d\TH:i:00'), 'end_time' => $reservation2->end_time->format('Y-m-d\TH:i:00')],
       ]
@@ -100,7 +100,7 @@ class ReservationControllerTest extends TestCase
     $reservationNew->end_time = Carbon::parse($reservation->end_time)->addMinute()->format('Y-m-d\TH:i');
     $response = $this->actingAs($user)->put('/reservation/'.$reservation->id, [
       'room_id' => $reservationNew->room_id,
-      'recurrences'=>[
+      'reservations'=>[
         [
           'start_time' => $reservationNew->start_time->format('Y-m-d\TH:i:00'),
           'end_time' => $reservationNew->end_time->format('Y-m-d\TH:i:00'),
@@ -134,7 +134,7 @@ class ReservationControllerTest extends TestCase
     $reservationNew->end_time = Carbon::parse($reservation->start_time)->addMinute()->format('Y-m-d\TH:i');
     $response = $this->actingAs($user)->post('/reservation', [
       'room_id' => $reservationNew->room_id,
-      'recurrences'=>[
+      'reservations'=>[
         [
           'start_time' => $reservationNew->start_time->format('Y-m-d\TH:i:00'),
           'end_time' => $reservationNew->end_time->format('Y-m-d\TH:i:00'),
@@ -168,7 +168,7 @@ class ReservationControllerTest extends TestCase
     $reservationNew->end_time = Carbon::parse($reservation->end_time)->addMinute()->format('Y-m-d\TH:i');
     $response = $this->actingAs($user)->post('/reservation', [
       'room_id' => $reservationNew->room_id,
-      'recurrences'=>[
+      'reservations'=>[
         [
           'start_time' => $reservationNew->start_time->format('Y-m-d\TH:i:00'),
           'end_time' => $reservationNew->end_time->format('Y-m-d\TH:i:00'),
@@ -202,7 +202,7 @@ class ReservationControllerTest extends TestCase
     $reservationNew->end_time = Carbon::parse($reservation->end_time)->addMinute()->format('Y-m-d\TH:i');
     $response = $this->actingAs($user)->post('/reservation', [
       'room_id' => $reservationNew->room_id,
-      'recurrences'=>[
+      'reservations'=>[
         [
           'start_time' => $reservationNew->start_time->format('Y-m-d\TH:i:00'),
           'end_time' => $reservationNew->end_time->format('Y-m-d\TH:i:00'),
@@ -236,7 +236,7 @@ class ReservationControllerTest extends TestCase
     $reservationNew->end_time = Carbon::parse($reservation->end_time)->subMinute()->format('Y-m-d\TH:i');
     $response = $this->actingAs($user)->post('/reservation', [
       'room_id' => $reservationNew->room_id,
-      'recurrences'=>[
+      'reservations'=>[
         [
           'start_time' => $reservationNew->start_time->format('Y-m-d\TH:i:00'),
           'end_time' => $reservationNew->end_time->format('Y-m-d\TH:i:00'),
@@ -267,7 +267,7 @@ class ReservationControllerTest extends TestCase
     $reservation2->end_time = Carbon::parse($reservation2->end_time)->addDay()->format('Y-m-d\TH:i');
     $response = $this->actingAs($user)->post('/reservation' , [
       'room_id' => $room->id,
-      'recurrences' => [
+      'reservations' => [
         ['start_time' => $reservation->start_time->format('Y-m-d\TH:i:00'), 'end_time' => $reservation->end_time->format('Y-m-d\TH:i:00')],
         ['start_time' => $reservation2->start_time->format('Y-m-d\TH:i:00'), 'end_time' => $reservation2->end_time->format('Y-m-d\TH:i:00')],
       ]
@@ -292,7 +292,7 @@ class ReservationControllerTest extends TestCase
 
     $response = $this->actingAs($user)->post('/reservation' , [
       'room_id' => $room->id,
-      'recurrences' => [
+      'reservations' => [
         ['start_time' => $reservation->start_time->format('Y-m-d\TH:i:00'), 'end_time' => $reservation->end_time->format('Y-m-d\TH:i:00')],
       ]
     ]);
@@ -315,7 +315,7 @@ class ReservationControllerTest extends TestCase
 
     $response = $this->actingAs($user)->post('/reservation' , [
       'room_id' => $room->id,
-      'recurrences' => [
+      'reservations' => [
         ['start_time' => $reservation->start_time->format('Y-m-d\TH:i:00'), 'end_time' => $reservation->end_time->format('Y-m-d\TH:i:00')],
       ]
     ]);
@@ -336,6 +336,37 @@ class ReservationControllerTest extends TestCase
     $this->assertEquals(1, $reservation->bookingRequest()->count());
 
   }
+
+  public function test_retrieve_approved_reservations_on_given_date()
+  {
+    $user = User::factory()->create();
+    $room = Room::factory()->create();
+
+    $booking_request = $this->createBookingRequest(true, ['status' => "approved"]);
+    $reservation = $this->createReservation($room, $booking_request, true);
+    $this->createReservationAvailabilities($reservation->start_time, $room);
+
+    $response = $this->actingAs($user)->post('/api/reservations/' . $room->id, [
+      'date' => $reservation->start_time
+    ]);
+
+    $response->assertJsonCount(1);
+  }
+
+  public function test_retrieve_approved_reservations_with_no_date_return_empty()
+  {
+    $user = User::factory()->create();
+    $room = Room::factory()->create();
+
+    $booking_request = $this->createBookingRequest(true, ['status' => "approved"]);
+    $reservation = $this->createReservation($room, $booking_request, true);
+    $this->createReservationAvailabilities($reservation->start_time, $room);
+
+    $response = $this->actingAs($user)->post('/api/reservations/' . $room->id);
+
+    $response->assertJsonCount(0);
+  }
+
   /**
    * helper functions
    */
@@ -374,12 +405,12 @@ class ReservationControllerTest extends TestCase
     return $reservation;
   }
 
-  private function createBookingRequest($create = true)
+  private function createBookingRequest($create = true, $input = [])
   {
     if ($create) {
-      $booking_request = BookingRequest::factory()->create();
+      $booking_request = BookingRequest::factory()->create($input);
     } else {
-      $booking_request = BookingRequest::factory()->make();
+      $booking_request = BookingRequest::factory()->make($input);
     }
     return $booking_request;
   }
