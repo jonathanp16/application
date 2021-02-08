@@ -7,12 +7,14 @@ import { InertiaForm } from 'laravel-jetstream';
 import PortalVue from 'portal-vue';
 import Calendar from 'v-calendar/lib/components/calendar.umd'
 import DatePicker from 'v-calendar/lib/components/date-picker.umd'
+import DateFormatter from "./plugins/date-formatter.js";
 
 Vue.use(InertiaApp);
 Vue.use(InertiaForm);
 Vue.use(PortalVue);
 Vue.component('calendar', Calendar)
 Vue.component('date-picker', DatePicker)
+Vue.use(DateFormatter);
 
 const app = document.getElementById('app');
 

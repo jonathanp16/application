@@ -187,10 +187,6 @@ export default {
       });
     },
 
-    fromNow(timestamp) {
-      return moment(timestamp).local().fromNow()
-    },
-
     setSelectedRoles(user) {
       this.updateUserForm.roles = this.mapUserRoles(user.roles)
     },
