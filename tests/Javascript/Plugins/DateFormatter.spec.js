@@ -5,7 +5,7 @@ jest.mock('laravel-jetstream')
 import {createLocalVue, shallowMount} from '@vue/test-utils'
 import {InertiaApp} from '@inertiajs/inertia-vue'
 import {InertiaForm} from 'laravel-jetstream'
-import DateFormatter from "@src/Plugins/date-formatter";
+import {calendar, fromNow} from "@src/Plugins/date-formatter";
 import {InertiaFormMock} from "@test/__mocks__/laravel-jetstream";
 import moment from "moment";
 
@@ -19,18 +19,17 @@ beforeEach(() => {
   localVue = createLocalVue()
   localVue.use(InertiaApp)
   localVue.use(InertiaForm)
-  localVue.use(DateFormatter)
 
 });
 
 test('calendar should return proper calendar date', () => {
-  const date = localVue.prototype.$calendar("2021-02-08T18:03");
+  const date = calendar("2021-02-08T18:03");
   expect(date).toBe("February 8, 2021 6:03 PM");
 })
 
 
 test('fromNow should return proper date from current timestamp', () => {
-  const date = localVue.prototype.$fromNow("2021-02-08T18:03:00.000000Z");
+  const date = fromNow("2021-02-08T18:03:00.000000Z");
   const expected = moment("2021-02-08T18:03:00.000000Z").local().fromNow();
   expect(date).toBe(expected);
 })
