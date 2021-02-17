@@ -24,8 +24,8 @@ beforeEach(() => {
 });
 
 test('calendar should return proper calendar date', () => {
-  const date = localVue.prototype.$calendar("2021-02-08T18:03:00.000000Z");
-  expect(date).toBe("February 8, 2021 1:03 PM");
+  const date = localVue.prototype.$calendar("2021-02-08T18:03");
+  expect(date).toBe("February 8, 2021 6:03 PM");
 })
 
 
