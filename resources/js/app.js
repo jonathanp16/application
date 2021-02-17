@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 require('./bootstrap');
 
 import Vue from 'vue';
