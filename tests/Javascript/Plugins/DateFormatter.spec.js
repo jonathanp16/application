@@ -2,10 +2,11 @@ import {beforeEach, jest, test} from "@jest/globals";
 
 jest.mock('laravel-jetstream')
 
-import {createLocalVue, shallowMount} from '@vue/test-utils'
+import {createLocalVue} from '@vue/test-utils'
 import {InertiaApp} from '@inertiajs/inertia-vue'
 import {InertiaForm} from 'laravel-jetstream'
 import {calendar, fromNow} from "@src/Plugins/date-formatter";
+import DateFormatter from "@src/Plugins/date-formatter";
 import {InertiaFormMock} from "@test/__mocks__/laravel-jetstream";
 import moment from "moment";
 
@@ -21,6 +22,10 @@ beforeEach(() => {
   localVue.use(InertiaForm)
 
 });
+
+test('plugin installs without crashing', () => {
+  localVue.use(DateFormatter);
+})
 
 test('calendar should return proper calendar date', () => {
   const date = calendar("2021-02-08T18:03");
