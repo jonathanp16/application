@@ -23,7 +23,6 @@
     import JetButton from '@src/Jetstream/Button'
     import CreateRoleForm from "./CreateRoleForm";
     import UpdateRoleForm from "./UpdateRoleForm";
-    import moment from "moment";
     import RoleTable from '@src/Components/Tables/RoleTable';
 
     export default {
