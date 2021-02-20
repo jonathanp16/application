@@ -5,7 +5,6 @@
       <thead>
         <tr>
           <th class="lt-grey p-3" id="id_role_name">Role Name</th>
-          <th class="lt-grey p-3" id="id_role_desc">Description</th>
           <th class="lt-grey p-3" id="id_role_set">Permission Set</th>
           <th class="lt-grey p-3" id="id_role_action">Action</th>
         </tr>
@@ -13,7 +12,6 @@
       <tbody>
         <tr v-for="role in roles" :key="role.id">
           <td class="text-center lt-grey p-3">{{role.name}}</td>
-          <td class="text-center lt-grey p-3">Desc</td>
           <td class="text-center lt-grey p-3">
             <Dropdown width="48">
               <template #trigger>
