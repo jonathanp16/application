@@ -13,7 +13,7 @@
         <tr v-for="role in roles" :key="role.id">
           <td class="text-center lt-grey p-3">{{role.name}}</td>
           <td class="text-center lt-grey p-3">
-            <Dropdown width="48">
+            <jet-dropdown width="48">
               <template #trigger>
                 <button
                   class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out mx-auto"
@@ -28,11 +28,11 @@
                 </div>
 
               </template>
-            </Dropdown>
+            </jet-dropdown>
           </td>
           <td class="lt-grey p-3">
             <div class="text-md mx-2">
-              <Dropdown width="48">
+              <jet-dropdown width="48">
                 <template #trigger>
                   <button
                   class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out mx-auto"
@@ -59,7 +59,7 @@
                     </button>
                   </div>
                 </template>
-              </Dropdown>
+              </jet-dropdown>
             </div>
           </td>
         </tr>
@@ -107,7 +107,7 @@ import JetDangerButton from '@src/Jetstream/DangerButton'
 import JetButton from '@src/Jetstream/Button'
 import JetModal from '@src/Jetstream/Modal'
 import Input from "@src/Jetstream/Input";
-import Dropdown from "@src/Jetstream/Dropdown";
+import JetDropdown from "@src/Jetstream/Dropdown";
 import UpdateRoomForm from "@src/Pages/Admin/Rooms/UpdateRoomForm";
 import UpdateRoleForm from "@src/Pages/Admin/Roles/UpdateRoleForm";
 
@@ -127,7 +127,7 @@ export default {
     },
   },
   components: {
-        Dropdown,
+        JetDropdown,
         Input,
         JetSectionBorder,
         JetActionSection,

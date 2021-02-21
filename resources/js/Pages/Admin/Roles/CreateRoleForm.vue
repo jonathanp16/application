@@ -7,15 +7,15 @@
 
 
             <template #form>
-                <div class="overflow-y-auto max-h-96 w-full pb-3">
-                    
+                <div class="w-full pb-3">
+
                     <div class="mb-3 w-4/5">
                         <jet-label for="name" value="Name"/>
                         <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form.name" autofocus/>
                         <jet-input-error :message="form.error('name')" class="mt-2"/>
                     </div>
 
-                    
+
                     <div class="mb-3 w-4/5" v-if="availablePermissions.length > 0">
                         <jet-label for="permissions" value="Permissions" />
 
@@ -29,7 +29,7 @@
                         </div>
                     </div>
 
-                    
+
                     <div class="mb-3 w-4/5">
                         <jet-label for="number_of_bookings_per_period" value="Number of bookings per period (optional)"/>
                         <jet-input id="number_of_bookings_per_period" type="number" class="mt-1 block w-full"
@@ -56,7 +56,7 @@
             </template>
         </form-section>
     </div>
-    
+
 </template>
 
 <script>
