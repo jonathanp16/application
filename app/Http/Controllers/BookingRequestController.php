@@ -171,7 +171,7 @@ class BookingRequestController extends Controller
     public function edit(BookingRequest $booking)
     {
         return inertia('Requestee/EditBookingForm', [
-            'booking' => $booking->load('user', 'reservations', $this->reservationRoom),
+            'booking' => $booking->load('requester', 'reservations', $this->reservationRoom),
         ]);
     }
 
@@ -251,7 +251,7 @@ class BookingRequestController extends Controller
     public function list()
     {
         return inertia('Requestee/BookingsList', [
-            'bookings' => BookingRequest::with('user', $this->reservationRoom)->get(),
+            'bookings' => BookingRequest::with('requester', $this->reservationRoom)->get(),
 
         ]);
     }
