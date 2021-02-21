@@ -6,7 +6,7 @@
             </div>
             <div v-if="roles.length > 0" class="m-4 w-3/4">
                 <div class="py-12">
-                    <RoleTable :roles="roles" :permissions="permissions"/>
+                    <role-table :roles="roles" :permissions="permissions"/>
                 </div>
             </div>
         </div>
