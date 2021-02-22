@@ -1,7 +1,7 @@
 <x-guest-layout>
     <x-jet-authentication-card >
         <x-slot name="logo">
-        <img src="https://www.csu.qc.ca/wp-content/uploads/2020/01/CSU_logo_Colored.png" >
+        <img src="https://www.csu.qc.ca/wp-content/uploads/2020/01/CSU_logo_Colored.png" alt= "Csu logo">
         </x-slot>
 
         <x-jet-validation-errors class="mb-4" />
@@ -80,25 +80,25 @@
                         </div>
                         <div class="flex-1 py-3">
                             <a href="https://www.facebook.com">
-                                <i class="fab fa-facebook pr-2"></i>
+                                <em class="fab fa-facebook pr-2"></em>
                                 Facebook
                             </a>
                         </div>
                         <div class="flex-1 py-3">
                             <a href="https://www.instagram.com">
-                                <i class="fab fa-instagram pr-2"></i>
+                                <em class="fab fa-instagram pr-2"></em>
                                 Instagram
                             </a>
                         </div>
                         <div class="flex-1 py-3">
                             <a href="https://www.twitter.com">
-                                <i class="fab fa-twitter pr-2"></i>
+                                <em class="fab fa-twitter pr-2"></em>
                                 Twitter
                             </a>
                         </div>
                         <div class="flex-1 py-3">
                             <a href="https://www.youtube.com">
-                                <i class="fab fa-youtube pr-2"></i>
+                                <em class="fab fa-youtube pr-2"></em>
                                 YouTube
                             </a>
                         </div>
