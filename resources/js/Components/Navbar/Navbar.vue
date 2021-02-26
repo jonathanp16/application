@@ -119,6 +119,7 @@
             class="space-x-8 sm:flex"
           >
             <jet-nav-sub
+              v-if="userHasOneOf(['bookings.request'])"
               href="/bookings/list"
               :active="$page.currentRouteName === 'bookings.list'"
             >
@@ -131,12 +132,14 @@
               Search
             </jet-nav-sub>
             <jet-nav-sub
+              v-if="userHasOneOf(['bookings.request'])"
               href="/bookings/create"
               :active="$page.currentRouteName === 'bookings.create'"
             >
               Create
             </jet-nav-sub>
             <jet-nav-sub
+              v-if="userHasOneOf(['bookings.approve'])"
               href="/bookings/review"
               :active="$page.currentRouteName === 'bookings.review'"
             >
@@ -148,24 +151,41 @@
             class="space-x-8 flex"
           >
             <jet-nav-sub
+              v-if="userHasOneOf([
+                'rooms.create',
+                'rooms.update',
+                'rooms.delete'
+              ])"
               href="/admin/rooms"
               :active="$page.currentRouteName === 'admin.rooms.index'"
             >
               Rooms
             </jet-nav-sub>
             <jet-nav-sub
+              v-if="userHasOneOf([
+                'users.create',
+                'users.update',
+                'users.delete'
+              ])"
               href="/admin/users"
               :active="$page.currentRouteName === 'admin.users.index'"
             >
               Users
             </jet-nav-sub>
             <jet-nav-sub
+              v-if="userHasOneOf([
+                'roles.assign',
+                'roles.create',
+                'roles.update',
+                'roles.delete'
+              ])"
               href="/admin/roles"
               :active="$page.currentRouteName === 'admin.roles.index'"
             >
               Roles
             </jet-nav-sub>
             <jet-nav-sub
+              v-if="userHasOneOf(['settings.edit'])"
               href="/admin/settings"
               :active="$page.currentRouteName === 'admin.settings.index'"
             >
@@ -213,6 +233,13 @@ export default {
       axios.post('/logout').then(() => {
         window.location = '/';
       })
+    },
+    userHasOneOf(permissions) {
+      for (let i = 0; i < permissions.length; ++i)
+        if (this.$page.user.can.includes(permissions[i]))
+          return true;
+
+      return false;
     },
     userHasPermissionWithPrefix(prefix) {
       return this.$page.user.can.some(function (e) {
