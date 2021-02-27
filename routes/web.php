@@ -156,7 +156,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             ->name('store')
             ->middleware(['permission:bookings.create']);
 
-        Route::put('/{booking}/edit', [BookingRequestController::class, 'edit'])
+        Route::get('/{booking}/edit', [BookingRequestController::class, 'edit'])
             ->name('edit')
             ->middleware(['permission:bookings.update']);
 

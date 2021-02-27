@@ -148,7 +148,7 @@ class BookingRequestController extends Controller
         $log = '[' . date(self::DATE_FORMAT) . '] - Created booking request';
         BookingRequestUpdated::dispatch($booking, $log);
 
-        return redirect()->route('bookings.list')->with('flash', ['banner' => 'Your Booking Request was submitted']);
+        return redirect()->route('bookings.index')->with('flash', ['banner' => 'Your Booking Request was submitted']);
     }
 
   /**
@@ -197,7 +197,7 @@ class BookingRequestController extends Controller
             BookingRequestUpdated::dispatch($booking, $log);
         }
 
-        return redirect(route('bookings.list'))
+        return redirect(route('bookings.index'))
             ->with('flash', ['banner' => 'Your Booking Request was updated!']);
     }
 
@@ -213,7 +213,7 @@ class BookingRequestController extends Controller
         Reservation::where('booking_request_id', $booking->id)->delete();
         $booking->delete();
 
-        return redirect()->route('bookings.index');
+        return redirect()->back();
     }
 
     public function downloadReferenceFiles($folder)
