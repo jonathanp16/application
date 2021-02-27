@@ -137,9 +137,41 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
      * BOOKINGS
      */
     Route::prefix('bookings')->name('bookings.')->group(function () {
-        Route::resource('', BookingRequestController::class)->except('show')->parameters(['' => 'booking']);
-        Route::post('create', [BookingRequestController::class, 'createInit'])->name('createInit');
-        Route::get('list', [BookingRequestController::class, 'list'])->name('list');
+        /**
+         * ROLES
+         */
+        Route::get('/', [BookingRequestController::class, 'list'])
+            ->name('index')
+            ->middleware(['permission:bookings.create']);
+
+        Route::get('/create', [BookingRequestController::class, 'create'])
+            ->name('create')
+            ->middleware(['permission:bookings.create']);
+
+        Route::post('/create', [BookingRequestController::class, 'createInit'])
+            ->name('createInit')
+            ->middleware(['permission:bookings.create']);
+
+        Route::post('/', [BookingRequestController::class, 'store'])
+            ->name('store')
+            ->middleware(['permission:bookings.create']);
+
+        Route::put('/{booking}/edit', [BookingRequestController::class, 'edit'])
+            ->name('edit')
+            ->middleware(['permission:bookings.update']);
+
+        Route::put('/{booking}', [BookingRequestController::class, 'update'])
+            ->name('update')
+            ->middleware(['permission:bookings.update']);
+
+        Route::delete('/{booking}', [BookingRequestController::class, 'destroy'])
+            ->name('destroy')
+            ->middleware(['permission:bookings.delete']);
+
+        Route::get('/search', [BookingRequestController::class, 'index'])
+            ->name('search')
+            ->middleware(['permission:bookings.create']);
+
         Route::get('download/{folder}', [BookingRequestController::class, 'downloadReferenceFiles'])->name('download');
 
         Route::name('reviews.')->middleware('permission:bookings.approve')->group(function () {
@@ -149,6 +181,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         });
     });
 
-    Route::resource('reservation', ReservationsController::class);
+    Route::resource('reservation', ReservationsController::class)->middleware(['permission:bookings.create']);
 
 });

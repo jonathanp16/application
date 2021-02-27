@@ -80,7 +80,7 @@ class BookingRequestController extends Controller
     public function create()
     {
       if (!Session::has(self::RESERVATIONS_SESSION_KEY)) {
-        return redirect()->route('bookings.index');
+        return redirect()->route('bookings.search');
       } else {
         $data = Session::get(self::RESERVATIONS_SESSION_KEY)[0];
 

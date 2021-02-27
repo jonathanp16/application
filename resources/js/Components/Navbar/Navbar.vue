@@ -119,20 +119,20 @@
             class="space-x-8 sm:flex"
           >
             <jet-nav-sub
-              v-if="userHasOneOf(['bookings.request'])"
-              href="/bookings/list"
-              :active="$page.currentRouteName === 'bookings.list'"
+              v-if="userHasOneOf(['bookings.create'])"
+              href="/bookings"
+              :active="$page.currentRouteName === 'bookings.index'"
             >
               My Bookings
             </jet-nav-sub>
             <jet-nav-sub
-              href="/bookings"
-              :active="$page.currentRouteName === 'bookings.index'"
+              href="/bookings/search"
+              :active="$page.currentRouteName === 'bookings.search'"
             >
               Search
             </jet-nav-sub>
             <jet-nav-sub
-              v-if="userHasOneOf(['bookings.request'])"
+              v-if="userHasOneOf(['bookings.create'])"
               href="/bookings/create"
               :active="$page.currentRouteName === 'bookings.create'"
             >
@@ -267,7 +267,7 @@ export default {
       switch (this.$page.currentRouteName) {
         case 'bookings.index':
         case 'bookings.create':
-        case 'bookings.list':
+        case 'bookings.search':
           return true;
         default:
           return false

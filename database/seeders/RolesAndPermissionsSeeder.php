@@ -32,7 +32,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'roles.update',
             'roles.delete',
 
-            'bookings.request', // create & update
+            'bookings.create',
+            'bookings.update',
             'bookings.approve', // view & respond
             'bookings.delete',
 
