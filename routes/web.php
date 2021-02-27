@@ -110,16 +110,16 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
                     ->name('index');
 
                 Route::post('/', [BlackoutController::class, 'store'])
-                    ->name('store');
-//                    ->middleware(['permission:roles.create']);
+                    ->name('store')
+                    ->middleware(['permission:rooms.blackouts.create']);
 
                 Route::put('/{blackout}', [BlackoutController::class, 'update'])
-                    ->name('update');
-//                    ->middleware(['permission:roles.update']);
+                    ->name('update')
+                    ->middleware(['permission:rooms.blackouts.update']);
 
                 Route::delete('/{blackout}', [BlackoutController::class, 'destroy'])
-                    ->name('destroy');
-//                    ->middleware(['permission:roles.delete']);
+                    ->name('destroy')
+                    ->middleware(['permission:rooms.blackouts.delete']);
             });
         });
 

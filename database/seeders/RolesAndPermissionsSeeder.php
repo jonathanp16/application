@@ -40,6 +40,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'rooms.update',
             'rooms.delete',
 
+            'rooms.blackouts.create',
+            'rooms.blackouts.update',
+            'rooms.blackouts.delete',
+
             'settings.edit'
         ];
 
