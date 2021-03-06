@@ -295,4 +295,34 @@ class BookingRequestController extends Controller
     }
 
 
+    /**
+     * Filter booking requests by given json payload
+     *
+     * @param Request $request
+     * @return JsonResponse|Response
+     */
+    public function filter(Request $request)
+    {
+//        var_dump($request);
+//        dd($request);
+//        die();
+        // None of the request fields are mandatory, only
+        // filter the ones provided from request
+        $request->validate([
+            'status' => ['boolean'],
+        ]);
+
+        // Filter by status, assignee, dates if present in query
+        $query = BookingRequest::with('requester')->query();
+
+//        foreach ($request->toArray() as $key => $value) {
+//            if ($key == 'status' && !empty($value)) {
+//                $query->where('status->' . $value);
+//            }
+//        }
+
+        return response()->json($query->get());
+    }
+
+
 }

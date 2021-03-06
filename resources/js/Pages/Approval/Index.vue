@@ -6,7 +6,10 @@
       </h2>
     </template>
     <div v-if="bookings.length > 0" class="m-24">
-      <AdminBookingRequestTable :bookings="bookings"/>
+      <AdminBookingRequestTable
+        :bookings="dataBookings"
+        @filterBookingRequestsJson="filterBookingRequestsJson($event)"
+      />
     </div>
 
     <div v-else>
@@ -34,6 +37,7 @@ import JetSectionBorder from '@src/Jetstream/SectionBorder'
 import XSection from "@src/Components/XSection"
 import AppLayout from '@src/Layouts/AppLayout'
 import AdminBookingRequestTable from "@src/Components/Tables/AdminBookingRequestTable";
+import axios from "axios";
 
 export default {
   components: {
@@ -51,5 +55,22 @@ export default {
       },
     }
   },
+  mounted(){
+    this.dataBookings = this.bookings ?? [];
+  },
+  data() {
+    return {
+      dataBookings: []
+    }
+  },
+  methods:{
+    filterBookingRequestsJson(e) {
+      axios.post('/api/filterBookingRequests', e)
+        .then((response)=>{
+          console.log(response)
+          this.dataBookings = response.data;
+        })
+    }
+  }
 }
 </script>
