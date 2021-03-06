@@ -39,7 +39,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="booking in filteredBookings" :key="booking.id">
+      <tr v-for="booking in filteredBookingRequests" :key="booking.id">
         <td class="text-center">{{booking.id}}</td>
         <td class="text-center">{{booking.requester.name}}</td>
         <td class="text-center">Assigned to</td>
@@ -69,13 +69,13 @@
             <div class="flex flex-col flex-1 py-2 px-3">
               <div><h2>Status</h2></div>
               <div class="flex flex-row">
-                <div><input type="checkbox"></div>
+                <div><input type="checkbox" v-model="jsonFilters.status.review"></div>
                 <div class="text-sm text-gray-400 px-2">
                   Pending
                 </div>
               </div>
               <div class="flex flex-row">
-                <div><input type="checkbox"></div>
+                <div><input type="checkbox" v-model="jsonFilters.status.approved"></div>
                 <div class="text-sm text-gray-400 px-2">
                   Approved
                 </div>
@@ -139,14 +139,17 @@ export default {
       filter: '',
       showFilterModal: false,
       jsonFilters: {
-        status: null,
+        status: {
+          review: false,
+          approved: false
+        },
         date_range_start: null,
         date_range_end: null,
       }
     }
   },
   computed: {
-    filteredBookings() {
+    filteredBookingRequests() {
       return this.bookings.filter(booking => {
         const requesterName = booking.requester.name.toLowerCase();
         const id = booking.id.toString();
@@ -160,8 +163,21 @@ export default {
 
       });
     },
+    activeJsonFilters: function () {
+      let activeJsonFilters = {};
+      for (let key of Object.keys(this.jsonFilters)) {
+        if(this.jsonFilters[key]){
+          activeJsonFilters[key] = this.jsonFilters[key];
+        }
+      }
+      return activeJsonFilters;
+    }
   },
   methods: {
+    advancedFilters(){
+        this.$emit('filterBookingRequestsJson', this.activeJsonFilters);
+        this.toggleAdvancedFilters();
+    },
     toggleAdvancedFilters(){
       this.showFilterModal = !this.showFilterModal;
     },
