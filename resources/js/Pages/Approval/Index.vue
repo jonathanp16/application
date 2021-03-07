@@ -8,6 +8,7 @@
     <div v-if="bookings.length > 0" class="m-24">
       <AdminBookingRequestTable
         :bookings="dataBookings"
+        :statuses="statuses"
         @filterBookingRequestsJson="filterBookingRequestsJson($event)"
       />
     </div>
@@ -49,6 +50,12 @@ export default {
   },
   props: {
     bookings: {
+      type: Array,
+      default: function () {
+        return []
+      },
+    },
+    statuses:{
       type: Array,
       default: function () {
         return []

@@ -54,6 +54,17 @@ class BookingRequest extends Model
 
 
     /**
+     * Constant types of booking request statuses
+     */
+    public const REVIEW = 'review';
+    public const APPROVED = 'approved';
+    public const REFUSED = 'denied';
+    public const PENDING = 'pending';
+
+    public const STATUS_TYPES = [self::REVIEW, self::APPROVED, self::REFUSED, self::PENDING];
+
+
+    /**
      * Get the rooms that are part of the booking request.
      */
     public function rooms()
