@@ -43,7 +43,7 @@
         <td class="text-center">{{booking.id}}</td>
         <td class="text-center">{{booking.requester.name}}</td>
         <td class="text-center">Assigned to</td>
-        <td class="text-center">{{ booking.status }}</td>
+        <td class="text-center capitalize">{{ booking.status }}</td>
         <td class="text-center">Created {{ booking.created_diff }}</td>
         <td class="text-center">Last Updated {{ booking.updated_diff }}</td>
         <td>
@@ -68,22 +68,10 @@
           <div class="flex flex-row">
             <div class="flex flex-col flex-1 py-2 px-3">
               <div><h2>Status</h2></div>
-              <div class="flex flex-row">
-                <div><input type="checkbox" v-model="jsonFilters.status.review"></div>
-                <div class="text-sm text-gray-400 px-2">
-                  Pending
-                </div>
-              </div>
-              <div class="flex flex-row">
-                <div><input type="checkbox" v-model="jsonFilters.status.approved"></div>
-                <div class="text-sm text-gray-400 px-2">
-                  Approved
-                </div>
-              </div>
-              <div class="flex flex-row">
-                <div><input type="checkbox"></div>
-                <div class="text-sm text-gray-400 px-2">
-                  Denied
+              <div v-for="status in statuses" class="flex flex-row">
+                <div><input type="checkbox" v-model="jsonFilters.status_list[status]"></div>
+                <div class="capitalize text-sm text-gray-400 px-2">
+                  {{status}}
                 </div>
               </div>
             </div>
@@ -124,6 +112,12 @@ export default {
       default: function () {
         return []
       },
+    },
+    statuses:{
+      type: Array,
+      default: function () {
+        return []
+      },
     }
   },
   components: {
@@ -139,14 +133,19 @@ export default {
       filter: '',
       showFilterModal: false,
       jsonFilters: {
-        status: {
-          review: false,
-          approved: false
-        },
+        status_list: [],
         date_range_start: null,
         date_range_end: null,
       }
     }
+  },
+  mounted(){
+    const status_zip = {};
+    for (var i = 0; i < this.statuses.length; i++) {
+      status_zip[this.statuses[i]] = false;
+    }
+    this.jsonFilters.status_list = status_zip ?? {};
+
   },
   computed: {
     filteredBookingRequests() {

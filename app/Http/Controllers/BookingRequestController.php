@@ -303,23 +303,22 @@ class BookingRequestController extends Controller
      */
     public function filter(Request $request)
     {
-//        var_dump($request);
-//        dd($request);
-//        die();
         // None of the request fields are mandatory, only
         // filter the ones provided from request
         $request->validate([
-            'status' => ['boolean'],
+            'status_list.*' => ['boolean'],
         ]);
 
         // Filter by status, assignee, dates if present in query
-        $query = BookingRequest::with('requester')->query();
+        $query = BookingRequest::with('requester');
 
-//        foreach ($request->toArray() as $key => $value) {
-//            if ($key == 'status' && !empty($value)) {
-//                $query->where('status->' . $value);
-//            }
-//        }
+
+
+        foreach ($request->status_list as $key => $value) {
+            if ($value) {
+                $query->where('status', $key);
+            }
+        }
 
         return response()->json($query->get());
     }
