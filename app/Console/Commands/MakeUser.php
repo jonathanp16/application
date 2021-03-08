@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * @codeCoverageIgnore
+ */
 class MakeUser extends Command
 {
     protected $signature = 'user:create {email} {--p|password=} {--a|admin} {--N|name=}';
