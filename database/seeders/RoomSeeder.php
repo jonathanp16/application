@@ -124,8 +124,8 @@ class RoomSeeder extends Seeder
                 'sale_for_profit' => false,
                 'fundraiser' => false,
             ],
-            'min_days_advance' => NULL,
-            'max_days_advance' => NULL,
+            'min_days_advance' => 0,
+            'max_days_advance' => 200,
             'room_type' => 'Conference'
         ]);
 
@@ -162,8 +162,8 @@ class RoomSeeder extends Seeder
                     'sale_for_profit' => false,
                     'fundraiser' => false,
                 ],
-                'min_days_advance' => NULL,
-                'max_days_advance' => NULL,
+                'min_days_advance' => 0,
+                'max_days_advance' => 200,
                 'room_type' => 'Conference'
             ]);
     
@@ -200,8 +200,8 @@ class RoomSeeder extends Seeder
                         'sale_for_profit' => false,
                         'fundraiser' => false,
                     ],
-                    'min_days_advance' => NULL,
-                    'max_days_advance' => NULL,
+                    'min_days_advance' => 0,
+                    'max_days_advance' => 200,
                     'room_type' => 'Mezzanine'
                 ]);
         
@@ -237,8 +237,8 @@ class RoomSeeder extends Seeder
                             'sale_for_profit' => false,
                             'fundraiser' => false,
                         ],
-                        'min_days_advance' => NULL,
-                        'max_days_advance' => NULL,
+                        'min_days_advance' => 0,
+                        'max_days_advance' => 200,
                         'room_type' => 'Mezzanine'
                     ]);
             
@@ -274,8 +274,8 @@ class RoomSeeder extends Seeder
                                 'sale_for_profit' => true,
                                 'fundraiser' => false,
                             ],
-                            'min_days_advance' => NULL,
-                            'max_days_advance' => NULL,
+                            'min_days_advance' => 0,
+                            'max_days_advance' => 200,
                             'room_type' => 'Mezzanine'
                         ]);
                 
