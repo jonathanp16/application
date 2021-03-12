@@ -21,6 +21,8 @@ use Illuminate\Validation\ValidationException;
 use Inertia\ResponseFactory;
 use ZipArchive;
 use File;
+use App\Http\Resources\BookingCollection;
+
 
 class BookingRequestController extends Controller
 {
@@ -307,6 +309,8 @@ class BookingRequestController extends Controller
         // filter the ones provided from request
         $request->validate([
             'status_list.*' => ['boolean'],
+            'date_range_start' => ['string'],
+            'date_range_end' => ['string']
         ]);
 
         // Filter by status, assignee, dates if present in query
@@ -320,7 +324,15 @@ class BookingRequestController extends Controller
             }
         }
 
-        return response()->json($query->get());
+        if($request->date_range_start){
+            $query->where('created_at', '<', $request->date_range_start);
+        }
+
+        if($request->date_range_end){
+            $query->where('created_at', '>', $request->date_range_end);
+        }
+
+        return response()->json(new BookingCollection($query->get()));
     }
 
 

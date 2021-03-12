@@ -9,6 +9,7 @@
       <AdminBookingRequestTable
         :bookings="dataBookings"
         :statuses="statuses"
+        :reviewers="reviewers"
         @filterBookingRequestsJson="filterBookingRequestsJson($event)"
       />
     </div>
@@ -60,7 +61,11 @@ export default {
       default: function () {
         return []
       },
-    }
+    },
+    reviewers: {
+      type: Array,
+      required: true,
+    },
   },
   mounted(){
     this.dataBookings = this.bookings ?? [];

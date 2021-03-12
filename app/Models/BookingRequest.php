@@ -58,7 +58,7 @@ class BookingRequest extends Model
      */
     public const REVIEW = 'review';
     public const APPROVED = 'approved';
-    public const REFUSED = 'denied';
+    public const REFUSED = 'refused';
     public const PENDING = 'pending';
 
     public const STATUS_TYPES = [self::REVIEW, self::APPROVED, self::REFUSED, self::PENDING];
