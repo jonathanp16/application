@@ -42,7 +42,11 @@
       <tr v-for="booking in filteredBookingRequests" :key="booking.id">
         <td class="text-center">{{booking.id}}</td>
         <td class="text-center">{{booking.requester.name}}</td>
-        <td class="text-center">Assigned to</td>
+        <td class="text-center">
+          <div class="-space-x-4">
+            <img v-for="reviewer in booking.reviewers " class="relative z-30 inline object-cover w-12 h-12 border-2 border-white rounded-full" :src="reviewer.profile_photo_url" :alt="reviewer.name"/>
+          </div>
+        </td>
         <td class="text-center capitalize">{{ booking.status }}</td>
         <td class="text-center">Created {{ booking.created_diff }}</td>
         <td class="text-center">Last Updated {{ booking.updated_diff }}</td>
@@ -64,7 +68,7 @@
       </template>
 
       <template #content>
-        <div class="overflow-y-auto h-48">
+        <div class="overflow-y-auto h-96">
           <div class="flex flex-row">
             <div class="flex flex-col flex-1 py-2 px-3">
               <div><h2>Status</h2></div>
@@ -75,6 +79,38 @@
                 </div>
               </div>
             </div>
+            <div class="flex flex-col flex-1 py-2 px-3">
+              <div><h2>Date Created</h2></div>
+              <div class="flex flex-col">
+                  <jet-label for="start_time" value="Before" />
+                  <jet-input
+                    id="start_time"
+                    type="datetime-local"
+                    class="mt-1 block w-full"
+                    v-model="jsonFilters.date_range_start"
+                    autofocus
+                  />
+              </div>
+              <div class="flex flex-col">
+                  <jet-label for="end_time" value="After" />
+                  <jet-input
+                    id="end_time"
+                    type="datetime-local"
+                    class="mt-1 block w-full"
+                    v-model="jsonFilters.date_range_end"
+                    autofocus
+                  />
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-row">
+            <div class="flex flex-col flex-1 py-2 px-3">
+            <div><h2>Reviewers</h2></div>
+            <div class="flex flex-row">
+              <multi-select :options="options" :selected-on-init="selected" @change="updateReviewers"/>
+            </div>
+          </div>
           </div>
         </div>
 
@@ -101,8 +137,10 @@ import JetSecondaryButton from "@src/Jetstream/SecondaryButton";
 import JetDropdown from "@src/Jetstream/Dropdown";
 import JetDropdownLink from "@src/Jetstream/DropdownLink";
 import JetButton from "@src/Jetstream/Button";
-
+import JetLabel from "@src/Jetstream/Label";
 import JetResponsiveNavLink from "@src/Jetstream/ResponsiveNavLink"
+import JetInput from "@src/Jetstream/Input";
+import MultiSelect from "@src/Components/Form/MultiSelect";
 
 export default {
   name: "AdminBookingRequestTable",
@@ -118,7 +156,11 @@ export default {
       default: function () {
         return []
       },
-    }
+    },
+    reviewers: {
+      type: Array,
+      required: true,
+    },
   },
   components: {
     JetResponsiveNavLink,
@@ -126,16 +168,22 @@ export default {
     JetDropdown,
     JetButton,
     JetDialogModal,
-    JetSecondaryButton
+    JetSecondaryButton,
+    JetLabel,
+    JetInput,
+    MultiSelect
   },
   data() {
     return {
       filter: '',
       showFilterModal: false,
+      selected: {},
+      options: {},
       jsonFilters: {
         status_list: [],
         date_range_start: null,
         date_range_end: null,
+        data_reviewers: []
       }
     }
   },
@@ -146,6 +194,9 @@ export default {
     }
     this.jsonFilters.status_list = status_zip ?? {};
 
+  },
+  created() {
+      this.options = this.reduceUsersForSelect(this.reviewers);
   },
   computed: {
     filteredBookingRequests() {
@@ -180,6 +231,15 @@ export default {
     toggleAdvancedFilters(){
       this.showFilterModal = !this.showFilterModal;
     },
+    reduceUsersForSelect(users) {
+      return users.reduce(function(groups, item) {
+        groups[item.id] = { text: item.name, icon: item.profile_photo_url };
+        return groups;
+      }, {})
+    },
+    updateReviewers(selected) {
+      console.log(selected)
+    }
   },
 
 };

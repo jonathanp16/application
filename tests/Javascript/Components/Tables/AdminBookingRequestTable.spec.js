@@ -85,3 +85,22 @@ test('should filter properly', () => {
   expect(wrapper.vm.filter).toBe('thisfiltershouldnotwork')
   expect(wrapper.vm.filteredBookingRequests.length).toBe(0)
 })
+
+
+test('should show advanced filters popup', () => {
+  const wrapper = shallowMount(AdminBookingRequestTable, {
+    localVue,
+    propsData: {
+      statuses: ["test", "test2"],
+      bookings: [{
+        "id": 1,
+        "status": "review",
+        "requester": {
+          "name": "Test"
+        }
+      }]
+    }
+  });
+  wrapper.vm.advancedFilters();
+  expect(wrapper.vm.showFilterModal).toBe(true);
+})

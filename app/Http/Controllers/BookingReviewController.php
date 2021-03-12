@@ -15,7 +15,8 @@ class BookingReviewController extends Controller
 
         return inertia('Approval/Index', [
             'bookings' => new BookingCollection($bookings),
-            'statuses' => BookingRequest::STATUS_TYPES
+            'statuses' => BookingRequest::STATUS_TYPES,
+            'reviewers' => $this->assignable(),
         ]);
     }
 
