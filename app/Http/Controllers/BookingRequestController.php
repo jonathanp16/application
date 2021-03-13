@@ -319,13 +319,16 @@ class BookingRequestController extends Controller
 
 
 
-        $activeStatuses = [];
-        foreach ($request->status_list as $key => $value) {
-            if ($value) {
-                array_push($activeStatuses, $key);
+        if($request->status_list){
+            $activeStatuses = [];
+            foreach ($request->status_list as $key => $value) {
+                if ($value) {
+                    array_push($activeStatuses, $key);
+                }
             }
+            $query->whereIn('status', $activeStatuses);
         }
-        $query->whereIn('status', $activeStatuses);
+
 
         if($request->date_range_start){
             $query->where('created_at', '<', $request->date_range_start);
