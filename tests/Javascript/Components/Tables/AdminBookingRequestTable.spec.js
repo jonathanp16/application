@@ -26,7 +26,11 @@ afterEach(() => {
 
 test('should mount without crashing', () => {
   const wrapper = shallowMount(AdminBookingRequestTable, {
-    localVue
+    localVue,
+    propsData: {
+      statuses: ["test", "test2"],
+      reviewers: []
+    }
   })
 })
 
@@ -35,13 +39,14 @@ test('should set status_list dict from array prop', () => {
   const wrapper = shallowMount(AdminBookingRequestTable, {
     localVue,
     propsData: {
-      statuses: ["test", "test2"]
+      statuses: ["test", "test2"],
+      reviewers: []
     }
   })
 
   expect(wrapper.props().statuses).toStrictEqual(["test", "test2"])
   expect(wrapper.vm.$data).toStrictEqual(
-  {"filter": "", "jsonFilters": {"date_range_end": null, "date_range_start": null, "status_list": {"test": false, "test2": false}}, "showFilterModal": false}
+  {"filter": "", "jsonFilters": {"data_reviewers": [], "date_range_end": null, "date_range_start": null, "status_list": {"test": false, "test2": false}}, "showFilterModal": false, "options": {}, "selected": {}}
     )
 })
 
@@ -49,15 +54,19 @@ test('should compute only active jsonfilter fields to send in post request', () 
   const wrapper = shallowMount(AdminBookingRequestTable, {
     localVue,
     propsData: {
-      statuses: ["test", "test2"]
+      statuses: ["test", "test2"],
+      reviewers: []
     }
   });
 
   wrapper.vm.jsonFilters.status_list.test = true;
-  expect(wrapper.vm.activeJsonFilters).toStrictEqual({"status_list": {
-      "test": true,
+  expect(wrapper.vm.activeJsonFilters).toStrictEqual(
+    {
+      "status_list": {
+        "test": true,
         "test2": false,
-      }
+      },
+      "data_reviewers": []
   });
 })
 
@@ -68,6 +77,7 @@ test('should filter properly', () => {
     localVue,
     propsData: {
       statuses: ["test", "test2"],
+      reviewers: [],
       bookings: [{
         "id": 1,
         "status": "review",
@@ -92,6 +102,7 @@ test('should show advanced filters popup', () => {
     localVue,
     propsData: {
       statuses: ["test", "test2"],
+      reviewers: [],
       bookings: [{
         "id": 1,
         "status": "review",
