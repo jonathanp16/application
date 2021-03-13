@@ -310,7 +310,8 @@ class BookingRequestController extends Controller
         $request->validate([
             'status_list.*' => ['boolean'],
             'date_range_start' => ['string'],
-            'date_range_end' => ['string']
+            'date_range_end' => ['string'],
+            'data_reviewers' => ['array']
         ]);
 
         // Filter by status, assignee, dates if present in query
@@ -318,11 +319,13 @@ class BookingRequestController extends Controller
 
 
 
+        $activeStatuses = [];
         foreach ($request->status_list as $key => $value) {
             if ($value) {
-                $query->where('status', $key);
+                array_push($activeStatuses, $key);
             }
         }
+        $query->whereIn('status', $activeStatuses);
 
         if($request->date_range_start){
             $query->where('created_at', '<', $request->date_range_start);
@@ -330,6 +333,11 @@ class BookingRequestController extends Controller
 
         if($request->date_range_end){
             $query->where('created_at', '>', $request->date_range_end);
+        }
+
+        if($request->data_reviewers){
+            $uids = collect($request->data_reviewers)->pluck('text');
+            $query->whereIn('id', $uids);
         }
 
         return response()->json(new BookingCollection($query->get()));

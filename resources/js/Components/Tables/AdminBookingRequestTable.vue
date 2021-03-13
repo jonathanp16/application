@@ -238,7 +238,7 @@ export default {
       }, {})
     },
     updateReviewers(selected) {
-      console.log(selected)
+      this.jsonFilters.data_reviewers = Object.entries(selected).map((e) => ( e[0] ));
     }
   },
 
