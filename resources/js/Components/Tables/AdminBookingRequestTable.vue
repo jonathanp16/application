@@ -68,7 +68,7 @@
       </template>
 
       <template #content>
-        <div class="overflow-y-auto h-96">
+        <div class="overflow-y-auto h-96 w-400">
           <div class="flex flex-row">
             <div class="flex flex-col flex-1 py-2 px-3">
               <div><h2>Status</h2></div>
@@ -80,37 +80,37 @@
               </div>
             </div>
             <div class="flex flex-col flex-1 py-2 px-3">
-              <div><h2>Date Created</h2></div>
-              <div class="flex flex-col">
-                  <jet-label for="start_time" value="Before" />
-                  <jet-input
-                    id="start_time"
-                    type="datetime-local"
-                    class="mt-1 block w-full"
-                    v-model="jsonFilters.date_range_start"
-                    autofocus
-                  />
-              </div>
-              <div class="flex flex-col">
-                  <jet-label for="end_time" value="After" />
-                  <jet-input
-                    id="end_time"
-                    type="datetime-local"
-                    class="mt-1 block w-full"
-                    v-model="jsonFilters.date_range_end"
-                    autofocus
-                  />
+              <div><h2>Reviewers</h2></div>
+              <div class="flex flex-row">
+                <multi-select :options="options" :selected-on-init="selected" @change="updateReviewers"/>
               </div>
             </div>
           </div>
 
           <div class="flex flex-row">
             <div class="flex flex-col flex-1 py-2 px-3">
-            <div><h2>Reviewers</h2></div>
-            <div class="flex flex-row">
-              <multi-select :options="options" :selected-on-init="selected" @change="updateReviewers"/>
+              <div><h2>Date Created</h2></div>
+              <div class="flex flex-col">
+                <jet-label for="start_time" value="Before" />
+                <jet-input
+                  id="start_time"
+                  type="datetime-local"
+                  class="mt-1 block w-full"
+                  v-model="jsonFilters.date_range_start"
+                  autofocus
+                />
+              </div>
+              <div class="flex flex-col">
+                <jet-label for="end_time" value="After" />
+                <jet-input
+                  id="end_time"
+                  type="datetime-local"
+                  class="mt-1 block w-full"
+                  v-model="jsonFilters.date_range_end"
+                  autofocus
+                />
+              </div>
             </div>
-          </div>
           </div>
         </div>
 
