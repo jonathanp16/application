@@ -16,10 +16,7 @@ class FilterBookingRequestsTest extends TestCase
      * @return void
      */
     public function test_filter_by_status(){
-        $this->withoutExceptionHandling();
         $user = $this->createUserWithPermissions(['bookings.approve']);
-        // Create room with boolean attribute as true and make sure it exists
-        // and is returned by the filter endpoint
         $booking = BookingRequest::factory()->create([
             'status' => 'review']);
         $this->assertDatabaseHas('booking_requests', [
@@ -29,14 +26,16 @@ class FilterBookingRequestsTest extends TestCase
 
         $response = $this->actingAs($user)->postJson('/api/filterBookingRequests', ['status_list' => ['review' => true]]);
         $response
-            ->assertStatus(200);
+            ->assertStatus(200)
+            ->assertSessionHasNoErrors();
 
         $res_id = collect($response->json())->pluck('id');
         $this->assertContains($booking->id, $res_id);
 
         $response2 = $this->actingAs($user)->postJson('/api/filterBookingRequests', ['status_list' => ['review' => false]]);
         $response2
-            ->assertStatus(200);
+            ->assertStatus(200)
+            ->assertSessionHasNoErrors();
         $res_id_2 = collect($response2->json())->pluck('id');
         $this->assertNotContains($booking->id, $res_id_2);
     }
@@ -48,8 +47,6 @@ class FilterBookingRequestsTest extends TestCase
      */
     public function test_filter_by_dates(){
         $user = $this->createUserWithPermissions(['bookings.approve']);
-        // Create room with boolean attribute as true and make sure it exists
-        // and is returned by the filter endpoint
         $booking = BookingRequest::factory()->create();
         $this->assertDatabaseHas('booking_requests', [
             'id' => $booking->id,
@@ -57,7 +54,8 @@ class FilterBookingRequestsTest extends TestCase
 
         $response = $this->actingAs($user)->postJson('/api/filterBookingRequests', ['date_range_start' => Carbon::now()->addMinutes(5)]);
         $response
-            ->assertStatus(200);
+            ->assertStatus(200)
+            ->assertSessionHasNoErrors();
 
         $res_id = collect($response->json())->pluck('id');
         $this->assertContains($booking->id, $res_id);
@@ -72,7 +70,8 @@ class FilterBookingRequestsTest extends TestCase
 
         $response3 = $this->actingAs($user)->postJson('/api/filterBookingRequests', ['date_range_end' => Carbon::now()->subDay()]);
         $response3
-            ->assertStatus(200);
+            ->assertStatus(200)
+            ->assertSessionHasNoErrors();
 
         $res_id_3 = collect($response->json())->pluck('id');
         $this->assertContains($booking->id, $res_id_3);
@@ -80,15 +79,9 @@ class FilterBookingRequestsTest extends TestCase
 
         $response4 = $this->actingAs($user)->postJson('/api/filterBookingRequests', ['date_range_end' => Carbon::now()->addMinutes(5)]);
         $response4
-            ->assertStatus(200);
+            ->assertStatus(200)
+            ->assertSessionHasNoErrors();
         $res_id_4 = collect($response2->json())->pluck('id');
         $this->assertNotContains($booking->id, $res_id_4);
     }
-
-
-
-
-
-
-//"2021-03-13T22:37"
 }
