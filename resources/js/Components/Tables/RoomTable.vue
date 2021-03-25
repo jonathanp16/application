@@ -29,17 +29,32 @@
       <caption></caption>
       <thead>
         <tr>
-          <th  id="id_room_id">Room ID</th>
-          <th  id="id_room_type">Room Type</th>
-          <th  id="id_room_building">Building</th>
-          <th  id="id_room_number">Number</th>
-          <th  id="id_room_floor">Floor</th>
-          <th  id="id_room_availability">Availability</th>
+          <th @click="sort('name')" id="id_room_id" class="cursor-pointer">
+            Room ID &blacktriangledown;
+          </th>
+          <th @click="sort('room_type')"  id="id_room_type" class="cursor-pointer">
+            Room Type &blacktriangledown;
+          </th>
+          <th @click="sort('building')" id="id_room_building" class="cursor-pointer">
+            Building &blacktriangledown;
+          </th>
+          <th @click="sort('number')" id="id_room_number" class="cursor-pointer">
+            Number &blacktriangledown;
+          </th>
+          <th @click="sort('floor')" id="id_room_floor" class="cursor-pointer">
+            Floor &blacktriangledown;
+          </th>
+          <th  id="id_room_availability">
+            Availability
+          </th>
+          <th @click="sort('attributes.capacity_sitting')" id="id_room_capacity" class="cursor-pointer">
+            Capacity &blacktriangledown;
+          </th>
           <th  id="id_room_action">Action</th>
         </tr>
       </thead>
       <tbody>
-         <tr v-for="room in filteredRooms" :key="room.id">
+         <tr v-for="room in sortedRooms" :key="room.id">
             <td class="text-center">{{room.name}}</td>
             <td class="text-center">{{room.room_type}}</td>
             <td class="text-center">{{room.building}}</td>
@@ -50,6 +65,7 @@
             class="text-center underline">
             {{room.status}}
             </td>
+           <td class="text-center">{{room.attributes.capacity_sitting}}</td>
             <td>
              <div>
                <jet-dropdown width="20">
@@ -395,31 +411,11 @@ export default {
               recurrences:[]
           },
         showFilterModal: false,
+        currentSort: 'name',
+        currentSortDir: 'asc'
       }
   },
     computed: {
-        filteredRooms() {
-            return this.rooms.filter(room => {
-
-
-                const building = room.building.toLowerCase();
-                const status = room.status.toLowerCase();
-                const type = room.room_type.toLowerCase();
-                const floor = room.floor.toString();
-                const number = room.number.toLowerCase();
-                const id = room.id.toString();
-
-                const searchTerm = this.filter.toLowerCase();
-
-                return building.includes(searchTerm) ||
-                        floor.includes(searchTerm) ||
-                        type.includes(searchTerm) ||
-                        status.includes(searchTerm) ||
-                        number.includes(searchTerm) ||
-                        id.includes(searchTerm);
-
-            });
-        },
         activeJsonFilters: function () {
             let activeJsonFilters = {};
             for (let key of Object.keys(this.jsonFilters)) {
@@ -443,6 +439,40 @@ export default {
           }else{
             return false;
           }
+        },
+        sortedRooms:function() {
+          if(this.filter){
+            return this.rooms.filter(room => {
+              const building = room.building.toLowerCase();
+              const status = room.status.toLowerCase();
+              const type = room.room_type.toLowerCase();
+              const floor = room.floor.toString();
+              const number = room.number.toLowerCase();
+              const name = room.name.toLowerCase();
+
+              const searchTerm = this.filter.toLowerCase();
+
+              return building.includes(searchTerm) ||
+                floor.includes(searchTerm) ||
+                type.includes(searchTerm) ||
+                status.includes(searchTerm) ||
+                number.includes(searchTerm) ||
+                name.includes(searchTerm);
+
+            });
+          }
+          return this.rooms.sort((a,b) => {
+            let modifier = 1;
+            if(this.currentSortDir === 'desc') modifier = -1;
+            if(this.currentSort.includes('attributes')){
+              if(parseInt(a['attributes'][this.currentSort.split(".")[1]]) < parseInt(b['attributes'][this.currentSort.split(".")[1]])) return -1 * modifier;
+              if(parseInt(a['attributes'][this.currentSort.split(".")[1]])> parseInt(b['attributes'][this.currentSort.split(".")[1]])) return 1 * modifier;
+            }else{
+              if(a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+              if(a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+            }
+            return 0;
+          });
         }
     },
     methods: {
@@ -463,7 +493,14 @@ export default {
             start_time: "",
             end_time: "",
           })
-        }
+        },
+        sort:function(s) {
+          //if s == current sort, reverse
+          if(s === this.currentSort) {
+            this.currentSortDir = this.currentSortDir==='asc'?'desc':'asc';
+          }
+          this.currentSort = s;
+        },
     },
 
 };
