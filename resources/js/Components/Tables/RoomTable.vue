@@ -30,25 +30,92 @@
       <thead>
         <tr>
           <th @click="sort('name')" id="id_room_id" class="cursor-pointer">
-            Room ID &blacktriangledown;
+            Room ID
+            <span v-if="currentSort == 'name'">
+              <span v-if="currentSortDir == 'asc'">
+                &blacktriangle;
+              </span>
+              <span v-else>
+                &blacktriangledown;
+              </span>
+            </span>
+            <span v-else>
+              &blacktriangledown;
+            </span>
           </th>
           <th @click="sort('room_type')"  id="id_room_type" class="cursor-pointer">
-            Room Type &blacktriangledown;
+            Room Type
+            <span v-if="currentSort == 'room_type'">
+              <span v-if="currentSortDir == 'asc'">
+                &blacktriangle;
+              </span>
+              <span v-else>
+                &blacktriangledown;
+              </span>
+            </span>
+            <span v-else>
+              &blacktriangledown;
+            </span>
           </th>
           <th @click="sort('building')" id="id_room_building" class="cursor-pointer">
-            Building &blacktriangledown;
+            Building
+            <span v-if="currentSort == 'building'">
+              <span v-if="currentSortDir == 'asc'">
+                &blacktriangle;
+              </span>
+              <span v-else>
+                &blacktriangledown;
+              </span>
+            </span>
+            <span v-else>
+              &blacktriangledown;
+            </span>
           </th>
           <th @click="sort('number')" id="id_room_number" class="cursor-pointer">
-            Number &blacktriangledown;
+            Number
+            <span v-if="currentSort == 'number'">
+              <span v-if="currentSortDir == 'asc'">
+                &blacktriangle;
+              </span>
+              <span v-else>
+                &blacktriangledown;
+              </span>
+            </span>
+            <span v-else>
+              &blacktriangledown;
+            </span>
           </th>
           <th @click="sort('floor')" id="id_room_floor" class="cursor-pointer">
-            Floor &blacktriangledown;
+            Floor
+            <span v-if="currentSort == 'floor'">
+              <span v-if="currentSortDir == 'asc'">
+                &blacktriangle;
+              </span>
+              <span v-else>
+                &blacktriangledown;
+              </span>
+            </span>
+            <span v-else>
+              &blacktriangledown;
+            </span>
+
           </th>
           <th  id="id_room_availability">
             Availability
           </th>
           <th @click="sort('attributes.capacity_sitting')" id="id_room_capacity" class="cursor-pointer">
-            Capacity &blacktriangledown;
+            Capacity
+            <span v-if="currentSort == 'attributes.capacity_sitting'">
+              <span v-if="currentSortDir == 'asc'">
+                &blacktriangle;
+              </span>
+              <span v-else>
+                &blacktriangledown;
+              </span>
+            </span>
+            <span v-else>
+              &blacktriangledown;
+            </span>
           </th>
           <th  id="id_room_action">Action</th>
         </tr>
