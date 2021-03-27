@@ -100,11 +100,8 @@
             </span>
 
           </th>
-          <th  id="id_room_availability">
-            Availability
-          </th>
           <th @click="sort('attributes.capacity_sitting')" id="id_room_capacity" class="cursor-pointer">
-            Capacity
+            Seating Capacity
             <span v-if="currentSort == 'attributes.capacity_sitting'">
               <span v-if="currentSortDir == 'asc'">
                 &blacktriangle;
@@ -127,11 +124,6 @@
             <td class="text-center">{{room.building}}</td>
             <td class="text-center">{{room.number}}</td>
             <td class="text-center">{{room.floor}}</td>
-            <td
-            @click="seeRoomAvailability = room"
-            class="text-center underline">
-            {{room.status}}
-            </td>
            <td class="text-center">{{room.attributes.capacity_sitting}}</td>
             <td>
              <div>
