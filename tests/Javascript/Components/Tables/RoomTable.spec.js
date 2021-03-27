@@ -177,7 +177,7 @@ test('should sort rooms based on sorting component data', () => {
         status: "available",
         room_type: "Mezzanine",
         attributes: {
-          "capacity_sitting":5
+          "capacity_sitting":10
         }
       },
         {
@@ -210,7 +210,7 @@ test('should sort rooms based on sorting component data', () => {
       status: "available",
       room_type: "Mezzanine",
       attributes: {
-        "capacity_sitting":5
+        "capacity_sitting":10
       }
     },
     {
@@ -253,8 +253,40 @@ test('should sort rooms based on sorting component data', () => {
       status: "available",
       room_type: "Mezzanine",
       attributes: {
+        "capacity_sitting":10
+      }
+    }
+  ]);
+
+  wrapper.vm.sort('attributes.capacity_sitting');
+  expect(wrapper.vm.currentSort).toBe('attributes.capacity_sitting');
+  expect(wrapper.vm.currentSortDir).toBe('desc');
+
+  expect(wrapper.vm.sortedRooms).toStrictEqual([
+    {
+      id: 1,
+      name: "name",
+      building: "building",
+      number: "1",
+      floor: 1,
+      status: "available",
+      room_type: "Mezzanine",
+      attributes: {
+        "capacity_sitting":10
+      }
+    },
+    {
+      id: 2,
+      name: "zzz",
+      building: "zzz",
+      number: "1",
+      floor: 1,
+      status: "available",
+      room_type: "Mezzanine",
+      attributes: {
         "capacity_sitting":5
       }
     }
   ]);
+
 })
