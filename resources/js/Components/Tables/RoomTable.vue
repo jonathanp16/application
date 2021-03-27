@@ -118,7 +118,7 @@
         </tr>
       </thead>
       <tbody>
-         <tr v-for="room in sortedRooms" :key="room.id">
+         <tr v-for="room in filteredRooms" :key="room.id">
             <td class="text-center">{{room.name}}</td>
             <td class="text-center">{{room.room_type}}</td>
             <td class="text-center">{{room.building}}</td>
@@ -500,26 +500,6 @@ export default {
           }
         },
         sortedRooms:function() {
-          if(this.filter){
-            return this.rooms.filter(room => {
-              const building = room.building.toLowerCase();
-              const status = room.status.toLowerCase();
-              const type = room.room_type.toLowerCase();
-              const floor = room.floor.toString();
-              const number = room.number.toLowerCase();
-              const name = room.name.toLowerCase();
-
-              const searchTerm = this.filter.toLowerCase();
-
-              return building.includes(searchTerm) ||
-                floor.includes(searchTerm) ||
-                type.includes(searchTerm) ||
-                status.includes(searchTerm) ||
-                number.includes(searchTerm) ||
-                name.includes(searchTerm);
-
-            });
-          }
           return this.rooms.sort((a,b) => {
             let modifier = 1;
             if(this.currentSortDir === 'desc') modifier = -1;
@@ -532,7 +512,27 @@ export default {
             }
             return 0;
           });
-        }
+        },
+        filteredRooms:function(){
+          return this.sortedRooms.filter(room => {
+            const building = room.building.toLowerCase();
+            const status = room.status.toLowerCase();
+            const type = room.room_type.toLowerCase();
+            const floor = room.floor.toString();
+            const number = room.number.toLowerCase();
+            const name = room.name.toLowerCase();
+
+            const searchTerm = this.filter.toLowerCase();
+
+            return building.includes(searchTerm) ||
+              floor.includes(searchTerm) ||
+              type.includes(searchTerm) ||
+              status.includes(searchTerm) ||
+              number.includes(searchTerm) ||
+              name.includes(searchTerm);
+
+          });
+      }
     },
     methods: {
         advancedFilters(){
