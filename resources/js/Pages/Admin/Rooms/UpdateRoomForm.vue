@@ -124,7 +124,7 @@
                 </div>
 
                 <div class="m-6">
-                    <jet-label for="equippment" value="Equippment"/>
+                    <jet-label for="equipment" value="Equipment"/>
                     <br>
                     <label class="flex items-center">
                     <input type="checkbox" class="form-checkbox" v-model="form.projector"/>
@@ -142,7 +142,7 @@
                     <input type="checkbox" class="form-checkbox" v-model="form.whiteboard"/>
                     <span class="ml-2 text-sm text-black">Whiteboard</span>
                     </label>
-                    <jet-input-error :message="form.error('equippment')" class="mt-2"/>
+                    <jet-input-error :message="form.error('equipment')" class="mt-2"/>
                 </div>
 
                 <div class="m-6">

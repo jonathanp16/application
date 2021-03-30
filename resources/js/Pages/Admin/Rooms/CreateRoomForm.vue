@@ -101,7 +101,7 @@
             <br>
 
             <div class="col-span-6 sm:col-span-3">
-              <jet-label for="equippment" value="Equippment"/>
+              <jet-label for="equipment" value="Equipment"/>
               <label class="flex items-center">
                 <input type="checkbox" class="form-checkbox" v-model="createRoomForm.projector"/>
                 <span class="ml-2 text-sm text-black">Projector</span>
@@ -118,7 +118,7 @@
                 <input type="checkbox" class="form-checkbox" v-model="createRoomForm.whiteboard"/>
                 <span class="ml-2 text-sm text-black">Whiteboard</span>
               </label>
-              <jet-input-error :message="createRoomForm.error('equippment')" class="mt-2"/>
+              <jet-input-error :message="createRoomForm.error('equipment')" class="mt-2"/>
             </div>
             <br>
 
