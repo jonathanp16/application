@@ -2,13 +2,11 @@
 
 namespace Tests\Browser;
 
-use App\Models\Room;
 use App\Models\User;
 use Database\Seeders\EasyUserSeeder;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
-use Tests\Browser\Pages\Rooms;
 use Tests\DuskTestCase;
 
 class SetRoomAttributesTest extends DuskTestCase
@@ -42,11 +40,10 @@ class SetRoomAttributesTest extends DuskTestCase
                 ->assertSee('Sofa(s)')
                 ->assertSee('Coffee Table(s)')
                 ->assertSee('Table(s)')
-                ->assertSee('Chair(s)');
-//                ->type('name', 'testname')
-//                ->type('number', 'number')
-//                ->value('#floor', 5)
-//                ->value('#stand_capacity', 9);
+                ->assertSee('Chair(s)')
+                ->value('#floor', 5)
+                ->value('#stand_capacity', 9)
+                ->assertSee('5');
         });
     }
 

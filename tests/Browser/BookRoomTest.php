@@ -9,8 +9,10 @@ use Database\Seeders\RolesAndPermissionsSeeder;
 use Database\Seeders\RoomSeeder;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
+use Tests\Browser\Pages\Bookings\Search;
 use Tests\Browser\Pages\Rooms;
 use Tests\DuskTestCase;
+use Illuminate\Support\Carbon;
 
 class BookRoomTest extends DuskTestCase
 {
@@ -23,31 +25,90 @@ class BookRoomTest extends DuskTestCase
         $seeder->run();
         $seeder = new RolesAndPermissionsSeeder();
         $seeder->run();
-        $room = Room::factory()->create([
-            'name' => 'TestRoom',
-        ]);
+        $seeder = new RoomSeeder();
+        $seeder->run();
         User::first()->assignRole('super-admin');
 
     }
 
     public function testBookRoomForTimeIntervals()
     {
-
-//        $room = Room::factory()->make();
         $this->browse(function (Browser $browser){
-            $browser->loginAs(User::first())->visit('/bookings/search')
+
+            $admin = User::first();
+
+            if($admin === null) {
+
+                $admin = User::factory()->create();
+                $admin->assignRole('super-admin');
+            }
+
+            $browser->loginAs($admin);
+            $browser->visit(new Search);
+
+            $browser
                 ->assertSourceHas('<title>CSU Booking Platform</title>')
-                ->assertSourceHas('<div>Action</div>')
-                ->pressAndWaitFor('Action', 2)
-                ->pressAndWaitFor('Create Booking', 1)
-                ->value('#start_time', '2021-03-15T14:00')
-                ->value('#end_time', '2021-03-15T14:00')
-                ->press('CREATE');
+                ->assertSourceHas('<div>Action</div>');
 
+            $room = Room::inRandomOrder()->first();
 
+            $browser->reserveRoom($room, '2021-03-30 01:15PM', '2021-03-30 02:15PM');
 
+            $browser->assertPathIs('/bookings/create');
         });
     }
 
+    public function testCannotBookUnavailableTime()
+    {
+        $this->browse(function (Browser $browser){
 
+            $admin = User::first();
+
+            if($admin === null) {
+
+                $admin = User::factory()->create();
+                $admin->assignRole('super-admin');
+            }
+
+            $browser->loginAs($admin);
+            $browser->visit(new Search);
+
+            $browser
+                ->assertSourceHas('<title>CSU Booking Platform</title>')
+                ->assertSourceHas('<div>Action</div>');
+
+            $room = Room::inRandomOrder()->first();
+
+            $browser->reserveRoom($room, '2021-03-30 01:15AM', '2021-03-30 02:15AM');
+
+            $browser->assertSee('These dates and times are not within the room\'s availabilities!');
+        });
+    }
+
+    public function testPromptedToDownloadForm()
+    {
+        $this->browse(function (Browser $browser){
+
+            $admin = User::first();
+
+            if($admin === null) {
+
+                $admin = User::factory()->create();
+                $admin->assignRole('super-admin');
+            }
+
+            $browser->loginAs($admin);
+            $browser->visit(new Search);
+
+            $browser
+                ->assertSourceHas('<title>CSU Booking Platform</title>')
+                ->assertSourceHas('<div>Action</div>');
+
+            $room = Room::where('name', 'Art Nook')->firstOrFail();
+
+            $browser->reserveRoom($room, '2021-03-30 01:15PM', '2021-03-30 02:15PM');
+
+            $browser->assertPathIs('/bookings/create');
+        });
+    }
 }
