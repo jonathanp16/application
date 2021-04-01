@@ -374,7 +374,7 @@
 
                         <!-- bake sale -->
                         <div class="col-span-6" v-if="room.room_type == 'Mezzanine'">
-                            <app-question v-model="form.event.bake_sale">
+                            <app-question v-model="form.event.bake_sale" :duskIdentifier="'bakeSaleCheckbox'">
                                 <template #header>
                                     <jet-label value="Is the reservation for a bake sale?"/>
                                 </template>

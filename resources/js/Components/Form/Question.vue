@@ -4,7 +4,7 @@
         <div class="flex items-center space-x-2">
             <slot name="header"></slot>
 
-            <jet-checkbox :value="value" v-model="proxyChecked"/>
+            <jet-checkbox :value="value" v-model="proxyChecked" :id="duskIdentifier"/>
 
             <slot name="after">
                 <span v-if="proxyChecked" class="text-md text-black">Yes</span>
@@ -40,6 +40,9 @@ export default {
         },
         placeholder: {
             default: null,
+        },
+        duskIdentifier: {
+          default: null
         }
     },
 

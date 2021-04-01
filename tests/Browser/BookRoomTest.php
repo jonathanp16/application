@@ -31,6 +31,10 @@ class BookRoomTest extends DuskTestCase
 
     }
 
+    /**
+     * Create booking at available time,
+     * assert that user redirected to creation page
+     */
     public function testBookRoomForTimeIntervals()
     {
         $this->browse(function (Browser $browser){
@@ -52,12 +56,20 @@ class BookRoomTest extends DuskTestCase
 
             $room = Room::inRandomOrder()->first();
 
+            $room->min_days_advance = 0;
+            $room->max_days_advance = 10000;
+            $room->save();
+
             $browser->reserveRoom($room, '2021-03-30 01:15PM', '2021-03-30 02:15PM');
 
             $browser->assertPathIs('/bookings/create');
         });
     }
 
+    /**
+     * Create booking at unavailable time,
+     * assert that error message shows up
+     */
     public function testCannotBookUnavailableTime()
     {
         $this->browse(function (Browser $browser){
@@ -85,7 +97,12 @@ class BookRoomTest extends DuskTestCase
         });
     }
 
-    public function testPromptedToDownloadForm()
+    /**
+     * Create booking and check off bake sale,
+     * assert that bake sale form prompt pops up,
+     * attach file and assert it is visible
+     */
+    public function testPromptedToDownloadFormAndAttach()
     {
         $this->browse(function (Browser $browser){
 
@@ -106,9 +123,18 @@ class BookRoomTest extends DuskTestCase
 
             $room = Room::where('name', 'Art Nook')->firstOrFail();
 
+            $room->min_days_advance = 0;
+            $room->max_days_advance = 10000;
+            $room->save();
+
             $browser->reserveRoom($room, '2021-03-30 01:15PM', '2021-03-30 02:15PM');
 
             $browser->assertPathIs('/bookings/create');
+            $browser->script('document.getElementById(\'bakeSaleCheckbox\').scrollIntoView();');
+            $browser->check("#bakeSaleCheckbox");
+            $browser->assertSee('Please remember to attach a filled out "Bake Sale Form" to the document section');
+            $browser->attach('#files', __DIR__ . '/test.jpg');
+            $browser->assertSee('test.jpg');
         });
     }
 }
