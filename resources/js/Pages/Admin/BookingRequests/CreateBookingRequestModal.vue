@@ -1,7 +1,7 @@
 <template>
     <jet-dialog-modal :show="room" @close="closeModal" max-width="">
         <template #content>
-          
+
           <div class="overflow-y-auto h-96">
             <h2 class="pb-1">Availabilities</h2>
             <Availabilities :room="room" />
@@ -85,6 +85,7 @@
                 @click.native="setDuration(); createBookingRequest();"
                 :class="{ 'opacity-25': createBookingRequestForm.processing }"
                 :disabled="createBookingRequestForm.processing"
+                :id="'modal-create'"
             >
                 Create
             </jet-button>
@@ -137,7 +138,7 @@ export default {
     },
   },
   data() {
-    return { 
+    return {
       createBookingRequestForm: this.$inertia.form(
         {
           room_id: null,
@@ -186,7 +187,7 @@ export default {
       this.createBookingRequestForm.post("/bookings/create", {
         preserveScroll: true
       }).then(() => {
-        if (! this.createBookingRequestForm.hasErrors()) {       
+        if (! this.createBookingRequestForm.hasErrors()) {
           this.closeModal();
         }
         else{

@@ -51,8 +51,7 @@ class BookRoomTest extends DuskTestCase
             $browser->visit(new Search);
 
             $browser
-                ->assertSourceHas('<title>CSU Booking Platform</title>')
-                ->assertSourceHas('<div>Action</div>');
+                ->assertSourceHas('<title>CSU Booking Platform</title>');
 
             $room = Room::inRandomOrder()->first();
 
@@ -86,8 +85,7 @@ class BookRoomTest extends DuskTestCase
             $browser->visit(new Search);
 
             $browser
-                ->assertSourceHas('<title>CSU Booking Platform</title>')
-                ->assertSourceHas('<div>Action</div>');
+                ->assertSourceHas('<title>CSU Booking Platform</title>');
 
             $room = Room::inRandomOrder()->first();
 
@@ -118,8 +116,7 @@ class BookRoomTest extends DuskTestCase
             $browser->visit(new Search);
 
             $browser
-                ->assertSourceHas('<title>CSU Booking Platform</title>')
-                ->assertSourceHas('<div>Action</div>');
+                ->assertSourceHas('<title>CSU Booking Platform</title>');
 
             $room = Room::where('name', 'Art Nook')->firstOrFail();
 

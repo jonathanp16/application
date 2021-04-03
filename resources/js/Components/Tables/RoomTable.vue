@@ -126,13 +126,13 @@
             <td class="text-center">{{room.floor}}</td>
             <td class="text-center">{{room.attributes.capacity_sitting}}</td>
             <td class="text-center space-x-2">
-              <jet-button id="create" :dusk="'room-select-' + room.id"
+              <jet-button :id="'create-booking-'+room.id" :dusk="'room-select-' + room.id"
                       @click.native="roomBeingBooked = room"
               >
                 Create Booking
               </jet-button>
 
-              <jet-button @click.native="roomBeingInspected = room">
+              <jet-button :id="'view-details-'+room.id" @click.native="roomBeingInspected = room">
                 View Details
               </jet-button>
             </td>

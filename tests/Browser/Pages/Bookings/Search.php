@@ -55,15 +55,13 @@ class Search extends Page
     }
 
     public function reserveRoom(Browser $browser, Room $room, $start, $end){
-        $browser->click("@room-actions-{$room->id}");
-        $browser->waitFor("@room-select-{$room->id}", 5);
-        $browser->click("@room-select-{$room->id}");
+        $browser->press("@room-select-{$room->id}");
 
         $browser->typeDateTime('#start_time', $start);
         $browser->typeDateTime('#end_time', $end);
 
         $browser->pause(1000)
-            ->press('CREATE')
+            ->press('#modal-create')
             ->pause(1000);
     }
 
