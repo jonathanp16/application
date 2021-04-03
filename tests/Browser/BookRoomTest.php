@@ -60,8 +60,7 @@ class BookRoomTest extends DuskTestCase
             $room->save();
 
             $browser->reserveRoom($room, '2021-03-30 01:15PM', '2021-03-30 02:15PM');
-            $browser->pause(3000);
-            $browser->assertPathIs('/bookings/create');
+            $browser->waitForLocation('/bookings/create');
         });
     }
 
@@ -126,8 +125,7 @@ class BookRoomTest extends DuskTestCase
 
             $browser->reserveRoom($room, '2021-03-30 01:15PM', '2021-03-30 02:15PM');
 
-            $browser->pause(3000);
-            $browser->assertPathIs('/bookings/create');
+            $browser->waitForLocation('/bookings/create');
             $browser->script('document.getElementById(\'bakeSaleCheckbox\').scrollIntoView();');
             $browser->check("#bakeSaleCheckbox");
             $browser->assertSee('Please remember to attach a filled out "Bake Sale Form" to the document section');
