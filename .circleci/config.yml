@@ -113,7 +113,7 @@ jobs:
       - store_artifacts:
           path: reports
       - store_artifacts:
-          path: tests/Browser/screnshots
+          path: tests/Browser/screenshots
       - store_artifacts:
           path: tests/Browser/console
       - store_artifacts:
@@ -217,7 +217,7 @@ workflows:
           filters:
             branches:
               # only from forks
-              only: 
+              only:
                 - /^pull\/.*$/
       - tag-and-release:
           requires:
