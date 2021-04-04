@@ -1,94 +1,87 @@
 <template>
-    <jet-dialog-modal :show="room" @close="closeModal" max-width="">
-        <template #content>
+  <jet-dialog-modal :dusk="'createBookingModal'" :show="room" @close="closeModal" max-width="5/6">
+    <template #content>
+      <h2>Create a booking request</h2>
+      <div class="m-6">
+        <jet-label for="name" value="Room"/>
+        <jet-input
+          id="room_id"
+          type="text"
+          class="mt-1 block w-full"
+          :value="room_name"
+          disabled
+        />
+        <jet-input-error :message="createBookingRequestForm.error('room_id')" class="mt-2"/>
+      </div>
+      <div v-for="(dates, index) in createBookingRequestForm.reservations" :key="index">
+        <jet-input-error :message="createBookingRequestForm.error('reservations.'+index)" class="mt-2"/>
+        <jet-label :value="index+1"/>
+        <div class="m-6">
+          <jet-label :for="'start_time_'+index" value="Start Time"/>
+          <date-time-picker
+            :id="'start_time_'+index"
+            class="mt-1 block w-full"
+            v-model="dates.start_time"
+            autofocus
+          />
+          <jet-input-error :message="createBookingRequestForm.error('reservations.'+index+'.start_time')"
+                           class="mt-2"/>
+        </div>
 
-          <div :dusk="'createBookingModal'" class="overflow-y-auto h-96">
-            <h2 class="pb-1">Availabilities</h2>
-            <Availabilities :room="room" />
-            <div class="pt-5 pb-5">
-              <hr/>
-            </div>
-            <h2>Create a booking request</h2>
-            <div class="m-6">
-                <jet-label for="name" value="Room" />
-                <jet-input
-                    id="room_id"
-                    type="text"
-                    class="mt-1 block w-full"
-                    :value="room_name"
-                    disabled
-                />
-                <jet-input-error :message="createBookingRequestForm.error('room_id')" class="mt-2" />
-            </div>
-            <div v-for="(dates, index) in createBookingRequestForm.reservations" :key="index">
-              <jet-input-error :message="createBookingRequestForm.error('reservations.'+index)" class="mt-2" />
-              <jet-label  :value="index+1" />
-              <div class="m-6">
-                  <jet-label :for="'start_time_'+index" value="Start Time" />
-                  <date-time-picker
-                      :id="'start_time_'+index"
-                      class="mt-1 block w-full"
-                      v-model="dates.start_time"
-                      autofocus
-                  />
-                  <jet-input-error :message="createBookingRequestForm.error('reservations.'+index+'.start_time')" class="mt-2" />
-              </div>
+        <div class="m-6">
+          <jet-label :for="'end_time_'+index" value="End Time"/>
+          <date-time-picker
+            :id="'end_time_'+index"
+            class="mt-1 block w-full"
+            v-model="dates.end_time"
+            autofocus
+          />
+          <jet-input-error
+            :message="createBookingRequestForm.error('reservations.'+index+'.start_time')"
+            class="mt-2"
+          />
+          <jet-input-error :message="createBookingRequestForm.error('reservations.'+index+'.duration')" class="mt-2"/>
+        </div>
+        <jet-secondary-button v-if="numDates > 1" @click.native="removeDate(index)">
+          Remove this date
+        </jet-secondary-button>
+      </div>
+      <div class="m-6">
+        <jet-secondary-button @click.native="addDate">
+          Add Another date
+        </jet-secondary-button>
+      </div>
 
-              <div class="m-6">
-                  <jet-label for="end_time" value="End Time" />
-                  <date-time-picker
-                    :id="'end_time_'+index"
-                      class="mt-1 block w-full"
-                      v-model="dates.end_time"
-                      autofocus
-                  />
-                  <jet-input-error
-                      :message="createBookingRequestForm.error('reservations.'+index+'.start_time')"
-                      class="mt-2"
-                  />
-                  <jet-input-error :message="createBookingRequestForm.error('reservations.'+index+'.duration')" class="mt-2" />
-              </div>
-              <jet-secondary-button v-if="numDates > 1" @click.native="removeDate(index)">
-                Remove this date
-              </jet-secondary-button>
-            </div>
-          <div class="m-6">
-          <jet-secondary-button  id="addAnotherDate" @click.native="addDate">
-            Add Another date
-          </jet-secondary-button>
-          </div>
+      <div class="m-6">
+        <jet-input-error
+          :message="createBookingRequestForm.error('availabilities')"
+          class="mt-2"
+        />
+      </div>
+      <div class="m-6">
+        <jet-input-error
+          :message="createBookingRequestForm.error('booking_request_exceeded')"
+          class="mt-2"
+        />
+      </div>
+    </template>
 
-            <div class="m-6">
-                <jet-input-error
-                    :message="createBookingRequestForm.error('availabilities')"
-                    class="mt-2"
-                />
-            </div>
-            <div class="m-6">
-                <jet-input-error
-                    :message="createBookingRequestForm.error('booking_request_exceeded')"
-                    class="mt-2"
-                />
-            </div>
-          </div>
-        </template>
+    <template #footer>
+      <jet-secondary-button @click.native="closeModal">
+        Nevermind
+      </jet-secondary-button>
 
-        <template #footer>
-            <jet-secondary-button @click.native="closeModal">
-                Nevermind
-            </jet-secondary-button>
-
-            <jet-button
-                class="ml-2"
-                @click.native="setDuration(); createBookingRequest();"
-                :class="{ 'opacity-25': createBookingRequestForm.processing }"
-                :disabled="createBookingRequestForm.processing"
-                :id="'createBookingRequest'"
-            >
-                Create
-            </jet-button>
-        </template>
-    </jet-dialog-modal>
+      <jet-button
+        class="ml-2"
+        @click.native="setDuration(); createBookingRequest();"
+        :class="{ 'opacity-25': createBookingRequestForm.processing }"
+        :disabled="createBookingRequestForm.processing"
+        :id="'createBookingRequest'"
+      >
+        Create
+      </jet-button>
+    </template>
+  </jet-dialog-modal>
 </template>
 
 <script>
@@ -133,7 +126,7 @@ export default {
     }
   },
   computed: {
-    numDates: function() {
+    numDates: function () {
       return this.createBookingRequestForm.reservations.length;
     },
   },
@@ -142,7 +135,7 @@ export default {
       createBookingRequestForm: this.$inertia.form(
         {
           room_id: null,
-          reservations:[
+          reservations: [
             {
               start_time: "",
               end_time: "",
@@ -161,16 +154,16 @@ export default {
   },
   methods: {
     closeModal() {
-        this.createBookingRequestForm.room_id = null;
-        this.createBookingRequestForm.reservations = [
-          {
-            start_time: "",
-            end_time: "",
-            duration: 0,
-          }
-        ];
-        this.createBookingRequestForm.reference = [];
-        this.$emit("close");
+      this.createBookingRequestForm.room_id = null;
+      this.createBookingRequestForm.reservations = [
+        {
+          start_time: "",
+          end_time: "",
+          duration: 0,
+        }
+      ];
+      this.createBookingRequestForm.reference = [];
+      this.$emit("close");
     },
     addDate() {
       this.createBookingRequestForm.reservations.push({
@@ -180,17 +173,16 @@ export default {
       })
     },
     removeDate(pos) {
-      this.createBookingRequestForm.reservations.splice(pos,1)
+      this.createBookingRequestForm.reservations.splice(pos, 1)
     },
     createBookingRequest() {
       this.setLocalIsCreating(true);
       this.createBookingRequestForm.post("/bookings/create", {
         preserveScroll: true
       }).then(() => {
-        if (! this.createBookingRequestForm.hasErrors()) {
+        if (!this.createBookingRequestForm.hasErrors()) {
           this.closeModal();
-        }
-        else{
+        } else {
           this.setLocalIsCreating(false);
         }
       });
@@ -207,10 +199,8 @@ export default {
     setLocalIsCreating(val) {
       localStorage.isCreatingBooking = val;
     },
-    setDuration()
-    {
-      for (let reservation of this.createBookingRequestForm.reservations)
-      {
+    setDuration() {
+      for (let reservation of this.createBookingRequestForm.reservations) {
         let moment_start = moment(reservation.start_time);
         let moment_end = moment(reservation.end_time);
 
@@ -219,10 +209,10 @@ export default {
     },
   },
   watch: {
-        room(room) {
-            this.createBookingRequestForm.room_id = room?.id;
-            this.room_name = room?.name;
-        },
-    }
+    room(room) {
+      this.createBookingRequestForm.room_id = room?.id;
+      this.room_name = room?.name;
+    },
+  }
 };
 </script>
