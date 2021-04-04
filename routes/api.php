@@ -19,7 +19,7 @@ use App\Http\Controllers\SettingsController;
 |
 */
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum'])->name('api.')->group(function () {
     Route::post('/filterBookingRequests', [BookingRequestController::class, 'filter'])
         ->middleware(['permission:bookings.approve']);
 
