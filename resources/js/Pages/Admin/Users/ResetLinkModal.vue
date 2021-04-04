@@ -13,7 +13,7 @@
       <div v-show="resetLink != null && !isProcessing">
         <p>Reset link generated:</p>
         <br/>
-        <pre class="text-sm">{{ resetLink }}</pre>
+        <pre class="text-sm overflow-x-auto whitespace-pre-wrap break-all">{{ resetLink }}</pre>
       </div>
       <!-- Else, Display the warning text before continuing -->
       <div v-show="resetLink == null && !isProcessing">
