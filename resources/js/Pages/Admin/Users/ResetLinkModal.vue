@@ -56,11 +56,6 @@ export default {
     user: {
       type: Object,
       default: null,
-    },
-    close: {
-      type: Function,
-      default: function () {
-      }
     }
   },
   data() {
@@ -88,7 +83,3 @@ export default {
 
 }
 </script>
-
-<style scoped>
-
-</style>
