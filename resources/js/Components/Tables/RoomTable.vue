@@ -5,7 +5,7 @@
         <h3 class="font-black">ROOMS</h3>
       </div>
       <div class="border shadow-md">
-        <input type="text" v-model="filter"/>
+        <input id="search-rooms" type="text" v-model="filter"/>
       </div>
       <div class="bg-yellow-300 shadow-md">
         <em class="fas fa-search m-2"></em>
@@ -19,7 +19,7 @@
         <h3 class="font-black">FILTER</h3>
       </div>
       <div class="mx-2 border shadow-md bg-yellow-300 min-w-24">
-        <button @click="toggleAdvancedFilters()">
+        <button @click="toggleAdvancedFilters()" dusk="toggle-advanced-filters">
           <em class="fas fa-filter mx-2 pt-2 max-w"></em>
         </button>
       </div>
@@ -239,25 +239,25 @@
                   <div class="flex flex-col flex-1 py-2 px-3">
                       <div><h2>Electronics</h2></div>
                       <div class="flex flex-row">
-                          <div><input type="checkbox"></div>
+                          <div><input type="checkbox" dusk="computers"></div>
                           <div class="text-sm text-gray-400 px-2">
                               Computers
                           </div>
                       </div>
                       <div class="flex flex-row">
-                          <div><input type="checkbox"></div>
+                          <div><input type="checkbox" dusk="televisions"></div>
                           <div class="text-sm text-gray-400 px-2">
                               Television
                           </div>
                       </div>
                       <div class="flex flex-row">
-                          <div><input type="checkbox" v-model="jsonFilters.whiteboard"></div>
+                          <div><input type="checkbox" dusk="whiteboards" v-model="jsonFilters.whiteboard"></div>
                           <div class="text-sm text-gray-400 px-2">
                               Whiteboard
                           </div>
                       </div>
                       <div class="flex flex-row">
-                          <div><input type="checkbox" v-model="jsonFilters.projector"></div>
+                          <div><input type="checkbox" dusk="projectors" v-model="jsonFilters.projector"></div>
                           <div class="text-sm text-gray-400 px-2">
                               Projector
                           </div>
@@ -266,25 +266,25 @@
                   <div class="flex flex-col flex-1 py-2 px-3">
                       <div><h2>Amenities Permitted</h2></div>
                       <div class="flex flex-row">
-                          <div><input type="checkbox" v-model="jsonFilters.food"></div>
+                          <div><input type="checkbox" dusk="amenities" v-model="jsonFilters.food"></div>
                           <div class="text-sm text-gray-400 px-2">
                               Food
                           </div>
                       </div>
                       <div class="flex flex-row">
-                          <div><input type="checkbox" v-model="jsonFilters.alcohol"></div>
+                          <div><input type="checkbox" dusk="alcohol" v-model="jsonFilters.alcohol"></div>
                           <div class="text-sm text-gray-400 px-2">
                               Alcohol
                           </div>
                       </div>
                       <div class="flex flex-row">
-                          <div><input type="checkbox" v-model="jsonFilters.a_v_permitted"></div>
+                          <div><input type="checkbox" dusk="av" v-model="jsonFilters.a_v_permitted"></div>
                           <div class="text-sm text-gray-400 px-2">
                               AV
                           </div>
                       </div>
                       <div class="flex flex-row">
-                          <div><input type="checkbox" v-model="jsonFilters.ambiant_music"></div>
+                          <div><input type="checkbox" dusk="ambient-music" v-model="jsonFilters.ambiant_music"></div>
                           <div class="text-sm text-gray-400 px-2">
                               Ambient Music
                           </div>
@@ -293,13 +293,13 @@
                   <div class="flex flex-col flex-1 py-2 px-3">
                       <div><h2>Event Type</h2></div>
                       <div class="flex flex-row">
-                          <div><input type="checkbox" v-model="jsonFilters.sale_for_profit"></div>
+                          <div><input type="checkbox" dusk="sales" v-model="jsonFilters.sale_for_profit"></div>
                           <div class="text-sm text-gray-400 px-2">
                               Sales for Profit
                           </div>
                       </div>
                       <div class="flex flex-row">
-                          <div><input type="checkbox" v-model="jsonFilters.fundraiser"></div>
+                          <div><input type="checkbox" dusk="fundraiser" v-model="jsonFilters.fundraiser"></div>
                           <div class="text-sm text-gray-400 px-2">
                               Fundraiser
                           </div>
@@ -370,6 +370,7 @@
           <template #footer>
               <jet-button
                 class="ml-2"
+                :id="'filter-rooms'"
                 @click.native="advancedFilters()"
               >
                   Filter
