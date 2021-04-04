@@ -42,6 +42,7 @@ import JetSecondaryButton from '@src/Jetstream/SecondaryButton'
 import JetDangerButton from '@src/Jetstream/DangerButton'
 import JetButton from '@src/Jetstream/Button'
 import JetModal from '@src/Jetstream/Modal'
+import axios from "axios"
 
 export default {
   components: {
@@ -74,8 +75,6 @@ export default {
       axios.post(`/api/admin/users/${this.user.id}/reset-token`).then((response) => {
         if (response.data.hasOwnProperty("link"))
           this.resetLink = response.data.link
-        else
-          console.log(response)
         this.isProcessing = false;
       });
     },
