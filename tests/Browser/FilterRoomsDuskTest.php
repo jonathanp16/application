@@ -132,7 +132,7 @@ class FilterRoomsDuskTest extends DuskTestCase
 
             $browser->within( new DateTimePicker('start_time-0'), function($browser) {
                 $browser->setDatetime(10,13);
-            })->pause(250);
+            })->pause(500);
 
             $browser->within( new DateTimePicker('end_time-0'), function($browser) {
                 $browser->setDatetime(10,14);
