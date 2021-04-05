@@ -13,50 +13,55 @@
         />
         <jet-input-error :message="createBookingRequestForm.error('room_id')" class="mt-2"/>
       </div>
+      <h3>Reservation(s):</h3>
       <!-- FOR EACH DATE -->
-      <div v-for="(dates, index) in createBookingRequestForm.reservations" :key="index"
-           class="flex flex-row">
-
+      <div v-for="(dates, index) in createBookingRequestForm.reservations" :key="index">
+        <div class="flex flex-row">
+          <!-- START TIME -->
+          <div class="my-3 mx-2 flex-grow">
+            <jet-label :for="'start_time_'+index" value="Start Time"/>
+            <date-time-picker
+              :id="'start_time_'+index"
+              class="mt-1 block w-full"
+              v-model="dates.start_time"
+              autofocus
+            />
+            <jet-input-error :message="createBookingRequestForm.error('reservations.'+index+'.start_time')"
+                             class="mt-2"/>
+          </div>
+          <!-- END TIME -->
+          <div class="my-3 mx-2 flex-grow">
+            <jet-label :for="'end_time_'+index" value="End Time"/>
+            <date-time-picker
+              :id="'end_time_'+index"
+              class="mt-1 block w-full"
+              v-model="dates.end_time"
+              autofocus
+            />
+            <jet-input-error
+              :message="createBookingRequestForm.error('reservations.'+index+'.start_time')"
+              class="mt-2"
+            />
+            <jet-input-error :message="createBookingRequestForm.error('reservations.'+index+'.duration')" class="mt-2"/>
+          </div>
+          <div v-if="numDates > 1" class="my-3 mx-2 pt-4 flex items-center">
+            <jet-danger-button class="m-1" @click.native="removeDate(index)">
+              Delete
+            </jet-danger-button>
+          </div>
+        </div>
         <jet-input-error :message="createBookingRequestForm.error('reservations.'+index)" class="mt-2"/>
-        <!-- START TIME -->
-        <div class="my-3 mx-2">
-          <jet-label :for="'start_time_'+index" value="Start Time"/>
-          <date-time-picker
-            :id="'start_time_'+index"
-            class="mt-1 block w-full"
-            v-model="dates.start_time"
-            autofocus
-          />
-          <jet-input-error :message="createBookingRequestForm.error('reservations.'+index+'.start_time')"
-                           class="mt-2"/>
-        </div>
-        <!-- END TIME -->
-        <div class="my-3 mx-2">
-          <jet-label :for="'end_time_'+index" value="End Time"/>
-          <date-time-picker
-            :id="'end_time_'+index"
-            class="mt-1 block w-full"
-            v-model="dates.end_time"
-            autofocus
-          />
-          <jet-input-error
-            :message="createBookingRequestForm.error('reservations.'+index+'.start_time')"
-            class="mt-2"
-          />
-          <jet-input-error :message="createBookingRequestForm.error('reservations.'+index+'.duration')" class="mt-2"/>
-        </div>
-        <div class="my-3 mx-2 pt-4 flex items-center">
-          <jet-danger-button class="m-1" v-if="numDates > 1" @click.native="removeDate(index)">
-            Delete
-          </jet-danger-button>
-          <jet-secondary-button class="m-1" @click.native="duplicateDate(index)">
-            Duplicate
-          </jet-secondary-button>
-        </div>
       </div>
-      <div class="my-3 mx-2">
-        <jet-secondary-button @click.native="addDate">
-          Add Another date
+
+      <div class="my-3 mx-2 flex flex-row space-x-1">
+        <jet-input v-model="recurrenceForm.recurrences" id="recurrence_quantity" type="number" min="1" />
+
+        <x-select class="border-1" v-model="recurrenceForm.type">
+          <option v-for="option in recurrenceOptions" :value="option.value"> {{ option.name }}</option>
+        </x-select>
+
+        <jet-secondary-button @click.native="addDates">
+          Add Recurrences
         </jet-secondary-button>
       </div>
 
@@ -109,9 +114,26 @@ import Availabilities from "@src/Components/Availabilities";
 import JetDangerButton from "@src/Jetstream/DangerButton";
 import moment from "moment"
 import DateTimePicker from "@src/Components/Form/DateTimePicker";
+import XSelect from "@src/Components/Form/Select";
+
+export const RECURRENCE_OPTIONS = [
+  {
+    name: 'daily',
+    value: 'days'
+  },
+  {
+    name: 'weekly',
+    value: 'weeks'
+  },
+  {
+    name: 'monthly',
+    value: 'months'
+  },
+]
 
 export default {
   components: {
+    XSelect,
     DateTimePicker,
     DialogModal,
     JetButton,
@@ -142,6 +164,11 @@ export default {
   },
   data() {
     return {
+      recurrenceForm: {
+        recurrences: 2,
+        type: "weeks"
+      },
+      recurrenceOptions: RECURRENCE_OPTIONS,
       createBookingRequestForm: this.$inertia.form(
         {
           room_id: null,
@@ -175,6 +202,26 @@ export default {
       this.createBookingRequestForm.reference = [];
       this.$emit("close");
     },
+    addDates() {
+      let recurrences = parseInt(this.recurrenceForm.recurrences);
+      let type = this.recurrenceForm.type;
+      let referenceDate = this.createBookingRequestForm.reservations[0]
+
+      if (referenceDate.start_time === "" || referenceDate.end_time === "")
+        return
+
+      for (let i = 1; i <= recurrences; i++) {
+        this.createBookingRequestForm.reservations.push({
+          start_time: moment(referenceDate.start_time, "YYYY-MM-DD HH:mm")
+            .add(i, type)
+            .format("YYYY-MM-DD HH:mm"),
+          end_time: moment(referenceDate.end_time, "YYYY-MM-DD HH:mm")
+            .add(i, type)
+            .format("YYYY-MM-DD HH:mm"),
+          duration: 0
+        })
+      }
+    },
     addDate() {
       this.createBookingRequestForm.reservations.push({
         start_time: "",
@@ -184,10 +231,6 @@ export default {
     },
     removeDate(pos) {
       this.createBookingRequestForm.reservations.splice(pos, 1)
-    },
-    duplicateDate(pos) {
-      let date = this.createBookingRequestForm.reservations[pos]
-      this.createBookingRequestForm.reservations.push(date)
     },
     createBookingRequest() {
       this.setLocalIsCreating(true);
@@ -200,15 +243,6 @@ export default {
           this.setLocalIsCreating(false);
         }
       });
-    },
-    fieldChange(e) {
-      let selectedFiles = e.target.files;
-
-      if (!selectedFiles.length) return false;
-
-      for (let file of selectedFiles) {
-        this.createBookingRequestForm.reference.push(file);
-      }
     },
     setLocalIsCreating(val) {
       localStorage.isCreatingBooking = val;
