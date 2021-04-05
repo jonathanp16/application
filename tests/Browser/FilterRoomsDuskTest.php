@@ -61,7 +61,7 @@ class FilterRoomsDuskTest extends DuskTestCase
             $browser->type('#sofas', 1);
             $browser->press("#filter-rooms");
             $browser->pause(250);
-            $browser->assertSourceMissing('Art Nook');
+            $browser->assertSee('CSU Lounge');
             $browser->script('location.reload();');
 
             $browser->assertSee('Art Nook');
@@ -69,7 +69,7 @@ class FilterRoomsDuskTest extends DuskTestCase
             $browser->check('@alcohol');
             $browser->press("#filter-rooms");
             $browser->pause(250);
-            $browser->assertSourceMissing('Art Nook');
+            $browser->assertSee('CSU Lounge');
 
         });
     }

@@ -61,7 +61,7 @@ class BookRoomsTest extends DuskTestCase
 
             $browser->press("@room-select-".$room->id);
 
-            $browser->mouseover('#addAnotherDate');
+            $browser->mouseover('#addRecurrences');
 
 
             $browser->within( new DateTimePicker('start_time_0'), function($browser) {
@@ -127,7 +127,7 @@ class BookRoomsTest extends DuskTestCase
 
             $browser->press("@room-select-".$room->id);
 
-            $browser->mouseover('#addAnotherDate');
+            $browser->mouseover('#addRecurrences');
 
             $browser->within( new DateTimePicker('start_time_0'), function($browser) {
                 $browser->setDatetime(10,02);
@@ -137,9 +137,8 @@ class BookRoomsTest extends DuskTestCase
                 $browser->setDatetime(10,03);
             })->pause(250);
 
-            $browser->press('#createBookingRequest');
+            $browser->pressAndWaitFor('#createBookingRequest');
 
-            $browser->pause(250);
             $browser->assertSee('These dates and times are not within the room\'s availabilities!');
         });
     }
@@ -176,7 +175,7 @@ class BookRoomsTest extends DuskTestCase
 
             $browser->press("@room-select-".$room->id);
 
-            $browser->mouseover('#addAnotherDate');
+            $browser->mouseover('#addRecurrences');
 
             $browser->within( new DateTimePicker('start_time_0'), function($browser) {
                 $browser->setDatetime(10,13);
