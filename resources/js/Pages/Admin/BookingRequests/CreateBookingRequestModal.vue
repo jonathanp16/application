@@ -2,21 +2,24 @@
   <jet-dialog-modal :dusk="'createBookingModal'" :show="room" @close="closeModal" max-width="5/6">
     <template #content>
       <h2>Create a booking request</h2>
-      <div class="m-6">
+      <div class="mx-2 my-3">
         <jet-label for="name" value="Room"/>
         <jet-input
           id="room_id"
           type="text"
-          class="mt-1 block w-full"
+          class="mt-1 cursor-not-allowed block w-full bg-gray-100"
           :value="room_name"
           disabled
         />
         <jet-input-error :message="createBookingRequestForm.error('room_id')" class="mt-2"/>
       </div>
-      <div v-for="(dates, index) in createBookingRequestForm.reservations" :key="index">
+      <!-- FOR EACH DATE -->
+      <div v-for="(dates, index) in createBookingRequestForm.reservations" :key="index"
+           class="flex flex-row">
+
         <jet-input-error :message="createBookingRequestForm.error('reservations.'+index)" class="mt-2"/>
-        <jet-label :value="index+1"/>
-        <div class="m-6">
+        <!-- START TIME -->
+        <div class="my-3 mx-2">
           <jet-label :for="'start_time_'+index" value="Start Time"/>
           <date-time-picker
             :id="'start_time_'+index"
@@ -27,8 +30,8 @@
           <jet-input-error :message="createBookingRequestForm.error('reservations.'+index+'.start_time')"
                            class="mt-2"/>
         </div>
-
-        <div class="m-6">
+        <!-- END TIME -->
+        <div class="my-3 mx-2">
           <jet-label :for="'end_time_'+index" value="End Time"/>
           <date-time-picker
             :id="'end_time_'+index"
@@ -42,11 +45,16 @@
           />
           <jet-input-error :message="createBookingRequestForm.error('reservations.'+index+'.duration')" class="mt-2"/>
         </div>
-        <jet-secondary-button v-if="numDates > 1" @click.native="removeDate(index)">
-          Remove this date
-        </jet-secondary-button>
+        <div class="my-3 mx-2 pt-4 flex items-center">
+          <jet-danger-button class="m-1" v-if="numDates > 1" @click.native="removeDate(index)">
+            Delete
+          </jet-danger-button>
+          <jet-secondary-button class="m-1" @click.native="duplicateDate(index)">
+            Duplicate
+          </jet-secondary-button>
+        </div>
       </div>
-      <div class="m-6">
+      <div class="my-3 mx-2">
         <jet-secondary-button @click.native="addDate">
           Add Another date
         </jet-secondary-button>
@@ -98,6 +106,7 @@ import JetNavLink from "@src/Components/Navbar/NavLink";
 import JetSecondaryButton from "@src/Jetstream/SecondaryButton";
 import DialogModal from "@src/Jetstream/DialogModal";
 import Availabilities from "@src/Components/Availabilities";
+import JetDangerButton from "@src/Jetstream/DangerButton";
 import moment from "moment"
 import DateTimePicker from "@src/Components/Form/DateTimePicker";
 
@@ -116,6 +125,7 @@ export default {
     JetNavLink,
     JetDialogModal,
     JetSecondaryButton,
+    JetDangerButton,
     Availabilities
   },
 
@@ -174,6 +184,10 @@ export default {
     },
     removeDate(pos) {
       this.createBookingRequestForm.reservations.splice(pos, 1)
+    },
+    duplicateDate(pos) {
+      let date = this.createBookingRequestForm.reservations[pos]
+      this.createBookingRequestForm.reservations.push(date)
     },
     createBookingRequest() {
       this.setLocalIsCreating(true);
