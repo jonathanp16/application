@@ -60,7 +60,7 @@ class FilterRoomsDuskTest extends DuskTestCase
             $browser->assertSee('Art Nook');
             $browser->type('#sofas', 1);
             $browser->press("#filter-rooms");
-            $browser->pause(2000);
+            $browser->pause(250);
             $browser->assertSourceMissing('Art Nook');
             $browser->script('location.reload();');
 
@@ -68,7 +68,7 @@ class FilterRoomsDuskTest extends DuskTestCase
             $browser->press("@toggle-advanced-filters");
             $browser->check('@alcohol');
             $browser->press("#filter-rooms");
-            $browser->pause(2000);
+            $browser->pause(250);
             $browser->assertSourceMissing('Art Nook');
 
         });
@@ -132,11 +132,11 @@ class FilterRoomsDuskTest extends DuskTestCase
 
             $browser->within( new DateTimePicker('start_time-0'), function($browser) {
                 $browser->setDatetime(10,13);
-            })->pause(1000);
+            })->pause(250);
 
             $browser->within( new DateTimePicker('end_time-0'), function($browser) {
                 $browser->setDatetime(10,14);
-            })->pause(1000);
+            })->pause(250);
 
             $browser->press("#filter-rooms");
 
