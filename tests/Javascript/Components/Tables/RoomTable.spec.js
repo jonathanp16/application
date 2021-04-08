@@ -7,7 +7,6 @@ import {InertiaApp} from '@inertiajs/inertia-vue'
 import {InertiaForm} from 'laravel-jetstream'
 import RoomTable from '@src/Components/Tables/RoomTable'
 import {InertiaFormMock} from "@test/__mocks__/laravel-jetstream";
-import moment from "moment";
 
 let localVue;
 
