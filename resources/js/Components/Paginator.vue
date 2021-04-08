@@ -8,12 +8,12 @@
                 </span>
             <inertia-link v-else :href="previousPageUrl"
                           class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150">
-                <i class="fas fa-chevron-left"></i>
+                <em class="fas fa-chevron-left"></em>
             </inertia-link>
 
             <inertia-link v-if="hasMorePages" :href="nextPageUrl"
                           class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150">
-                <i class="fas fa-chevron-right"></i>
+                <em class="fas fa-chevron-right"></em>
             </inertia-link>
             <span v-else
                   class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5 rounded-md">
@@ -153,7 +153,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-
-</style>
