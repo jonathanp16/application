@@ -39,6 +39,8 @@ class BookingRequestController extends Controller
 
   private const DATE_FORMAT = "F j, Y, g:i a";
 
+  private const ROOM_PAGINATOR_AMOUNT = 5;
+
   /**
    * Display a listing of the resource.
    *
@@ -50,6 +52,7 @@ class BookingRequestController extends Controller
         return inertia('Admin/BookingRequests/Index', [
             'booking_requests' => BookingRequest::with('requester', 'reservations', $this->reservationRoom)->get(),
             'rooms' => Room::hideUserRestrictions($request->user())->with('availabilities', 'blackouts')->get(),
+            'paginator' => Room::hideUserRestrictions($request->user())->with('availabilities', 'blackouts')->paginate(self::ROOM_PAGINATOR_AMOUNT)
         ]);
     }
 
