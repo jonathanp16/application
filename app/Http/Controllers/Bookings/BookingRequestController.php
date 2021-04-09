@@ -39,7 +39,7 @@ class BookingRequestController extends Controller
 
   private const DATE_FORMAT = "F j, Y, g:i a";
 
-  private const ROOM_PAGINATOR_AMOUNT = 5;
+  private const ROOM_PAGINATOR_AMOUNT = 10;
 
   /**
    * Display a listing of the resource.

@@ -26,7 +26,7 @@ class RoomController extends Controller
     private const ROOM_TYPES = 'rooms.types';
     private const BUILDING_NAMES = 'rooms.buildings';
     private const MAX_255 = 'max:255';
-    private const ROOM_PAGINATOR_AMOUNT = 5;
+    private const ROOM_PAGINATOR_AMOUNT = 10;
 
     /**
      * Display a listing of the resource.
