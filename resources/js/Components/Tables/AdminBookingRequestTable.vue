@@ -81,7 +81,7 @@
       </template>
 
       <template #content>
-        <div class="overflow-y-auto h-96 w-400">
+        <div class="overflow-y-scroll h-96 w-400">
           <div class="flex flex-row">
             <div class="flex flex-col flex-1 py-2 px-3">
               <div><h2>Status</h2></div>

@@ -6,6 +6,7 @@
       </template>
 
       <template #content>
+        <div class="overflow-y-scroll h-96">
         <Availabilities :room="room"/>
         <div class="pt-5 pb-5">
           <hr/>
@@ -28,6 +29,7 @@
             <jet-label :for="'room_type'" :value="'Room Type:'"></jet-label>
             <div class="text-center rounded-full py-2 px-4 bg-gray-300">{{room.room_type}}</div>
           </div>
+        </div>
         </div>
       </template>
 
