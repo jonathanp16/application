@@ -117,12 +117,6 @@
                   </h2>
                 </div>
                 <div class="m-2">
-<<<<<<< HEAD
-                  <input id="date-check" type="date" class="mt-1 block" v-model="jsonForm.dateCheck"/>
-                  <jet-secondary-button class="ml-2" @click.native="clearDate()">
-                    Clear Selected Date
-                  </jet-secondary-button>
-=======
                   <date-picker
                     id="date-check"
                     class="mt-1 block w-full"
@@ -135,7 +129,6 @@
                     class="ml-2"
                     @click.native="clearDate()"
                   >Clear Selected Date</jet-secondary-button>
->>>>>>> fix(#666): fix my bookings UI
                 </div>
               </div>
             </div>
@@ -144,14 +137,10 @@
       </template>
 
       <template #footer>
-<<<<<<< HEAD
-        <jet-button class="ml-2" type="button" @click.native="advancedFilters()">
-=======
         <jet-button
           class="ml-2"
           @click.native="advancedFilters()"
         >
->>>>>>> fix(#666): fix my bookings UI
           Filter
         </jet-button>
         <jet-secondary-button @click.native="toggleAdvancedFilters">
@@ -167,10 +156,7 @@
 <script>
 import moment from "moment";
 import ViewBookingRequestStatusModal from "@src/Pages/Admin/BookingRequests/ViewBookingRequestStatusModal";
-<<<<<<< HEAD
-=======
 import JetButton from "@src/Jetstream/Button";
->>>>>>> fix(#666): fix my bookings UI
 import JetDialogModal from "@src/Jetstream/DialogModal";
 import JetSecondaryButton from "@src/Jetstream/SecondaryButton";
 import JetButton from "@src/Jetstream/Button";
