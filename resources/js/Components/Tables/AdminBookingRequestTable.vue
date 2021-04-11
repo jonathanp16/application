@@ -44,7 +44,7 @@
         <td class="text-center">{{booking.requester.name}}</td>
         <td class="text-center">
           <div class="-space-x-4">
-            <img v-for="reviewer in booking.reviewers " class="relative z-30 inline object-cover w-12 h-12 border-2 border-white rounded-full" :src="reviewer.profile_photo_url" :alt="reviewer.name"/>
+            <img v-for="reviewer in booking.reviewers " class="relative inline object-cover w-12 h-12 border-2 border-white rounded-full" :src="reviewer.profile_photo_url" :alt="reviewer.name"/>
           </div>
         </td>
         <td class="text-center capitalize">
