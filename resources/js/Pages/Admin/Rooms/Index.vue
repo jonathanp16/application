@@ -1,11 +1,11 @@
 <template>
   <app-layout>
-    <div class="mt-12 flex flex-col items-center lg:flex-row mx-10">
+    <div class="mt-12 flex flex-col lg:flex-row mx-10">
       <div class="m-4 p-2">
         <create-room-form :available-room-types="availableRoomTypes"
                           :available-buildings="availableBuildings"/>
       </div>
-      <div v-if="rooms.length > 0" class="px-3 w-full">
+      <div v-if="rooms.length > 0" class="m-4 p-2 w-full">
         <ViewActiveRoomsTable
           :rooms="rooms"
           :available-room-types="availableRoomTypes"

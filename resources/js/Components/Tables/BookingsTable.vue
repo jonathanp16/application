@@ -15,7 +15,7 @@
       <div class="border mx-16">
       </div>
       <div class="mx-6">
-        <h3 class="font-black">Advanced filter</h3>
+        <h3 class="font-black">FILTERS</h3>
       </div>
       <div class="mx-2 border shadow-md bg-yellow-300 min-w-24">
         <button @click="toggleAdvancedFilters()">
@@ -91,9 +91,9 @@
       </template>
 
       <template #content>
-        <div class="overflow-y-auto h-60">
+        <div class="overflow-y-scroll h-96">
           <div class="flex flex-row">
-            <div class="flex flex-col flex-1 py-2 px-3">
+            <div class="flex flex-col flex-1 py-2">
               <div class="flex flex-row">
                 <div class="m-2">
                   <h2>
@@ -117,10 +117,25 @@
                   </h2>
                 </div>
                 <div class="m-2">
+<<<<<<< HEAD
                   <input id="date-check" type="date" class="mt-1 block" v-model="jsonForm.dateCheck"/>
                   <jet-secondary-button class="ml-2" @click.native="clearDate()">
                     Clear Selected Date
                   </jet-secondary-button>
+=======
+                  <date-picker
+                    id="date-check"
+                    class="mt-1 block w-full"
+                    v-model="jsonForm.dateCheck"
+                    autofocus
+                  />
+                </div>
+                <div class="m-2">
+                  <jet-secondary-button
+                    class="ml-2"
+                    @click.native="clearDate()"
+                  >Clear Selected Date</jet-secondary-button>
+>>>>>>> fix(#666): fix my bookings UI
                 </div>
               </div>
             </div>
@@ -129,7 +144,14 @@
       </template>
 
       <template #footer>
+<<<<<<< HEAD
         <jet-button class="ml-2" type="button" @click.native="advancedFilters()">
+=======
+        <jet-button
+          class="ml-2"
+          @click.native="advancedFilters()"
+        >
+>>>>>>> fix(#666): fix my bookings UI
           Filter
         </jet-button>
         <jet-secondary-button @click.native="toggleAdvancedFilters">
@@ -145,10 +167,16 @@
 <script>
 import moment from "moment";
 import ViewBookingRequestStatusModal from "@src/Pages/Admin/BookingRequests/ViewBookingRequestStatusModal";
+<<<<<<< HEAD
+=======
+import JetButton from "@src/Jetstream/Button";
+>>>>>>> fix(#666): fix my bookings UI
 import JetDialogModal from "@src/Jetstream/DialogModal";
 import JetSecondaryButton from "@src/Jetstream/SecondaryButton";
 import JetButton from "@src/Jetstream/Button";
 import Input from "@src/Jetstream/Input";
+import DatePicker from "@src/Components/Form/DatePicker";
+
 
 export default {
   props: {
@@ -164,7 +192,8 @@ export default {
     JetButton,
     ViewBookingRequestStatusModal,
     JetDialogModal,
-    JetSecondaryButton
+    JetSecondaryButton,
+    DatePicker
   },
 
   data() {
