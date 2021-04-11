@@ -194,7 +194,7 @@
           </template>
 
           <template #content>
-            <div class="overflow-y-auto">
+            <div class="overflow-y-scroll h-96">
               <div class="flex flex-row">
                   <div class="flex flex-col flex-1 py-2 px-3">
                       <div><h2>Capacity Standing</h2></div>

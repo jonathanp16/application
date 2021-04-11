@@ -6,7 +6,7 @@
 
         <template #content>
             <div v-if="booking">
-                <div class="overflow-y-auto max-h-96 h-48">
+                <div class="overflow-y-scroll max-h-96 h-48">
                     <div v-for="log in booking.log" class="text-md mx-3">
                         <div>{{log}}</div>
                     </div>
