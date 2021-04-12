@@ -112,3 +112,4 @@ _prepare to 2x speed and hit the left key 8x a sec_
 
 ## License
 This booking application is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
