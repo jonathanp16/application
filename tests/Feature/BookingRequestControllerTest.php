@@ -100,7 +100,7 @@ class BookingRequestControllerTest extends TestCase
         $this->assertDatabaseCount('booking_requests', 0);
         $this->assertDatabaseCount('reservations', 0);
 
-        $date = $this->faker->dateTimeInInterval('+' . $room->min_days_advance . ' days', '+' . ($room->max_days_advance - $room->min_days_advance) . ' days');
+        $date = $this->faker->dateTimeInInterval('+' . $room->min_days_advance . ' days', '+' . ($room->max_days_advance - $room->min_days_advance) . ' days')->setTime(12,0);
 
         $this->createReservationAvailabilities($date, $room);
 
@@ -354,7 +354,7 @@ class BookingRequestControllerTest extends TestCase
                 'attendees' => $booking_request->event['attendees'],
             ]
         ]);
-        $response->dumpSession();
+
         $response->assertSessionHasNoErrors();
 
         $updatedBooking = BookingRequest::find($booking_request->id);
@@ -435,7 +435,6 @@ class BookingRequestControllerTest extends TestCase
             ],
             'files' => $files
         ]);
-
         $response->assertSessionHasNoErrors();
         $booking_request->refresh();
         Storage::disk('public')->assertExists($booking_request->reference[0]['path']);
@@ -660,7 +659,6 @@ class BookingRequestControllerTest extends TestCase
             ]
         ]);
 
-//    dump(session()->all());
         $response->assertSessionHasNoErrors();
 
         Event::assertDispatched(BookingRequestUpdated::class);
